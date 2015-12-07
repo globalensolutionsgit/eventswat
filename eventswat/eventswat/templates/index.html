@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load app_filters %}
+{% load static from staticfiles %}
+{% block content %}
+ <script type="text/javascript" src="{% static "js/select.js" %}"></script>
+            <div class="slider-content">
+                <div id="home-slider" class="owl-carousel">
+                    {% for banners in banner|get_main_banner %}
+                        {% if banners.admin_status == True %}
+                            <div class="item">
+                                {% if 'start' in path %}  
+                                    <img src="../media/{{banners.mainbanner}}"  alt="">
+                                {% else %}
+                                    <img src="media/{{banners.mainbanner}}"  alt="">
+                                {% endif %}  
+                                <div class="slide-content"></div>          
+                            </div>
+                        {% endif %}
+                    {% endfor %}     
+                </div>
+                <div class="customNavigation">
+                    <a class="btn prev"><i class="fa fa-angle-left"></i></a>
+                    <a class="btn next"><i class="fa fa-angle-right"></i></a>
+                </div>
+            </div> <!-- END .slider-content -->
+        </div> <!-- END .SEARCH and slide-section -->
+    </header> <!-- end #header -->
+    <a class="btn btn-default feedback1">FEEDBACK</a>                 
+    <!-- <div class="feedback_popup">
+        <form action="{%url 'events.views.feedback' %}" id="form" method="post" name="form" class="feedback_form">{% csrf_token %}
+            <a class="close"> <i class="fa fa-times"></i></a>
+            <h2 >Rate my website!</h2>
+            <div class="content">
+                <label for="text1">Name:</label>
+                <input type="text" name="name" class="feed" placeholder=" name" id="name" />
+                <label class="error" for="name" id="name_error">This field is required.</label>
+                <label for="text1">Email:</label>
+                <input type="text" name="email" class="feed" placeholder=" email" id="email"/>
+                <label class="error" for="email" id="email_error">This field is required.</label>
+                <label for="text1">Rating: </label>
+                <select class="feed"name="rating" placeholder="Rating" id="rating" >
+                    <option value="0">Please select your Rating </option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+               <label class="error" for="rating" id="rating_error">This field is required.</label><br/>
+                <label for="text1">Comments:   </label>
+                <textarea placeholder="comments" name="comments" class="feed" value="" id="comments"></textarea>
+                <label class="error" for="comments" id="comments_error">This field is required.</label><br/>
+             
+                <button class="btn btn-default feed_btn" id="feed_btn" type="submit" >Submit</button>
+            </div>
+        </form>
+    </div> -->
+    <div id="page-content" class="home-slider-content">
+        <div class="container">
+            <div class="home-with-slide">
+                <div class="row">
+                    <div class="col-md-9 col-md-push-3">
+                        <div class="page-content">
+                            <div class="change-view">
+                                <div class="filter-input">
+                                </div>
+                            </div> <!-- end .change-view -->
+                            <div class="product-details">
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="all-categories">
+                                        <div class="row clearfix subcategories">         
+                                            {% for subcategory in eventssubcategory%}  
+                                                <div class="col-md-3 col-sm-4 col-xs-6">
+                                                    <div class="category-item">
+                                                        {% if 'start' in path %}  
+                                                              <img class="sub_cat_icon" src="../media/{{subcategory.subcategory_icon}}">
+                                                              <img class="sub_cat_icon_hover" src="../media/{{subcategory.subcategory_hover_icon}}">
+                                                              {% else %}
+                                                              <img class="sub_cat_icon" src="media/{{subcategory.subcategory_icon}}">
+                                                              <img class="sub_cat_icon_hover" src="media/{{subcategory.subcategory_hover_icon}}">
+                                                        {% endif %}
+                                                        <a  class="event_click" id="{{subcategory.id}}">{{subcategory.subcategory_name}}</a>
+                                                         <!-- <a href="search/?q=&amp;eventtype={{subcategory.id}}">{{subcategory.name}}</a> -->
+                                                         
+                                                    </div>
+
+                                                </div>
+                                            {% endfor %}                 
+                                        </div> <!-- end .row -->
+                                    </div> <!-- end .tabe-pane -->           
+                                </div> <!-- end .tabe-content -->
+                            </div> <!-- end .product-details -->
+                        </div> <!-- end .page-content -->
+                    </div>
+                    <div class="col-md-3 col-md-pull-9 category-toggle">
+                        <button><i class="fa fa-briefcase"></i></button>
+                        <div class="page-sidebar">
+                            <!-- Category accordion -->
+                            <div id="categories">
+                                <div class="accordion">
+                                    <form id="form_search_filter" class="form_search_filter">
+                                        <input type="hiddden" name="page" value="{{page.number}}">
+                                        <input id="search_form" type="hidden" name="{{form.q.html_name}}"  value="{{form.q.value|default:''}}"/>
+                                        <ul class="nav nav-tabs home-tab" role="tablist" class="category_click">
+                                                <li class="active">
+                                                    <a role="tab" data-toggle="tab" class="select_all_category pointer">All Categories
+                                                            <span>Display all sub-categories</span>
+                                                    </a>
+                                                </li>
+                                            {% for categories in initial_load|get_categories %}
+                                                <li>
+                                                    <a class="select_category pointer"  role="tab" data-toggle="tab" title="Please choose any category">{{categories.category_name}}</a>
+                                                    <input type="hidden" class="ajax_catid" value="{{categories.id}}">                                      
+                                                </li>
+                                            {% endfor %}  
+                                        </ul>
+                                        <input type="hidden"  id="categoryid"  value="" name="categoryid"/>   
+                                       
+                                    </form>
+                                </div> <!-- end .accordion -->
+                            </div> <!-- end #categories -->
+                        </div> <!-- end .page-sidebar -->
+                    </div> <!-- end grid layout-->
+                </div> <!-- end .row -->
+            </div> <!-- end .home-with-slide -->
+        </div> <!-- end .container -->
+    </div>  <!-- end #page-content -->
+    <div class="featured-listing" id= "featured-list">
+        <div class="our-partners">
+            <div class="container">
+                <h2>Prioritized Banners</h2>                 
+                <div id="partners-slider" class="owl-carousel owl-theme">
+                    {% for banners in banner|get_banner %}
+                        {% if banners.pageurl == '/' and banners.position == 'bottom' %}  
+                            <div class="item">  
+                                <a href="http://{{banners.link}}">{% if 'start' in path %} <img src="../media/{{banners.banner}}"  alt=""> {% else %}<img src="media/{{banners.banner}}"  alt="">{% endif %}</a>  
+                            </div>       
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>  <!-- end .container -->
+    </div>  <!-- end .featured-listing -->
+    <div class="feature" id= "featured-list">
+        <div class="our-partners">
+            <div class="container">
+                <div class="row clearfix">
+                    <h2><strong>Upcoming Events</strong></h2>
+                    {% for recentad in recentad %}
+                        <div class="col-md-3 col-sm-4 col-xs-6">
+                            <div class="single-product">
+                                <figure>
+                                    <img src="/media/{{recentad.poster}}" alt="">
+                                    <figcaption>
+                                        <div></div>
+                                        <div class="read-more">
+                                            <a href="/details/{{recentad.id}}"><i class="fa fa-angle-right"></i> Read More</a>
+                                        </div>
+                                    </figcaption>
+                                </figure>
+                                <h4><a href="/details/{{recentad.id}}">{{recentad.event_title}}</a></h4>
+                                <h5><a href="/details/{{recentad.id}}">{{recentad.city}}</a></h5>
+                            </div> <!-- end .single-product -->
+                        </div>
+                    {% endfor %}
+                </div>  <!-- end .row -->                 
+            </div>
+        </div><!-- END OUR PARTNER SLIDER -->
+{% endblock %}
+

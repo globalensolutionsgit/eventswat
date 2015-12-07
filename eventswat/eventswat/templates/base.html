@@ -1,0 +1,331 @@
+{% load static from staticfiles %}
+{% load i18n %}
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="keywords" content="events,eventswat,evewat,symposium events,technical events,cultural events,online events">
+        <meta name="description" content="Events based details in this site">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>EventsWat</title>        <!-- Stylesheets -->
+        <link rel="stylesheet" href="{% static "css/bootstrap-datepicker.css" %}">
+        <link rel="stylesheet" href="{% static "css/style.css" %}">
+        <link rel="stylesheet" href="{% static "css/imagelightbox.min.css" %}">
+        <link rel="stylesheet" href="{% static "css/stepsForm.css" %}">
+        <link rel="stylesheet" href="{% static "css/jquery-ui.css" %}">
+        <link rel="stylesheet" href="{% static "css/jquery.bxslider.css" %}">
+        <link href="{% static "css/simpleFilePreview.css" %}" rel="stylesheet">
+        <link href="{% static "css/owl.carousel.css" %}" rel="stylesheet">
+        <link href="{% static "css/datepicker.css" %}" rel="stylesheet">
+        <link href="{% static "css/tipsy.css" %}" rel="stylesheet">
+        <script type="text/javascript" src="{% static "js/jquery.js" %}"></script>
+        <script type="text/javascript" src="{% static "js/eventcalendar.js" %}"></script>
+        <script type="text/javascript" src="{% static "js/imagelightbox.js" %}"></script>
+        <script type="text/javascript" src="{% static "js/jquery.magnific-popup.js" %}"></script>
+         <!-- <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-69301615-1', 'auto');
+          ga('send', 'pageview');
+
+        </script> -->
+        <!--<script src="http://malsup.github.com/jquery.form.js"></script> -->
+         
+        <!-- GOOGLE FONTS -->
+        <link href='https://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'>
+        <!--[if IE 9]>
+            <script src="js/media.match.min.js"></script>
+        <![endif]-->
+    </head>
+    <body {% if request.path == '/post_event' %} class="post_event1" {% endif %}>
+        <div id="main-wrapper">
+            <header id="header">
+            <div class="header-top-bar">
+                <div class="container">
+                    <div class="header-logo text-center">
+                        <a href="/"><img src = "{% static "img/logo.png" %}" height="50"></a>
+                    </div>
+                    <!-- HEADER-LOG0 -->
+                    <div class="header-logo_text text-center">
+                        <a href="/"><img src = "{% static "img/logo_text.png" %}" height="27"></a>
+                    </div><!-- END HEADER LOGO -->
+                    <div class="header-call-to-action">
+                     
+                        <div class="fl">
+                            {% if not user.is_authenticated %}
+                                <div class="header-register">
+                                    <a href="#" class="northwest register_btn" title="New Register" ><i class="fa fa-plus-square"></i> Register</a>
+                                    &nbsp;&nbsp;&nbsp;
+                                    <!-- <a href="/">{{request.user.email}}</a> -->
+                                    <!-- <span style="{% if request.REQUEST.rst %} display:block;color:#df0024;font-weight: bold; {%else%} display: none; {% endif %}">
+                                    {%for message in messages%}{{message}}{% endfor %}
+                                    </span> -->
+                           <!--          <div class="register_holder">        
+                                        <form id="user_form" method="post" action="/register/" name="sign_up">{% csrf_token %}
+                                            <div class="field_control">
+                                                <input type="text" class="form-control" name="username" placeholder="Your Name" id="username_signup" autocomplete="off">
+                                                <label for="username_signin" class="error_message">Please Enter your Name</label>
+                                            </div>
+                                            <div class="field_control">
+                                                <input type="text" class="form-control" name="email_id" placeholder="Email" id="emailid_signup" autocomplete="off">
+                                                <label for="emailid_signup" class="error_message">Please Enter your Email</label>
+                                                <label class="error_message">Please Enter Valid Email</label>
+                                            </div>
+                                            <div class="field_control">
+                                                <input type="text" class="form-control" name="mobile" placeholder="Mobile" id="mobile_signup" autocomplete="off">
+                                                <label for="mobile_signin" class="error_message">Please Enter your Mobile</label>
+                                                <label for="mobile_signin" class="error_message">Enter valid mobile number</label>
+                                            </div>
+                                            <div class="field_control">
+                                                <input type="password" class="form-control" name="password" placeholder="Password" id="password_signup" autocomplete="off">
+                                                <label for="password" class="error_message">Please Enter Password</label>
+                                                <label for="password" class="error_message strength"></label>
+                                            </div>     
+                                            <div class="field_control">
+                                                <input type="password" class="form-control" name="confirm_password" placeholder="Confirm Password" id="confirm_password_signup" autocomplete="off">
+                                                <label for="confirm_password" class="error_message" style="display:none;">Please Re-enter Password</label>
+                                                <label for="confirm_password" class="error_message" style="display:none;">Password does not match</label>
+                                            </div>
+                                            <input type="submit" class="btn btn-default create_user fr" value="Register" name="Create" id="create_user">
+                                            <div class="clear_both"> </div>
+                                        </form>
+                                    </div> -->
+                                </div>
+                            {% else %}
+                                <div class="header-register">
+                                    <a href="/">{{request.user.email}}</a>
+                                    <!-- <span style="{% if request.REQUEST.rst %} display:block;color:#df0024;font-weight: bold; {%else%} display: none; {% endif %}">
+                                    {%for message in messages%}{{message}}{% endfor %}
+                                    </span> -->
+                                </div>
+                            {% endif %}
+                            {% if user.is_authenticated %} 
+                                <i class="fa fa-caret-down dropdown"></i>
+                                        <div class=" user_menu col-md-2">
+                                            <ul class="menulist">
+                                              <li><a href="{% url "events.views.user_profile" %}">Personal Info</a></li>
+                                              <li><a  class="privacy" href="{% url "events.views.user_profile" %}">Privacy</a></li>
+                                              <li><a href="{% url "events.views.user_profile" %}">My events</a></li>
+                                            </ul>
+                                            <!-- <input type="hidden" name="choose_settings" id="choose_settings"> -->
+                                        </div><!--user_menu-->
+                            {% endif %}     
+
+                            {% if user.is_authenticated %}
+                                <div class="header-logout">
+                                    <a href="/logout/" class=""><i class="fa fa-power-off"></i> Logout</a>
+                                    <a href="/">{{username}}</a>
+                                </div> <!-- END .HEADER-LOGOUT -->
+                            {% else %}       
+                                <div class="header-login">
+                                    <a href="#" class="login_button"><i class="fa fa-power-off" action="/login/"></i> Login</a>
+                                    <!-- <span style="{% if request.REQUEST.lst and not request.path == '/post_event_v2' %} display:block;color:#df0024;font-weight: bold; {%else%} display: none; {% endif %}">
+                                    {%for message in messages%}{{message}}{% endfor %}
+                                    </span> -->
+                                   <!--  <div class="login_holder">
+                                        <form method="post" id="login_val" action="/login/" name="sign_in">{% csrf_token %}       
+                                            <div class="field_control">        
+                                                <input type="text" class="form-control"  placeholder="Email" id="emailid_signin" name="username" autocomplete="off" >
+                                                <label for="emailid_signin" class="error_message">Enter your Username</label>
+                                                <label for="emailid_signin" class="error_message">Enter Valid Email</label>  
+                                            </div>
+                                            <div class="field_control">   
+                                                <input type="password" class="form-control" name="password" id="password_signin" placeholder="Password">
+                                                <label for="password" class="error_message">Enter your Password</label>
+                                            </div>
+                                            <input type="hidden" value="{{ request.get_full_path }}" name="next" /> 
+                                            <input type="submit" class="btn  btn-default fr" value="Login" name="create" id="signin">
+                                            <a href="#" class="btn btn-link fl">Forgot Password?</a>
+                                            <div class="clear_both"> </div>
+                                        </form>
+                                    </div> -->
+                                </div> <!-- END .HEADER-LOGIN -->
+                            {% endif %}
+                            {% if not request.path == "/user_profile/" %}
+                           <!--  <div class="header-share">
+                            <a href="#"><i class="fa fa-facebook"></i></a>
+                            </div> -->
+                        </div>
+                            {% if user.is_authenticated %}
+                                <a href="/post_event" class="btn btn-default"><i class="fa fa-plus"></i> Post Event</a>
+                                <a href="/banner" class="btn btn-default"><i class="fa fa-plus"></i> Post Banner</a>
+                            {% else %}
+                                <a class="btn btn-default login_act post_event_btn_act"><i class="fa fa-plus"></i> Post Event</a>
+                                <a class="btn btn-default login_act upload_banner_btn_act"><i class="fa fa-plus"></i> Post Banner</a>
+                            {% endif %}
+                            {% endif %}
+                    </div><!-- END .HEADER-CALL-TO-ACTION -->
+                </div><!-- END .CONTAINER -->
+            </div><!-- END .HEADER-TOP-BAR -->
+        <!-- HEADER SEARCH SECTION -->
+            {% if request.path == '/' or request.path == '/start/' %}
+                <div class="header-search slider-home">
+                    <div class="header-search-bar">
+                        <!-- <form class="form" method="get" action="/search/?q=" id="f_search" name="f_search"> -->
+                        <form class="form" id="f_search" name="f_search">
+                            <div class="container">
+                                <div class="search-value">
+                                    <div class="keywords">
+                                        {% if query or request.REQUEST.q or request.REQUEST.q == '' %}
+                                            <input type="text" name="q" id="q" class="form-control input-lg" placeholder="Event title" value="{% if query %}{{ query }}{% elif request.REQUEST.q %}{{request.REQUEST.q}}{% elif request.REQUEST.q == '' %}{% else %}{% endif %}" autocomplete="off"/>
+                                        {% else %}
+                                            <input type="text" name="q" id="q" class="form-control input-lg" placeholder="Event title" value="{% if recent_viewed_search %}{% for subcategory in recent_viewed_search|slice:'1' %}{% if subcategory.activity_view %}{{ subcategory.activity_view }}{% else %}{% endif %}{% endfor %}{% else %}{% endif %}" autocomplete="off"/>
+                                        {% endif %}
+                                    </div>
+                                    <div class="select-location">                          
+                                        <input type="text" class="form-control input-lg ui-autocomplete-input" placeholder="City" value="" id="fitltercitytxt" /> 
+                                        <input type="hidden" class="form-control input-lg" placeholder="City" value="" id="fitltercity" name="city" />                  
+                                    </div>
+                                    <div class="category-search">
+                                        <select class="category_choose" name="eventtype">                 
+                                            <option value="">Event type</option>
+                                            {% for subcategory in eventssubcategory %}
+                                                <option  value="{{subcategory.id}}">{{ subcategory.subcategory_name|capfirst }} </option>
+                                            {% endfor%} 
+                                        </select>
+                                            <!-- <input type="hidden" name="eventtype" value="" id="eventtype_id"> -->
+                                    </div>
+                                    <!-- old code -->
+                                   <!--  <button class="search-btn base_search" type="submit"><i class="fa fa-search"></i></button> -->
+                                   <!-- newly added by kalai -->
+                                    <a class="search-btn base_search" type="submit"><i class="fa fa-search search"></i></a>
+                                </div>
+                            </div> 
+                        </form>
+                    </div>
+                {% endif %}
+
+                {% block content %}
+                {% endblock %}
+                {%block search_results1%}
+                {% endblock %}
+                {% block content1 %}
+                {% endblock %}
+                <footer id="footer">
+                    <div class="main-footer">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-3 col-sm-6">
+                                    <div class="about-globo">
+                                        <div class="footer-logo">
+                                            <a href="/">
+                                                <img src="{%static "img/logo_150.png"%}" height="150" alt="">
+                                            </a>
+                                        </div>
+                                    </div> <!-- End .about-globo -->
+                                </div> <!-- end Grid layout-->
+                                <div class="col-md-3 col-sm-3 clearfix">
+                                    <div class="popular-categories">
+                                        <h3>eventswat.com</h3>
+                                        <ul>
+                                            <li><a href="{% url 'events.views.about' %}"><i class="fa fa-info-circle"></i>About us</a></li>
+                                            <li><a href="{% url 'events.views.privacy' %}"><i class="fa fa-tasks"></i>Privacy policy</a></li>
+                                            <li><a href="{% url 'events.views.terms_and_conditions' %}"><i class="fa fa-exclamation-triangle"></i>Terms and Conditions</a></li>
+                                            <li><a href="{% url 'events.views.faqs' %}"><i class="fa fa-question-circle"></i>FAQs</a></li>
+                                        </ul>
+                                    </div> <!-- end .popular-categories-->
+                                </div> <!-- end Grid layout-->
+                                <div class="col-md-3 col-sm-3 clearfix">
+                                    <div class="popular-categories">
+                                        <h3>Join our hands</h3>
+                                        <ul>
+                                            <li><a href="#"><span class="feed_back"><i class="fa fa-comment"></i>Feedback</span></a></li>
+                                            <li><a href="#"><i class="fa fa-briefcase"></i>Careers</a></li>
+                                            <li><a href="#"><i class="fa fa-newspaper-o"></i>Advertise with us</a></li>
+                                            <li><a href="#"><i class="fa fa-gift"></i>special offers</a></li>
+                                        </ul>
+                                    </div> <!-- end .popular-categories-->
+                                </div> <!-- end Grid layout-->
+                                <div class="col-md-3 col-sm-6">
+                                    <div class="newsletter">
+                                        <h3>We are available at</h3> 
+                                        <span class="contact_detail"><a href="/"><i class="fa fa-mobile adjust_space"></i></a></span>
+                                        <span class="contact_detail"><a href="/"><i class="fa fa-envelope adjust_space"></i>eventswat@gmail.com</a></span>
+                                        <h3>Track us</h3>
+                                        <ul class="list-inline">
+                                            <li><a href="https://www.facebook.com/EventsWat"><i class="fa fa-facebook"></i></a></li>
+                                            <li><a href="https://twitter.com/eventswat1"><i class="fa fa-twitter"></i></a></li>
+                                            <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+                                            <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
+                                        </ul>
+                                        <ul class="list">
+                                        </ul>
+                                    </div> <!-- end .newsletter-->
+                                </div> <!-- end Grid layout-->
+                            </div> <!-- end .row -->
+                        </div> <!-- end .container -->
+                    </div> <!-- end .main-footer -->
+                    <div class="copyright">
+                        <div class="container fl">
+                            <p>Copyright 2014 &copy; <i class="logo_blue">Events</i><i class="logo_red">wat</i>.com. All rights reserved. Powered by  <a href="/"><i class="logo_blue">Events</i><i class="logo_red">wat</i></a></p>
+                        </div> <!-- END .container -->
+                        <div class="visitor_count">
+                        <span> Visitor's count: </span>
+                        <span><script type="text/javascript" src="http://services.webestools.com/cpt_visitors/32922-1-5.js"></script></span>
+                        </div>
+                    </div> <!-- end .copyright-->
+                </footer> <!-- end #footer -->
+            </div> <!-- end #main-wrapper -->
+            {% include "popup.html" %}
+            <script type="text/javascript" src="{% static "js/jquery-ui.js" %}"></script>
+            <script src="{% static "js/jquery.ba-outside-events.min.js" %}"></script>
+            <script type="text/javascript" src="{% static "js/jquery.cookie.js"%}"></script>
+            <script src="{% static "js/bootstrap.min.js"%}"></script>
+            <script src="{% static "js/owl.carousel.js" %}"></script>
+            <script src="{% static "js/jquery.placeholder.min.js" %}"></script>
+            <script src="{% static "js/bootstrap-datepicker.js" %}"></script>
+            <script type="text/javascript" src="{% static "js/jquery.simpleFilePreview.js" %}"></script>    
+            <script src="{% static "js/jquery.iframe-transport.js" %}"></script>
+            <script src="{% static "js/jquery.fileupload.js" %}"></script>
+            <script src="{% static "js/script.js" %}"></script>
+            <script src="{% static "js/search.js" %}"></script>
+            <script src="{% static "js/jquery.bxslider.js" %}"></script>
+            <script src="{% static "js/jquery.tipsy.js" %}"></script>
+            <script src="{% static "js/scripts.js" %}"></script>
+            <script type="text/javascript" src="{% static "js/stepsForm.js" %}"></script>
+            <script type="text/javascript">
+
+                $('.date_pick').datepicker({
+                    format: 'yyyy-mm-dd',
+                    startDate: '-3d',
+                });               
+             </script>
+           <script type="text/javascript">
+                var events; 
+                $.ajax({
+                    async: false,
+                    url: "/get_events_for_calendar/",
+                    datatype: "json",
+                    success: function(response) {
+                        events = response;
+                    }
+                });
+                
+                var todaydate = new Date();
+                var curmonth = todaydate.getMonth() + 1; //get current month (1-12)
+                var curyear = todaydate.getFullYear(); //get current year
+                var selectedmonth = curmonth;
+                var selectedyear = curyear;
+
+                document.getElementById('cal').innerHTML = buildCal(curmonth ,curyear, "main", "month", "daysofweek", "days", 1);
+
+                function changeMonth(direction) {
+                    if (direction) {
+                        selectedyear =  ((selectedmonth+1) > 12) ? selectedyear+1 : selectedyear;
+                        selectedmonth = ((selectedmonth+1) > 12) ? 1 : selectedmonth+1;
+                    } else {
+                        selectedyear =  ((selectedmonth-1) == 0) ? selectedyear-1 : selectedyear;
+                        selectedmonth = ((selectedmonth-1) == 0) ? 12 : selectedmonth-1;
+                    }
+                    document.getElementById('cal').innerHTML = buildCal(selectedmonth ,selectedyear, "main", "month", "daysofweek", "days", 1);
+                }
+            </script>
+            {% if request.path == '/banner' %}
+            <script src="{% static "js/select.js" %}"></script>
+            {% endif %}
+    </body>
+</html>

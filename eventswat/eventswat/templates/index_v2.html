@@ -1,0 +1,320 @@
+{% extends request.is_ajax|yesno:"base_ajax.html,base.html" %}
+{%if not request.is_ajax%}
+{% load i18n %}
+{% load app_filters %}
+{% load static from staticfiles %}
+{% block content %}
+ <script type="text/javascript" src="{% static "js/select.js" %}"></script>
+            <div class="slider-content">
+                <div id="home-slider" class="owl-carousel">
+                    {% for banners in banner|get_main_banner %}
+                        {% if banners.admin_status == True %}
+                            <div class="item">
+                                {% if 'start' in path %}  
+                                    <img src="../media/{{banners.mainbanner}}"  alt="">
+                                {% else %}
+                                    <img src="media/{{banners.mainbanner}}"  alt="">
+                                {% endif %}  
+                                <div class="slide-content"></div>          
+                            </div>
+                        {% endif %}
+                    {% endfor %}     
+                </div>
+                <div class="customNavigation">
+                    <a class="btn prev"><i class="fa fa-angle-left"></i></a>
+                    <a class="btn next"><i class="fa fa-angle-right"></i></a>
+                </div>
+            </div> <!-- END .slider-content -->
+        </div> <!-- END .SEARCH and slide-section -->
+        <div class="container event_listing">
+        <div class="event_calendar">
+        <div class="action_calendar">
+            <button id="prev" onMouseUp="changeMonth(false)"> Previous </button>
+            <button id="next" onMouseUp="changeMonth(true)"> Next </button>
+        </div>
+        <div id="cal"></div>
+        </div></div>
+    </header> <!-- end #header -->
+
+    <div id="mgs" style="display:none;"><h2>Thanks For Your Feedback</h2></div>
+    <a class="btn btn-default feedback1">FEEDBACK</a>                 
+    <div class="feedback_popup">
+        <form action="{%url 'events.views.feedback' %}" id="form" method="post" name="form" class="feedback_form">
+        {% csrf_token %}
+            <a class="close"> <i class="fa fa-times"></i></a>
+            <h2 class="text_rate">Rate my website!</h2>
+            <div class="content">
+               <div class="form-group">
+                  <input type="name" class="form-control" placeholder="Name" id="name" name="name">
+                   <label class="error" for="name" id="name_error" style="color:red;">This field is required.</label>
+                </div>
+                <div class="form-group">
+                  <input type="email" class="form-control" placeholder="Email" id="email" name="email">
+                  <label class="error" for="email" id="email_error" style="color:red;">This field is required.</label>
+                </div>
+                <div class="form-group">
+                   <textarea class="form-control" rows="1" cols="33" placeholder="Comments" id="comments" name="comments"></textarea>
+                   <label class="error" for="comments" id="comments_error" style="color:red;">This field is required.</label>
+                </div>
+                <fieldset class="rating" name="rating" id="rating">
+                    <legend class="feedback_star">How satisfied are you with our services</legend>
+                    <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="Rocks!">5 stars</label>
+                    <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="Pretty good">4 stars</label>
+                    <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="Modrate">3 stars</label>
+                    <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="Kinda bad">2 stars</label>
+                    <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="Poor">1 star</label>
+                </fieldset>
+                <label class="error" for="rating" id="rating_error" style="color:red;">This field is required.</label>
+                <button class="btn btn-default" id="feed_btn" type="submit" >Submit</button>
+            </div>
+        </form>
+    </div>
+    <div id="page-content" class="home-slider-content">
+        <div class="container">
+            <div class="home-with-slide">
+                <div class="row">
+                    <div class="col-md-9 col-md-push-3">
+                        <div class="page-content">
+                            <div class="change-view">
+                                <div class="filter-input">
+                                </div>
+                            </div> <!-- end .change-view -->
+
+              <!--               <div class="product-details">
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="all-categories">
+                                        <div class="row clearfix subcategories">         
+                                            {% for subcategory in subcategory%}  
+                                                <div class="col-md-3 col-sm-4 col-xs-6">
+                                                    <div class="category-item">
+                                                        {% if 'start' in path %}  
+                                                              <img class="sub_cat_icon" src="../media/{{subcategory.icon}}">
+                                                              <img class="sub_cat_icon_hover" src="../media/{{subcategory.hover_icon}}">
+                                                              {% else %}
+                                                              <img class="sub_cat_icon" src="media/{{subcategory.icon}}">
+                                                              <img class="sub_cat_icon_hover" src="media/{{subcategory.hover_icon}}">
+                                                        {% endif %}
+                                                        <a href="search/?q=&amp;eventtype={{subcategory.id}}">{{subcategory.name}}</a>
+                                                    </div>
+
+                                                </div>
+                                            {% endfor %}                 
+                                        </div> <!- end .row ->
+                                    </div> <!- end .tabe-pane ->           
+                                </div> <!- end .tabe-content ->
+                            </div> <!- end .product-details -> -->
+                            
+                            
+{% endblock%}
+{% endif %}
+{%block search_results1%}
+                    <div class="col-md-12 ">
+                        <div class="page-content">
+                            <div class="product-details-list view-switch product-details-list-index">   
+                                <div class="tab-pane active">
+                                    <div class="change-view">                   
+                                    </div>
+                                    <div id="search_result" class="row clearfix">
+                                        {% if page and page.object_list%}
+                                            {% for events in page.object_list %}
+                                                {% if events.object.admin_status == True %}
+                                                    <div class="col-sm-4 col-xs-6">
+                                                        <div class="single-product">
+                                                            <figure>
+                                                                <a href="http://{{request.META.HTTP_HOST}}/details/{{events.object.id}}">
+                                                                    <img src="/media/{{events.object.poster|get_photos}}" alt="">
+                                                                </a>
+                                                                <figcaption>
+                                                                    <div class="bookmark">
+                                                                        <a href="/details/{{events.object.id}}"><i class="fa fa-bookmark-o"></i> Bookmark</a>
+                                                                    </div>
+                                                                    <div class="read-more">
+                                                                        <a href="/details/{{events.object.id}}"><i class="fa fa-angle-right"></i> Read More</a>
+                                                                    </div>
+                                                                </figcaption>
+                                                            </figure>
+                                                            <h4>
+                                                                <a href="/details/{{events.object.id}}">{{events.object.event_title}}</a>
+                                                            </h4>
+                                                            <h5>
+                                                                <a href="/details/{{events.object.id}}">{{events.object.college}}</a>
+                                                            </h5>
+                                                            <h5>
+                                                                <i class="fa fa-calendar-o"></i> &nbsp;{{events.object.enddate}}
+                                                            </h5>
+                                                            <h5>
+                                                                <i class="fa fa-map-marker"></i> &nbsp;&nbsp;<a href="/details/{{events.object.id}}">{{ events.object.city}}, {{events.object.state}}.
+                                                                </a>
+                                                            </h5>
+                                                            <a class="read-more" href="/details/{{events.object.id}}"><i class="fa fa-angle-right"></i>Read More</a>
+                                                        </div> <!-- end .single-product -->
+                                                    </div> <!-- end .col-sm-4 grid layout -->
+                                                {% endif %}
+                                            {% endfor %}
+                                        <div class="pagination-center">
+                                            <ul class="pagination">
+                                                <li>
+                                                    {% if page.has_previous %} 
+                                                    <a data-ajaxlink="true" data-ajaxpage="{{ page.previous_page_number }}" href="?q={{request.REQUEST.q}}&page={{ page.previous_page_number }}">
+                                                    <i class="fa  fa-angle-double-left"></i></a> 
+                                                    {% endif %}
+                                                </li>
+                                                {% for p in page.paginator.page_range %}
+                                                    {% if p|add:3 >= page.number and p|add:-3 <= page.number %}
+                                                        <li {% if p == page.number %} class="active"{% endif %}>
+                                                            <a data-ajaxlink="true" data-ajaxpage="{{ p }}" href="?q={{request.REQUEST.q}}&page={{ p }}">
+                                                                {{ p }}
+                                                            </a>
+                                                        </li> 
+                                                    {% endif %}
+                                                {% endfor %}
+                                                <li>
+                                                    {% if page.has_next %} 
+                                                            <a data-ajaxlink="true" data-ajaxpage="{{ page.next_page_number }}" href="?q={{request.REQUEST.q}}&page={{ page.next_page_number }}">
+                                                                <i class="fa  fa-angle-double-right"></i>
+                                                            </a>
+                                                    {% endif %}
+                                                </li> 
+                                            </ul>
+                                        </div>
+                                        {% else %}
+                                            <div class="right_align"><span>{% trans "No Results Found" %}</span></div>
+                                        {% endif %}
+                                    </div> <!-- end .row -->   
+                        <div class="advertisement" style="color:black;">
+                            <p>Advertisement</p>
+                            {% for banners in banner|get_banner %}
+                                {% if banners.pageurl == 'event/' and banners.position == 'right' and banners.admin_status == True %}
+                                    <img src="/media/{{banners.banner}}" >
+                                {% endif %}
+                            {% endfor %}
+                        </div>              
+                                </div> <!-- end .tabe-pane -->
+                            </div> <!-- end .product-details-->
+                        </div> <!-- end .page-content -->       
+                    </div> <!-- end .tabe-content --> 
+{% endblock %}
+{%if not request.is_ajax%}
+{% block content1 %}
+                        </div> <!-- end .page-content -->
+                    </div>
+                    <div class="col-md-3 col-md-pull-9 category-toggle">
+                        <button><i class="fa fa-briefcase"></i></button>
+                        <div class="page-sidebar">
+                            <!-- Category accordion -->
+                            <div id="categories">
+                                <div class="accordion">
+                                    <form id="form_search_filter" class="form_search_filter">
+                                        
+                                        <input id="search_form" type="hidden" name="{{form.q.html_name}}"  value="{{form.q.value|default:''}}"/>
+                                        <ul class="nav nav-tabs home-tab" role="tablist" class="category_click">
+                                                <li class="active">
+                                                    <a role="tab" data-toggle="tab" class="select_all_category pointer">All Categories
+                                                            <span>Display all sub-categories</span>
+                                                    </a>
+                                                </li>
+                                            <!-- old code for index.html --> 
+                                            <!-- {% for categories in initial_load|get_categories %}
+                                                <li>
+                                                    <a class="select_category pointer"  role="tab" data-toggle="tab" title="Please choose any category">{{categories.name}}</a>
+                                                    <input type="hidden" class="ajax_catid" value="{{categories.id}}">                                      
+                                                </li>
+                                            {% endfor %}  -->
+                                            <!-- new code for index_v2.html updated by kalai -->
+                                            
+                                            <!-- {% for categories in initial_load|get_categories %}
+                                                <li class="select_category">
+                                                    <a class="pointer"  role="tab" data-toggle="tab" title="Please choose any category">{{categories.name}}</a>
+                                                    <input type="hidden" class="ajax_catid" value="{{categories.id}}">
+                                                    <ul class="subcategory_list">  
+                                                        {% for subcategories in categories.id|get_subcategories %}
+                                                         <li class="subcategory_list_link">         
+                                                            <a class="select_category pointer"  role="tab" data-toggle="tab" title="Please choose any category">
+                                                            <img class="sub_cat_icon" src="../media/{{subcategories.icon}}">{{subcategories.name}}
+                                                            <img class="sub_cat_icon_hover" src="../media/{{subcategories.hover_icon}}">
+                                                       	</a>
+                                                            <input type="hidden" class="ajax_subcatid" value="{{subcategories.id}}">      
+                                                         </li>
+                                                         {% endfor %}
+                                                    </ul>                                     
+                                                </li>
+                                            {% endfor %} -->
+                                            {% for categories in initial_load|get_categories %}
+                                                <li>
+                                                    <a class="select_category_index pointer"  role="tab" data-toggle="tab" title="Please choose any category">{{categories.category_name}}</a>
+                                                    <input type="hidden" class="ajax_catid" value="{{categories.id}}">
+                                                    <ul class="subcategory_list">  
+                                                        {% for subcategories in categories.id|get_subcategories %}
+                                                         <li class="subcategory_list_link">         
+                                                            <a class="select_category pointer"  role="tab" data-toggle="tab" title="Please choose any category">
+                                                            <img class="sub_cat_icon" src="{{subcategories.subcategory_icon}}">{{subcategories.subcategory_name}}
+                                                            <img class="sub_cat_icon_hover" src="{{subcategories.subcategory_hover_icon}}">
+                                                       	</a>
+                                                            <input type="hidden" class="ajax_subcatid" value="{{subcategories.id}}">  
+                                                            <span class="event_count">
+                                                            {{subcategories.id|get_subcategoriesCount:categories.id}}
+                                                            </span>
+                                                         </li>
+                                                         {% endfor %}
+                                                    </ul>                                     
+                                                </li>
+                                            {% endfor %}
+                                          
+                                        </ul>
+                                        <input type="hidden"  id="search_keyword"  value="" name="q"/>
+                                        <input type="hidden" name="page" id="page" value="{{page.number}}"/>
+                                        <input type="hidden"  id="categoryid"  value="" name="category"/>           
+                                        <input type="hidden"  id="city"  value="" name="city"/>
+                                        <input type="hidden"  id="eventtypeid"  value="" name="eventtype"/>   
+                                    </form>
+                                </div> <!-- end .accordion -->
+                            </div> <!-- end #categories -->
+                        </div> <!-- end .page-sidebar -->
+                    </div> <!-- end grid layout-->
+                </div> <!-- end .row -->
+            </div> <!-- end .home-with-slide -->
+        </div> <!-- end .container -->
+    </div>  <!-- end #page-content -->
+    <div class="featured-listing" id= "featured-list">
+        <div class="our-partners">
+            <div class="container">
+                <h2>Prioritized Banners</h2>                 
+                <div id="partners-slider" class="owl-carousel owl-theme">
+                    {% for banners in banner|get_banner %}
+                        {% if banners.pageurl == '/' and banners.position == 'bottom' %}  
+                            <div class="item">  
+                                <a href="http://{{banners.link}}">{% if 'start' in path %} <img src="../media/{{banners.banner}}"  alt=""> {% else %}<img src="media/{{banners.banner}}"  alt="">{% endif %}</a>  
+                            </div>       
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>  <!-- end .container -->
+    </div>  <!-- end .featured-listing -->
+    <div class="feature" id= "featured-list">
+        <div class="our-partners">
+            <div class="container">
+                <div class="row clearfix">
+                    <h2><strong>Upcoming Events</strong></h2>
+                    {% for recentad in recentad %}
+                        <div class="col-md-3 col-sm-4 col-xs-6">
+                            <div class="single-product">
+                                <figure>
+                                    <img src="/media/{{recentad.poster}}" alt="">
+                                    <figcaption>
+                                        <div></div>
+                                        <div class="read-more">
+                                            <a href="/details/{{recentad.id}}"><i class="fa fa-angle-right"></i> Read More</a>
+                                        </div>
+                                    </figcaption>
+                                </figure>
+                                <h4><a href="/details/{{recentad.id}}">{{recentad.event_title}}</a></h4>
+                                <h5><a href="/details/{{recentad.id}}">{{recentad.city}}</a></h5>
+                            </div> <!-- end .single-product -->
+                        </div>
+                    {% endfor %}
+                </div>  <!-- end .row -->                 
+            </div>
+        </div><!-- END OUR PARTNER SLIDER -->
+{% endblock %}
+{% endif %}

@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+{% load static from staticfiles %}
+{% load i18n %}
+{% block content %}
+		
+		<div class="banner_profile">
+			<img src = "{% static "img/banner.png"%}" width="1590" height="359px">
+		</div><!--banner_profile-->
+		<div class="header_call_events">
+				{% if user.is_authenticated %}
+
+								<a href="/post_event" class="btn btn-default post_btn"> Post Event</a>
+								<a href="/banner" class="btn btn-default banner_btn"> Post Banner</a>
+
+							{% else %}
+								<a class="btn btn-default login_act post_event_btn_act post_btn">Post Event</a>
+								<a class="btn btn-default login_act upload_banner_btn_act banner_btn">Post Banner</a>
+							{% endif %}
+
+		</div><!--header_call_events-->
+		<!-- <form id="user_form" method="post" action="/new_user/" name="sign_up" enctype="multipart/form-data"> -->
+		<form id="userprofile" method="POST" action="{% url "events.views.user_profile" %}" enctype="multipart/form-data">
+			{% csrf_token %}
+			<div class="upload_image">
+				<!-- <input type='file' id="profile_poster" name="profile_poster" class="poster upload_image_act"/>	 -->
+				<!-- {% if requested_user_profile.profile_pic %}
+					<img id="uploaded_img" class="after_save_act" src="../media/{{requested_user_profile.profile_pic}}">
+				{% endif %} 	 -->	
+				{% if requested_user_profile.profile_pic %}
+					<input type='file' id="profile_poster" name="profile_poster" class="poster upload_image_act" value="../media{{requested_user_profile.profile_pic}}" />
+					<img id="uploaded_img" class="after_save_act" src="../media{{requested_user_profile.profile_pic}}">
+				{% else %}
+					<input type='file' id="profile_poster" name="profile_poster" class="poster upload_image_act"/>
+				{% endif %} 					
+			</div><!--upload_image-->
+			<div class="col-md-3 personal_info">
+				<ul class="personal_nav">
+					<li class="info">Personal Info</li>
+					<li class="privacy">Privacy</li>
+					<li class="myevents">My events</li>
+				</ul>
+			</div><!--personal_info-->
+							
+			<div class="profile">
+				<div class="personal_content">
+					<div class="col-md-4 personal_information">
+							<span>Your Personal Info</span><br><br>
+							<span>Manage this basic information-your name,email</span><br>
+							<span>phone number,address and other information</span>
+					</div><!--info-->	
+					<i class="fa fa-user person col-md-2"></i>	  
+					<div class="personal_form col-md-4">
+						<div class="form-group input_name">
+							<input type="text" maxlength="50" value="{{requested_user.username}}" name="name" readonly><br>
+							<span class="error"></span>
+						</div><!--form-group-->
+
+						<div class="form-group input_lastname">
+						    <input type="text"  id="last_name" maxlength="50" placeholder="last name"  value="{{requested_user_profile.lastname}}"  name="last_name"><br>
+						    <span class="error"></span>
+					    </div><!--form-group-->
+
+						<div class="form-group input_email">
+							<input type="text" maxlength="50" value="{{requested_user.email}}" name="email" readonly><br>
+							<span class="error"></span>
+						</div><!--form-group-->
+						<div class="form-group input_mobile">
+							<input type="text" id="mobile" cplaceholder="MOBILE" maxlength="50" value="{{requested_user_profile.mobile}}"  name="mobile"><br>
+							<span class="error"></span>
+						</div><!--form-group-->
+						 <div class="form-group">
+							<label class="label_gender">Gender</label>
+							<select  id="selected_gender" name="gender" class="gender_option">
+								<option id="gender" value="{{requested_user_profile.gender}}">{{requested_user_profile.gender}}</option>
+								<option value="male">Male</option>
+								<option value="female">Female</option>
+							</select>
+						 <!-- <div class="form-group input_category"> -->
+							<!-- <input type="text" placeholder="CATEGORY" maxlength="50" value="" name="category"><br>
+							<span class="error"></span> -->
+						</div><!--form-group--> 
+						 <div class="form-group input_organization">
+							<input class="date_pick" id="dob" type="text" placeholder="YYYY-MM-DD" maxlength="50" value="{{requested_user_profile.date_of_birth|date:'Y-m-d'}}" name="dob"><br>
+							<span class="error"></span>
+						</div>
+						<div class="form-group input_addr">
+							<input type="text" id="address" placeholder="ADDRESS" maxlength="50" value="{{requested_user_profile.user_address}}" name="address"><br>						
+						</div><!--form-group-->
+						<!-- <div class="form-group input_landmark">
+							<input type="text" placeholder="LANDMARK" maxlength="50" value="" name="landmark"><br>
+							<span class="error"></span>
+						</div>form-group-->
+						<!-- <div class="form-group input_zip">
+							<input type="text" placeholder="ZIP/POSTAL CODE" maxlength="50" value="" name="zip"><br>
+							<span class="error"></span>
+						</div>form-group--> 
+						<div class="form-group">        
+								  <!-- <a class="save_personal" href="#">SAVE</a> -->
+								  <!-- <input type="hidden" name="next" value="{{request.GET.next}}" > -->
+								  <button class="save_personal" type="submit">SAVE</button>
+						</div><!--form-group-->
+					</div><!--personal_form-->
+						
+				</div><!--personal_content-->
+			</div><!--profile-->
+		</form>	
+	
+		<div class="privacy_content">
+			<div class="personal_content">
+				<div class="col-md-4 privacy_information">
+					<span>Privacy Settings</span><br><br>
+					<span>Make sure that you choose a strong password</span><br>
+					<span>A strong password contains a mix of numbers,letters</span><br>
+					<span>and symbols.</span>
+				</div><!--info-->
+				<i class="fa fa-lock lock col-md-2"></i>	 				
+					<div class="privacy_form col-md-5">
+					<form action="{% url "events.views.privacy" %}" method="POST">
+					{% csrf_token %}
+						<!-- <div class="form-group input_name">
+							<input type="text" placeholder="OLD PASSWORD" maxlength="50" value="" name="oldpwd"><br>
+							<span class="error"></span>
+						</div> --><!--form-group-->
+						<div class="form-group input_email">
+							<input type="password" id="newpassword" placeholder="NEW PASSWORD" maxlength="50" value="" name="newpassword"><br>
+							<span class="error"></span>
+						</div><!--form-group-->
+						<div class="form-group input_mobile">
+							<input type="password" id="confirmpassword" placeholder="CONFIRMATION PASSWORD" maxlength="50" value="" name="confirmpassword"><br>
+							<span class="error"></span>
+						</div><!--form-group-->
+						<div class="form-group">        
+								<!--   <a class="save_privacy" href="#">SAVE</a> -->
+								<button class="save_privacy" type="submit" id="password_changed">SAVE</button>
+							</div><!--form-group-->
+							</form>
+					</div><!--privacy_form-->
+		</div><!--personal_content-->
+	</div><!--privacy_content-->
+<div class="container">  
+	<div class="col-md-9 event_lister">
+	{% for event_for_user in events_for_user %}	
+		{% if event_for_user.admin_status == True %}
+		    <div class="myevents_content col-sm-4 col-xs-6 ">
+		      <figure>
+		       <a href="http://{{request.META.HTTP_HOST}}/details/{{event_for_user.id}}"><img src="/media/{{event_for_user.poster}}" alt="symposium" class="image_size"></a>
+		      </figure>
+		       <h4><a href="/details/{{event_for_user.id}}">{{event_for_user.event_title}}</a></h4>
+		       <h5><a href="/details/{{event_for_user.id}}">{{event_for_user.college}}</a></h5>
+		       <h5><i class="fa fa-calendar-o"></i>{{event_for_user.enddate}}</h5>
+		       <h5><i class="fa fa-map-marker"></i><a href="/details/{{event_for_user.id}}">{{event_for_user.city}},{{event_for_user.state}}.</a></h5>
+		       <h5><a href="/details/{{event_for_user.id}}" class="read-more"><i class="fa fa-angle-right"></i>Read More</a></h5>
+		    </div><!--myevents_content-->
+
+		{% endif %}    
+	{% endfor %}    
+	</div>
+</div><!--container-->
+{% endblock %} 
