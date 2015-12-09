@@ -36,27 +36,35 @@ class EventSearchFilter(FacetedSearchForm):
 	eventtype = forms.CharField(required=False)		
 	city = forms.CharField(required=False)		
 	event_title = forms.CharField(required=False)
-	payment = forms.CharField(required=False)	
+	payment = forms.CharField(required=False)
+	sorteddata = forms.CharField(required=False)
 
 	def no_query_found(self):
 	  data = self.searchqueryset.all()  
 		
 	  if hasattr(self, 'cleaned_data'):
+	  	  print "if cleaned_data"
 		  save_object = None
-
-		  if self.cleaned_data['sortdata']:
-			  if (self.cleaned_data['sortdata'] == "createddate"):
-				data = data.filter(active=1).filter(status='active').filter(available__gt=0).order_by('-created')
+		  print "self.cleaned_data['sorteddata']", self.cleaned_data['sorteddata']
+		  if self.cleaned_data['sorteddata']:
+			  if (self.cleaned_data['sorteddata'] == "allevent"):
+				data = data.filter(admin_status=1)
 			  
-			  if (self.cleaned_data['sortdata'] == "modifieddate"):
-			   data = data.filter(active=1).filter(status='active').filter(available__gt=0).order_by('-modified')
+			  if (self.cleaned_data['sorteddata'] == "today"):
+			   data = data.filter(admin_status=1).filter(status='active').filter(available__gt=0).order_by('-modified')
 			  
-			  if (self.cleaned_data['sortdata'] == "pricelow"):
-				data = data.filter(active=1).filter(status='active').filter(available__gt=0).order_by('price')
+			  if (self.cleaned_data['sorteddata'] == "tomorrow"):
+				data = data.filter(admin_status=1).filter(status='active').filter(available__gt=0).order_by('price')
 			  
-			  if (self.cleaned_data['sortdata'] == "pricehigh"):  
-				data = data.filter(active=1).filter(status='active').filter(available__gt=0).order_by('-price')
-	   
+			  if (self.cleaned_data['sorteddata'] == "thisweek"):  
+				data = data.filter(admin_status=1).filter(status='active').filter(available__gt=0).order_by('-price')
+			  
+			  if (self.cleaned_data['sorteddata'] == "thisweekend"):  
+				data = data.filter(admin_status=1).filter(status='active').filter(available__gt=0).order_by('-price')
+			  
+			  if (self.cleaned_data['sorteddata'] == "thismonth"):  
+				data = data.filter(admin_status=1).filter(status='active').filter(available__gt=0).order_by('-price')
+   
 	  return data
   
 	def get_default_filters(self):
@@ -110,10 +118,10 @@ class EventSearchFilter(FacetedSearchForm):
 	  # if self.cleaned_data['groupby']:
 	  #   groupby = self.cleaned_data['groupby']
 
-	 #  if self.cleaned_data['sortdata']:
-		# orderby = self.cleaned_data['sortdata']
-		# if orderby in orderby_mappings:
-		#   orderby = orderby_mappings[groupby]
+	  if self.cleaned_data['sorteddata']:
+		orderby = self.cleaned_data['sorteddata']
+		if orderby in orderby_mappings:
+		  orderby = orderby_mappings[groupby]
 
 	  if not orderby:
 		orderby = orderby_mappings['payment']
