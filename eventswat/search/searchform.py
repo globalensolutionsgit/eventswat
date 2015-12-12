@@ -3,13 +3,14 @@ from django import forms
 from collections import OrderedDict
 from events.models import *
 from haystack.forms import SearchForm, FacetedSearchForm
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.http import HttpResponse, Http404
 from search.searchresults import searchresults as eventsearch
 from haystack.query import SearchQuerySet
 from haystack.inputs import Clean, Raw, AutoQuery, Exact
 from haystack.query import SQ
 from postevent.models import Postevent
+from django.db.models import Q
 
 class Partial(Clean):
 	input_type_name = 'partial'
@@ -37,34 +38,34 @@ class EventSearchFilter(FacetedSearchForm):
 	city = forms.CharField(required=False)		
 	event_title = forms.CharField(required=False)
 	payment = forms.CharField(required=False)
-	sorteddata = forms.CharField(required=False)
+	filterdata = forms.CharField(required=False)
 
-	def no_query_found(self):
+	def filter_by_calendar(self):
 	  data = self.searchqueryset.all()  
 		
 	  if hasattr(self, 'cleaned_data'):
-	  	  print "if cleaned_data"
+		  print "if cleaned_data"
 		  save_object = None
-		  print "self.cleaned_data['sorteddata']", self.cleaned_data['sorteddata']
-		  if self.cleaned_data['sorteddata']:
-			  if (self.cleaned_data['sorteddata'] == "allevent"):
+		  print "self.cleaned_data['filterdata']", self.cleaned_data['filterdata']
+		  if self.cleaned_data['filterdata']:
+			  today = datetime.now().date()
+			  if (self.cleaned_data['filterdata'] == "allevent"):
 				data = data.filter(admin_status=1)
-			  
-			  if (self.cleaned_data['sorteddata'] == "today"):
-			   data = data.filter(admin_status=1).filter(status='active').filter(available__gt=0).order_by('-modified')
-			  
-			  if (self.cleaned_data['sorteddata'] == "tomorrow"):
-				data = data.filter(admin_status=1).filter(status='active').filter(available__gt=0).order_by('price')
-			  
-			  if (self.cleaned_data['sorteddata'] == "thisweek"):  
-				data = data.filter(admin_status=1).filter(status='active').filter(available__gt=0).order_by('-price')
-			  
-			  if (self.cleaned_data['sorteddata'] == "thisweekend"):  
-				data = data.filter(admin_status=1).filter(status='active').filter(available__gt=0).order_by('-price')
-			  
-			  if (self.cleaned_data['sorteddata'] == "thismonth"):  
-				data = data.filter(admin_status=1).filter(status='active').filter(available__gt=0).order_by('-price')
-   
+				print "data", data	  
+			  if (self.cleaned_data['filterdata'] == "today"):	  	  
+				data = data.filter(Q(event_startdate_time=str(today))|Q(event_enddate_time=str(today)))
+				print "data", data
+			  if (self.cleaned_data['filterdata'] == "tomorrow"):
+				tomorrow = today + timedelta(1)
+				print "tomorrow",tomorrow
+				data = data.filter(Q(event_startdate_time=str(tomorrow))|Q(event_enddate_time=str(tomorrow)))
+				print "data", data	  
+			  if (self.cleaned_data['filterdata'] == "thisweek"):  
+				data = data.filter(admin_status=1).filter(status='active').filter(available__gt=0).order_by('-price')	  
+			  if (self.cleaned_data['filterdata'] == "thisweekend"):  
+				data = data.filter(admin_status=1).filter(status='active').filter(available__gt=0).order_by('-price')		  
+			  if (self.cleaned_data['filterdata'] == "thismonth"):  
+				data = data.filter(admin_status=1).filter(status='active').filter(available__gt=0).order_by('-price')   
 	  return data
   
 	def get_default_filters(self):
@@ -84,11 +85,12 @@ class EventSearchFilter(FacetedSearchForm):
 		  default_filters=self.get_default_filters())
 		
 	  _params = [
-	  	'category',
+		'category',
 		'eventtype',
 		'city',
 		'event_title',
-		'payment'
+		'payment',
+		'filterdata'
 	  ]
 	  params = OrderedDict()
 	  for p in _params:
@@ -118,16 +120,16 @@ class EventSearchFilter(FacetedSearchForm):
 	  # if self.cleaned_data['groupby']:
 	  #   groupby = self.cleaned_data['groupby']
 
-	  if self.cleaned_data['sorteddata']:
-		orderby = self.cleaned_data['sorteddata']
-		if orderby in orderby_mappings:
-		  orderby = orderby_mappings[groupby]
+	 #  if self.cleaned_data['sorteddata']:
+		# orderby = self.cleaned_data['sorteddata']
+		# if orderby in orderby_mappings:
+		#   orderby = orderby_mappings[groupby]
 
 	  if not orderby:
 		orderby = orderby_mappings['payment']
 
 	  return eventsearch(q, params, orderby, groupby, model_cls=self.get_model_class(), 
 		default_filters=self.get_default_filters(), 
-		default_search_field=self.get_default_search_field())
+		default_search_field=self.get_default_search_field(), filter_by_calendar=self.filter_by_calendar())
 
 

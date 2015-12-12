@@ -7,8 +7,9 @@ function perform_search(){
                 // alert("perform_search");
                 var q = $('#form_search_filter').serialize();
                 // alert("q===>"+q);
-                var qsort = $(".sorteddata").find('li.active a').attr('data-value');
-                q = q +'&sorteddata='+$.trim(qsort);
+                var qfilter = $(".filterdata").find('li.active a').attr('data-value');
+                q = q +'&filterdata='+$.trim(qfilter);
+                // alert(q);
                 $.get('/ajax_search/?'+ q, function(data){  
                   // alert(data);                                                                                           
                   $('#search_result').html(data);
@@ -136,7 +137,7 @@ $(document).ready(function() {
     });   
 
     //sorted_data click function in home page for calendar based events
-    $('.sorteddata li').click(function () {
+    $('.filterdata li').click(function () {
       $(this).addClass("active");
       $(this).siblings().removeClass("active");
       perform_search();
