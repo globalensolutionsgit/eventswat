@@ -527,10 +527,10 @@ $('.error').hide();
                type:"POST",
                url:"/feed/",
                data: {
-                      'name': $('#name').val(),
-                      'email': $('#email').val(),
+                      'name': $('input[name="name"]').val(),
+                      'email':$('input[name="email"]').val(),
                       'rating': $('input[name="rating"]').val(),
-                      'comments': $('#comments').val(),
+                      'comments': $('input[name="comments"]').val(),
                       
                       },
                success: function(){
@@ -538,10 +538,10 @@ $('.error').hide();
                    setTimeout(function() { $("#mgs").hide(); }, 5000);
                   }
           });
-          $('#name').val('');
-          $('#email').val('');
-          $('#rating').val('');
-          $('#comments').val('');
+          $('#id_name').val('');
+          $('#id_email').val('');
+          $('#id_rating').val('');
+          $('#id_comments').val('');
           return false;
         
        });

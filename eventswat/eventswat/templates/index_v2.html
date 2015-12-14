@@ -39,18 +39,28 @@
     <div id="mgs" style="display:none;"><h2>Thanks For Your Feedback</h2></div>
     <a class="btn btn-default feedback1">FEEDBACK</a>                 
     <div class="feedback_popup">
-        <form action="{%url 'events.views.feedback' %}" id="form" method="post" name="form" class="feedback_form">
+        <form action="{%url 'events.views.home' %}" id="form" method="post" name="form" class="feedback_form">
         {% csrf_token %}
+
             <a class="close"> <i class="fa fa-times"></i></a>
             <h2 class="text_rate">Rate my website!</h2>
             <div class="content">
-               <div class="form-group">
+                {{form}}
+               <!-- <div class="form-group">
+                {% if request.user == '' %}
                   <input type="name" class="form-control" placeholder="Name" id="name" name="name">
                    <label class="error" for="name" id="name_error" style="color:red;">This field is required.</label>
+                {% else %}
+                    <input type="name" class="form-control" placeholder="Name" id="name" name="name" value="{{request.user}}">
+                {% endif %}
                 </div>
                 <div class="form-group">
+                {% if request.user.email == '' %}
                   <input type="email" class="form-control" placeholder="Email" id="email" name="email">
                   <label class="error" for="email" id="email_error" style="color:red;">This field is required.</label>
+                  {% else %}
+                    <input type="name" class="form-control" placeholder="Name" id="name" name="name" value="{{request.user.email}}">
+                {% endif %}
                 </div>
                 <div class="form-group">
                    <textarea class="form-control" rows="1" cols="33" placeholder="Comments" id="comments" name="comments"></textarea>
@@ -64,7 +74,7 @@
                     <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="Kinda bad">2 stars</label>
                     <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="Poor">1 star</label>
                 </fieldset>
-                <label class="error" for="rating" id="rating_error" style="color:red;">This field is required.</label>
+                <label class="error" for="rating" id="rating_error" style="color:red;">This field is required.</label> -->
                 <button class="btn btn-default" id="feed_btn" type="submit" >Submit</button>
             </div>
         </form>

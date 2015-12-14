@@ -1,4 +1,4 @@
-from django.shortcuts import render_to_response, redirect, render
+from django.shortcuts import render_to_response, redirect, render,get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.files import File
 from django.core.exceptions import ValidationError
@@ -22,6 +22,7 @@ from events.models import *
 from usermanagement	.models import Userprofile
 from postevent.models import Postevent, Organizer
 from reviews.models import *
+from reviews.forms import *
 from postbanner.models import *
 from payu.models import *
 from eventswat.util import format_redirect_url
@@ -36,16 +37,32 @@ import time
 import openpyxl
 
 
+
 class JSONResponse(HttpResponse):
 	def __init__(self, data):
 		super(JSONResponse, self).__init__(
 				simplejson.dumps(data), mimetype='application/json')
-
+@csrf_exempt
 def home(request):
-    if request.user.is_superuser:
-        logout(request)
-        return HttpResponseRedirect('/')
-    return render_to_response("index_v2.html", context_instance=RequestContext(request))
+	if request.user.is_superuser:
+		logout(request)
+		return HttpResponseRedirect('/')
+	form = WebsiteFeedbackForm(request.POST)
+	if request.is_ajax():
+		if request.method == 'POST':
+			print "enter"
+			if form.is_valid():
+				form.save()
+				return HttpResponseRedirect('/thanks/')
+			else:
+				form = WebsiteFeedbackForm()
+			
+			msg = "The operation has been received correctly."
+	else:
+		msg = "Fail"
+
+	# return HttpResponse(msg)
+	return render_to_response("index_v2.html",{'form':form }, context_instance=RequestContext(request))
 
 def about(request):
 	return render_to_response("about-us.html", context_instance=RequestContext(request))
@@ -67,18 +84,70 @@ def logout_view(request):
 	response = HttpResponseRedirect("/")
 	return response
 
+
+@csrf_exempt
 def details(request,id=None):
-    # try:
-    postevent=Postevent.objects.get(pk=id)
-    img=str(postevent.poster).split(',')
-    photo=img[0]
-    photos=[n for n in str(postevent.poster).split(',')]
-    organizer=Organizer.objects.filter(postevent__id=postevent.id)
-    review=Review.objects.filter(event_id=postevent.id)
-    related_events = Postevent.objects.filter(category = postevent.category, eventtype=postevent.eventtype, city=postevent.city)
-    return render_to_response("company-profile.html",{'events':postevent,'organizer':organizer,'review':review,'related_events':related_events,'photos':photos,'photo':photo}, context_instance=RequestContext(request))
-    # except:
-    #     return render_to_response("company-profile.html",{'message':'Sorry for inconvenience.Some thing went to wrong'}, context_instance=RequestContext(request))
+	# try:
+	postevent=Postevent.objects.get(pk=id)
+	print postevent,"postevent"
+	img=str(postevent.event_poster).split(',')
+	photo=img[0]
+	photos=[n for n in str(postevent.event_poster).split(',')]
+	organizer=Organizer.objects.filter(postevent__id=postevent.id)
+	print "enter"
+	print request.user,"user"
+	user= request.user
+	
+	
+	form = CommentForm(request.POST or None)
+	if request.is_ajax():
+		if user.is_authenticated():
+	# print request.POST.get('postevent'),"request"
+			if request.method == "POST":
+				if form.is_valid():
+					temp = form.save(commit=False)
+					parent = form['parent'].value()
+
+
+					if parent == '':
+						#Set a blank path then save it to get an ID
+						temp.path = []
+						# temp.save()
+						id = int(0 if temp.id is None else temp.id)
+						temp.path = [id] 
+					else:
+						#Get the parent node
+						node = Comment.objects.get(id=parent)
+						temp.depth = node.depth + 1
+						s = str(node.path)
+						temp.path = eval(s)
+
+						
+						#Store parents path then apply comment ID
+						# temp.save()
+						id= int(0 if temp.id is None else temp.id)
+						temp.path.append(id) 
+						
+					print request.POST  
+					#Final save for parents and children
+					temp.postevent_id = request.POST.get('postent')
+					print temp.postevent,"temp.postevent"
+					temp.save()
+					form = CommentForm()
+		else:
+			form = CommentForm()
+			
+	else:
+		msg = "Fail"			
+		
+		#Retrieve all comments and sort them by path
+	comment_tree=Comment.objects.filter(postevent_id=postevent.id).order_by('path')
+	print comment_tree
+	# comment_tree = Comment.objects.all().order_by('path')
+	# related_events = Postevent.objects.filter(category = postevent.event_category, eventtype=postevent.event_type, city=postevent.city)
+	return render_to_response("company-profile.html",{'events':postevent,'organizer':organizer,'photos':photos,'photo':photo, 'form':form, 'comment_tree':comment_tree}, context_instance=RequestContext(request))
+	# except:
+	#     return render_to_response("company-profile.html",{'message':'Sorry for inconvenience.Some thing went to wrong'}, context_instance=RequestContext(request))
 
 def banner(request):
 	return render_to_response("uploadbanner.html",context_instance=RequestContext(request))
@@ -156,32 +225,32 @@ def banner(request):
 # new login code when using ajax (updated by kalai)
 @csrf_exempt
 def user_login(request):    
-    import json 
-    if request.user.is_superuser:
-        logout(request)
-        return HttpResponseRedirect('/')        
-    logout(request)
-    error = {}
-    username = request.POST['username']
-    print "username", username
-    password = request.POST['password']
-    print "password", password
-    context = {}
-    if not User.objects.filter(email=username).exists():
-        error['email_exists'] = True
-        response = HttpResponse(json.dumps(error, ensure_ascii=False),mimetype='application/json')
-    else:
-        user = User.objects.get(email=username)
-        user.backend='django.contrib.auth.backends.ModelBackend'
-        if user:
-            if user.check_password(password):
-                if user.is_active:
-                    login(request, user)
-                    response = HttpResponseRedirect(request.POST.get('next')) 
-            else:
-                error['password'] = True
-                response = HttpResponse(json.dumps(error, ensure_ascii=False),mimetype='application/json')           
-    return response
+	import json 
+	if request.user.is_superuser:
+		logout(request)
+		return HttpResponseRedirect('/')        
+	logout(request)
+	error = {}
+	username = request.POST['username']
+	print "username", username
+	password = request.POST['password']
+	print "password", password
+	context = {}
+	if not User.objects.filter(email=username).exists():
+		error['email_exists'] = True
+		response = HttpResponse(json.dumps(error, ensure_ascii=False),mimetype='application/json')
+	else:
+		user = User.objects.get(email=username)
+		user.backend='django.contrib.auth.backends.ModelBackend'
+		if user:
+			if user.check_password(password):
+				if user.is_active:
+					login(request, user)
+					response = HttpResponseRedirect(request.POST.get('next')) 
+			else:
+				error['password'] = True
+				response = HttpResponse(json.dumps(error, ensure_ascii=False),mimetype='application/json')           
+	return response
 
 @csrf_protect
 def register(request): 
@@ -617,23 +686,23 @@ def importcollegedata(request):
 	context_instance=RequestContext(request))
   
 @csrf_exempt
-def feedback(request):
-	if request.is_ajax():
-		if request.method=="POST":
-			print "enter in post"
-			feedback=Feedback()
-			feedback.name=request.POST.get('name')
-			print feedback.name
-			feedback.email=request.POST.get('email')
-			print feedback.email
-			feedback.comments=request.POST.get('comments')
-			print feedback.comments
-			feedback.rating=request.POST.get('rating')
-			feedback.save()
-			msg = "The operation has been received correctly."
-	else:
-		msg = "Fail"
-	return HttpResponse(msg)
+# def feedback(request):
+# 	if request.is_ajax():
+# 		if request.method=="POST":
+# 			print "enter in post"
+# 			feedback=Feedback()
+# 			feedback.name=request.POST.get('name')
+# 			print feedback.name
+# 			feedback.email=request.POST.get('email')
+# 			print feedback.email
+# 			feedback.comments=request.POST.get('comments')
+# 			print feedback.comments
+# 			feedback.rating=request.POST.get('rating')
+# 			feedback.save()
+# 			msg = "The operation has been received correctly."
+# 	else:
+# 		msg = "Fail"
+# 	return HttpResponse(msg)
 
 def getstate(request):
 	from collections import OrderedDict
@@ -803,15 +872,15 @@ def home_v2(request):
 							 context_instance=context)
 
 def get_events_for_calendar(request):
-    import datetime
-    events = Postevent.objects.all()
-    time = datetime.time(10, 25)
-    events_list = []
-    for event in events:
-        event_data = {'id':str(event.id), 'title':event.event_title, 'start':smart_unicode(datetime.datetime.combine(event.startdate,time)),'end':smart_unicode(datetime.datetime.combine(event.enddate,time))}
-        events_list.append(event_data)
-    # print "event_list", events_list
-    return HttpResponse(simplejson.dumps(events_list), mimetype='application/json')
+	import datetime
+	events = Postevent.objects.all()
+	time = datetime.time(10, 25)
+	events_list = []
+	for event in events:
+		event_data = {'id':str(event.id), 'title':event.event_title, 'start':smart_unicode(datetime.datetime.combine(event.startdate,time)),'end':smart_unicode(datetime.datetime.combine(event.enddate,time))}
+		events_list.append(event_data)
+	# print "event_list", events_list
+	return HttpResponse(simplejson.dumps(events_list), mimetype='application/json')
 
 @csrf_exempt
 def user_profile(request):
@@ -872,7 +941,6 @@ def privacy(request):
 	u.set_password(new_password)
 	u.save()
 	return render_to_response("user_profile.html", context_instance=RequestContext(request))
-
 
 
 

@@ -35,8 +35,10 @@ INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    # 'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'events',
     'eventswat',
     'haystack',
@@ -44,18 +46,20 @@ INSTALLED_APPS = (
     'payu', 
     'commerce',   
     'postbanner',
-    # 'social.apps.django_app.default',
-    # 'tracking',
+    
     'reviews',
     'worker',
     'south',
     'postevent',
     'usermanagement',
     'logs',
+    'core',
+   
 
 )
 
-SITE_ID = 1
+
+
 
 HAYSTACK_CONNECTIONS = {
     'default': {

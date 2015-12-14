@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static from staticfiles %}
 {% load i18n %}
+{% load humanize %}
 {% block content %}
 <script type="text/javascript" src="{% static "js/imagelightbox.js" %}"></script>
     <div id="main-wrapper">
@@ -120,7 +121,36 @@
     <p>Your comment has been successfully posted</p>
 </div>
 
+
+<!-- comments django package starts-->
 <div class="comments-section">
+ <!-- <input type="hidden" value="{{events.id}}" name= "postevent"></input> -->
+<!-- <iframe width="80%" height="1800px" style="border:none;" src="/comments/" id="comments_iframe" scrolling="no"></iframe>
+ -->
+{% include 'index_comments.html' %}
+ <!-- <form id="postcomment" method="post" action="{% url 'reviews.views.home' %}">
+        {{form.as_p}}
+        <p><input type="submit" value="Submit" /></p>
+        {% csrf_token %}
+    </form>
+
+    <ul id="commenters">
+    {% for c in comment_tree %}     
+        <li id="{{c.id}}" class="c" style="margin-left:{{c.depth|add:c.depth}}em;">
+            <p class="poster">Anonymous - {{c.date|naturaltime}}</p>
+            <p>{{c.content}}</p>
+            <p><a href="" class="reply">reply</a></p>
+        </li>
+    {% empty %}
+        <li>There are currently no comments. You can be first!</li>
+    {% endfor %}
+    
+    </ul> -->
+</div>
+<!-- package ends -->
+
+
+<!-- <div class="comments-section">
     <form class="comment-form" action="{%url "reviews.views.post" %}" method="post" name="form" id="review_form">
     {% csrf_token %}
         <div class="row">
@@ -135,7 +165,7 @@
             </div>
 
             <div class="col-md-4">
-                <!-- <input type="text" placeholder="Ratings" name="rating"> -->
+                
                 <fieldset class="rating" name="rating" id="rating">
                     <legend>Please rate:</legend>
                     <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="Rocks!">5 stars</label>
@@ -167,14 +197,14 @@
         </div>
         
 {% endfor %}
-
+ -->
    <!--  <span>NAME: 
     {{reviews.name}}</span><br/>
     <span>COMMENTS:
     {{reviews.content}}</span><br/>
     <br/>
  -->
-</div>
+<!-- </div> -->
 {% if related_events %}
 <div class="featured-listing" id= "featured-list">
         <div class="our-partners">
