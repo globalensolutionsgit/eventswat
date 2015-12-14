@@ -102,7 +102,7 @@ urlpatterns = patterns('',
 	# url('', include('social.apps.django_app.urls', namespace='social')),
    	url('', include('django.contrib.auth.urls', namespace='auth')),
    	url(r'^home_v2/$', 'events.views.home_v2', name='home_v2'),
-   	url(r'^review/',  'reviews.views.post', name='post'),
+   	# url(r'^review/',  'reviews.views.post', name='post'),
    	# url(r'^post/$', 'reviews.views.post_review', name='reviews-post-review'),
 
    	url(r'^get_events_for_calendar/',  'events.views.get_events_for_calendar', name='eventcalendar'),

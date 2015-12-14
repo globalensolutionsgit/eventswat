@@ -500,25 +500,25 @@ $('.error').hide();
          $('.error').hide();
           var name = $('input[name="name"]').val();
           if (name == "") {
-            $("label#name_error").show();
+            $(".error").show();
             $("input#name").focus();
             return false;
           }
           var email = $('input[name="email"]').val();
           if (email == "") {
-            $("label#email_error").show();
+           $(".error").show();
             $("input#email").focus();
             return false;
           }
           var rating = $('input[name="rating"]').val();
           if (rating == "") {
-            $("label#rating_error").show();
+            $(".error").show();
             $("input#rating").focus();
             return false;
           }
           var comments = $('input[name="comments"]').val();
           if (comments == "") {
-            $("label#comments_error").show();
+            $(".error").show();
             $("input#comments").focus();
             return false;
           }

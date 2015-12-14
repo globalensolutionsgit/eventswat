@@ -15,6 +15,9 @@ class WebsiteFeedback(models.Model):
 	comments= models.TextField()
 	rating=models.IntegerField()
 
+  
+
+
 class Comment(models.Model):
     name= models.CharField(max_length=50, null=True)
     email= models.EmailField(max_length=50)

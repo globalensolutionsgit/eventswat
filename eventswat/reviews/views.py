@@ -24,22 +24,22 @@ from itertools import ifilter
 #             self.content = render_to_string("reviews/400-debug.html", {"why": why})
 
 @csrf_exempt  
-def post(request):
-    form = WebsiteFeedbackForm(request.POST)
-    if request.is_ajax():
-        if request.method == 'POST':
-            print "enter"
+# def post(request):
+#     form = WebsiteFeedbackForm(request.POST)
+#     if request.is_ajax():
+#         if request.method == 'POST':
+#             print "enter"
             
-            if form.is_valid():
-                  return HttpResponseRedirect('/thanks/')
-            else:
-                form = WebsiteFeedbackForm()
+#             if form.is_valid():
+#                   return HttpResponseRedirect('/thanks/')
+#             else:
+#                 form = WebsiteFeedbackForm()
             
-            msg = "The operation has been received correctly."
-    else:
-        msg = "Fail"
+#             msg = "The operation has been received correctly."
+#     else:
+#         msg = "Fail"
 
-    return HttpResponse(msg)
+#     return HttpResponse(msg)
     
 
 

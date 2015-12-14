@@ -48,22 +48,22 @@ def home(request):
 	if request.user.is_superuser:
 		logout(request)
 		return HttpResponseRedirect('/')
-	form = WebsiteFeedbackForm(request.POST)
-	if request.is_ajax():
-		if request.method == 'POST':
-			print "enter"
-			if form.is_valid():
-				form.save()
-				return HttpResponseRedirect('/thanks/')
-			else:
-				form = WebsiteFeedbackForm()
+	form = WebsiteFeedbackForm()
+	# if request.is_ajax():
+	# 	if request.method == 'POST':
+	# 		print "enter"
+	# 		if form.is_valid():
+	# 			form.save()
+	# 			return HttpResponseRedirect('/thanks/')
+	# 		else:
+	# 			form = WebsiteFeedbackForm()
 			
-			msg = "The operation has been received correctly."
-	else:
-		msg = "Fail"
+	# 		msg = "The operation has been received correctly."
+	# else:
+	# 	msg = "Fail"
 
-	# return HttpResponse(msg)
-	return render_to_response("index_v2.html",{'form':form }, context_instance=RequestContext(request))
+	# # return HttpResponse(msg)
+	return render_to_response("index_v2.html", {'form':form},context_instance=RequestContext(request))
 
 def about(request):
 	return render_to_response("about-us.html", context_instance=RequestContext(request))
@@ -688,23 +688,24 @@ def importcollegedata(request):
 	context_instance=RequestContext(request))
 
 @csrf_exempt
-# def feedback(request):
-# 	if request.is_ajax():
-# 		if request.method=="POST":
-# 			print "enter in post"
-# 			feedback=Feedback()
-# 			feedback.name=request.POST.get('name')
-# 			print feedback.name
-# 			feedback.email=request.POST.get('email')
-# 			print feedback.email
-# 			feedback.comments=request.POST.get('comments')
-# 			print feedback.comments
-# 			feedback.rating=request.POST.get('rating')
-# 			feedback.save()
-# 			msg = "The operation has been received correctly."
-# 	else:
-# 		msg = "Fail"
-# 	return HttpResponse(msg)
+def feedback(request):
+	if request.is_ajax():
+		if request.method == 'POST':
+			print "enter"
+			form = WebsiteFeedbackForm(request.POST)
+			if form.is_valid():
+				print "form is valid"
+				print "form",form
+				form.save()
+				print "save"
+			else:
+				form = WebsiteFeedbackForm()
+			
+			msg = "The operation has been received correctly."
+	else:
+		msg = "Fail"
+
+	return HttpResponse(msg)
 
 def getstate(request):
 	from collections import OrderedDict
