@@ -1,7 +1,10 @@
 from django.db.models import FileField
 from django.forms import forms
+from django.http import HttpResponse
 from django.template.defaultfilters import filesizeformat
 from django.utils.translation import ugettext_lazy as _
+from django.utils import simplejson
+import simplejson as json
 
 class ContentTypeRestrictedFileField(FileField):
     """
@@ -23,9 +26,9 @@ class ContentTypeRestrictedFileField(FileField):
 
         super(ContentTypeRestrictedFileField, self).__init__(*args, **kwargs)
 
-    def clean(self, *args, **kwargs):        
+    def clean(self, *args, **kwargs):
         data = super(ContentTypeRestrictedFileField, self).clean(*args, **kwargs)
-        
+
         file = data.file
         try:
             content_type = file.content_type
@@ -35,6 +38,11 @@ class ContentTypeRestrictedFileField(FileField):
             else:
                 raise forms.ValidationError(_('Filetype not supported.'))
         except AttributeError:
-            pass        
-            
+            pass
+
         return data
+
+
+class JSONResponse(HttpResponse):
+    def __init__(self, data):
+        super(JSONResponse, self).__init__(simplejson.dumps(data), mimetype='application/json')
