@@ -803,7 +803,7 @@ def get_events_for_calendar(request):
     time = datetime.time(10, 25)
     events_list = []
     for event in events:
-        event_data = {'id':str(event.id), 'title':event.event_title, 'start':smart_unicode(datetime.datetime.combine(event.startdate,time)),'end':smart_unicode(datetime.datetime.combine(event.enddate,time))}
+        event_data = {'id':str(event.id), 'title':event.event_title, 'start':smart_unicode(datetime.datetime.combine(event.event_startdate_time,time)),'end':smart_unicode(datetime.datetime.combine(event.event_enddate_time,time))}
         events_list.append(event_data)
     # print "event_list", events_list
     return HttpResponse(simplejson.dumps(events_list), mimetype='application/json')

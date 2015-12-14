@@ -7,6 +7,9 @@ function perform_search(){
                 // alert("perform_search");
                 var q = $('#form_search_filter').serialize();
                 // alert("q===>"+q);
+                var qfilter = $(".filterdata").find('li.active a').attr('data-value');
+                q = q +'&filterdata='+$.trim(qfilter);
+                // alert(q);
                 $.get('/ajax_search/?'+ q, function(data){  
                   // alert(data);                                                                                           
                   $('#search_result').html(data);
@@ -132,6 +135,13 @@ $(document).ready(function() {
         // alert($(this).val());
         $('input[name="festtype"]').val($(this).val());
     });   
+
+    //sorted_data click function in home page for calendar based events
+    $('.filterdata li').click(function () {
+      $(this).addClass("active");
+      $(this).siblings().removeClass("active");
+      perform_search();
+    });
 
 
 //old code
