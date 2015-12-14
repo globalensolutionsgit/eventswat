@@ -48,7 +48,7 @@ def home(request):
 	if request.user.is_superuser:
 		logout(request)
 		return HttpResponseRedirect('/')
-	form = WebsiteFeedbackForm(request.POST)<
+	form = WebsiteFeedbackForm(request.POST)
 	if request.is_ajax():
 		if request.method == 'POST':
 			print "enter"

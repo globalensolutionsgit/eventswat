@@ -43,47 +43,47 @@ def post(request):
     
 
 
-# def home(request):
-#     print "enter"
-#     postevent = Postevent.objects.all()
-#     context = base_context(request)
+def home(request):
+    print "enter"
+    postevent = Postevent.objects.all()
+    context = base_context(request)
    
-#     form = CommentForm(request.POST or None)
+    form = CommentForm(request.POST or None)
     
-#     if request.method == "POST":
-#         if form.is_valid():
-#             temp = form.save(commit=False)
-#             parent = form['parent'].value()
+    if request.method == "POST":
+        if form.is_valid():
+            temp = form.save(commit=False)
+            parent = form['parent'].value()
             
-#             if parent == '':
-#                 #Set a blank path then save it to get an ID
-#                 temp.path = []
-#                 temp.save()
-#                 id = int(temp.id) 
-#                 temp.path = [id] 
-#             else:
-#                 #Get the parent node
-#                 node = Comment.objects.get(id=parent)
-#                 temp.depth = node.depth + 1
-#                 s = str(node.path)
-#                 temp.path = eval(s)
+            if parent == '':
+                #Set a blank path then save it to get an ID
+                temp.path = []
+                temp.save()
+                id = int(temp.id) 
+                temp.path = [id] 
+            else:
+                #Get the parent node
+                node = Comment.objects.get(id=parent)
+                temp.depth = node.depth + 1
+                s = str(node.path)
+                temp.path = eval(s)
 
                 
-#                 #Store parents path then apply comment ID
-#                 temp.save()
-#                 id= int(temp.id) 
-#                 temp.path.append(id) 
+                #Store parents path then apply comment ID
+                temp.save()
+                id= int(temp.id) 
+                temp.path.append(id) 
                 
                 
-#             #Final save for parents and children
-#             temp.postevent = Postevent.objects.get(pk=form.cleaned_data['postevent_id'])
-#             print temp.postevent,"temp.postevent"
-#             temp.save()
+            #Final save for parents and children
+            temp.postevent = Postevent.objects.get(pk=form.cleaned_data['postevent_id'])
+            print temp.postevent,"temp.postevent"
+            temp.save()
             
     
-#     #Retrieve all comments and sort them by path
-#     comment_tree = Comment.objects.all().order_by('path')
-#     context['postevent'] = postevent 
-#     context['form'] = form           
-#     return render(request, 'index_comments.html',context)
-#     # return render_to_response("index_comments.html",{'events':postevent}, context_instance=RequestContext(request))
+    #Retrieve all comments and sort them by path
+    comment_tree = Comment.objects.all().order_by('path')
+    context['postevent'] = postevent 
+    context['form'] = form           
+    return render(request, 'index_comments.html',context)
+    # return render_to_response("index_comments.html",{'events':postevent}, context_instance=RequestContext(request))

@@ -53,7 +53,7 @@ INSTALLED_APPS = (
     'usermanagement',
     'logs',
     'core',
-    'flexselect',
+    
 
 
 )

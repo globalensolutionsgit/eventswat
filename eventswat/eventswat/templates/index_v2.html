@@ -39,7 +39,7 @@
     <div id="mgs" style="display:none;"><h2>Thanks For Your Feedback</h2></div>
     <a class="btn btn-default feedback1">FEEDBACK</a>                 
     <div class="feedback_popup">
-        <form action="{%url 'events.views.home' %}" id="form" method="post" name="form" class="feedback_form">
+        <form action="{%url 'events.views.feedback' %}" id="form" method="post" name="form" class="feedback_form">
         {% csrf_token %}
 
             <a class="close"> <i class="fa fa-times"></i></a>
@@ -277,15 +277,6 @@
                                         <input type="hidden"  id="city"  value="" name="city"/>
                                         <input type="hidden"  id="eventtypeid"  value="" name="eventtype"/>   
                                     </form>
-                                    <ul class="filterdata">                                    
-                                        <li><a href="" data-value="allevent">All</a></li>
-                                        <li><a href="" data-value="today">Today</a></li>
-                                        <li><a href="" data-value="tomorrow">Tomorrow</a></li>
-                                        <li><a href="" data-value="thisweek">This Week</a></li>
-                                        <li><a href="" data-value="thisweekend">This Weekend</a></li>
-                                        <li><a href="" data-value="thismonth">This Month</a></li>
-                                        <li><a href="" data-value="free">Free</a></li>
-                                    </ul>
                                 </div> <!-- end .accordion -->
                             </div> <!-- end #categories -->
                         </div> <!-- end .page-sidebar -->
