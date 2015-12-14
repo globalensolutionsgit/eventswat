@@ -41,8 +41,8 @@ INSTALLED_APPS = (
     'eventswat',
     'haystack',
     'search',
-    'payu', 
-    'commerce',   
+    'payu',
+    'commerce',
     'postbanner',
     # 'social.apps.django_app.default',
     # 'tracking',
@@ -52,6 +52,7 @@ INSTALLED_APPS = (
     'postevent',
     'usermanagement',
     'logs',
+    'flexselect',
 
 )
 
@@ -95,7 +96,7 @@ DATABASES = {
         'NAME': 'evewat',                        # Or path to database file if using sqlite3.
         'USER': 'root',                          # Not used with sqlite3.
         'PASSWORD': 'root',                      # Not used with sqlite3.
-        'HOST': 'localhost',                     # Set to empty string for localhost. Not used with sqlite3.        
+        'HOST': 'localhost',                     # Set to empty string for localhost. Not used with sqlite3.
     }
 }
 
@@ -162,7 +163,9 @@ COMPRESS_ENABLED = True
 COMPRESS_JS_FILTERS = [
     'compressor.filters.template.TemplateFilter',
 ]
-
+FLEXSELECT = {
+    'include_jquery': True,
+}
 #EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # GEOS_LIBRARY_PATH = '/usr/local/lib/libgeos_c.so'

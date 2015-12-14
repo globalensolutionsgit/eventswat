@@ -1,38 +1,92 @@
-# from django.contrib import admin
-# from postevent.models import *
+from django.contrib import admin
+from postevent.models import *
+from events.models import SubcategoryRelatedField
+from django import forms
+from flexselect import FlexSelectWidget
 
 
-# class CampusCollegeAdmin(admin.ModelAdmin):
-# 	fields=['city','college_name']
-# 	list_display = ('id','city', 'college_name')
-# 	list_filter = ['college_name']
-# 	search_fields = ['id', 'college_name']
-# 	list_per_page = 50
+class CampusCollegeAdmin(admin.ModelAdmin):
+    fields = ['college_name', 'city']
+    list_display = ('id', 'college_name', 'city',)
+    list_filter = ['city__state']
+    search_fields = ['id', 'college_name']
+    list_per_page = 50
 
-# class CampusDepartmentAdmin(admin.ModelAdmin):
-# 	fields=['department']
-# 	list_display = ('id', 'department')
-# 	list_filter = ['department']
-# 	search_fields = ['id', 'department']
-# 	list_per_page = 50
 
-# class OraganizerInLine(admin.TabularInline):
-#     model = Organizer
-#     extra = 0
+class CampusDepartmentAdmin(admin.ModelAdmin):
+    fields = ['department', 'college']
+    list_display = ('id', 'department')
+    search_fields = ['id', 'department']
+    list_per_page = 50
 
-# class PosteventAdmin(admin.ModelAdmin):
 
-# 	filelds=['name','email','eventtype','city','event_title','startdate','admin_status','created_date','expired_date']
-# 	list_display = ('id', 'name','eventtype','city','event_title','startdate','admin_status')
-# 	list_filter = ['id','event_title','city']	
-# 	search_fields = ['id', 'event_title']
-# 	list_per_page = 50
-# 	actions = ['send_EMAIL']
-# 	inlines = [ OraganizerInLine ]
-	
-# 	def admin_status(self, obj):
-# 		return obj.admin_status 
-# 	admin_status.boolean = False
+class OraganizerInLine(admin.TabularInline):
+    model = Organizer
+    extra = 0
+
+class SubCategoryRelatedFieldValueInLine(admin.TabularInline):
+    model = SubCategoryRelatedFieldValue
+    extra = 0
+
+
+# class SubCategorywidget(FlexSelectWidget):
+#     """
+#     The widget must extend FlexSelectWidget and implement trigger_fields,
+#     details(), queryset() and empty_choices_text().
+#     """
+#
+#     trigger_fields = ['event_category']
+#     """Fields which on change will update the base field."""
+#
+#     def queryset(self, instance):
+#         """
+#         Returns the QuerySet populating the base field. If either of the
+#         trigger_fields is None, this function will not be called.
+#
+#         - instance: A partial instance of the parent model loaded from the
+#                     request.
+#         """
+#         print 'install',instance
+#         company = instance.eventscategory.category_name
+#         return EventsSubCategory.objects.filter(category=company)
+#
+#     def empty_choices_text(self, instance):
+#         """
+#         If either of the trigger_fields is None this function will be called
+#         to get the text for the empty choice in the select box of the base
+#         field.
+#
+#         - instance: A partial instance of the parent model loaded from the
+#                     request.
+#         """
+#         return "  ----------             "
+
+
+class PosteventAdmin(admin.ModelAdmin):
+
+    filelds = ['event_type', 'event_category', 'event_subcategory']
+    list_display = ('id', 'event_type', 'event_category', 'event_subcategory')
+    inlines = [ SubCategoryRelatedFieldValueInLine, OraganizerInLine ]
+
+    class Media:
+        js = ('js/jquery.js', 'js/admin.js' )
+
+    # def formfield_for_foreignkey(self, db_field, request, **kwargs):
+    # 	"""Alters the widget displayed for the base field."""
+    #     if db_field.name == "event_subcategory":
+	#         kwargs['widget'] = SubCategorywidget(
+	#             base_field=db_field,
+	#             modeladmin=self,
+	#             request=request,
+	#         )
+	#         kwargs['label'] = 'Event subcategory'
+    #     return super(PosteventAdmin, self).formfield_for_foreignkey(db_field,request, **kwargs)
+    # actions = ['send_EMAIL']
+    # inlines = [ OraganizerInLine ]
+
+    # def admin_status(self, obj):
+    # 	return obj.admin_status
+    # admin_status.boolean = False
 
 # 	def send_EMAIL(self,request, queryset):
 # 		from templated_email import send_templated_mail
@@ -48,7 +102,7 @@
 # 				            context={
 # 				                       'user': i.name,
 # 				                    },
-# 				        ) 
+# 				        )
 
 # 	def get_readonly_fields(self, request, obj=None):
 # 		if obj: # editing an existing object
@@ -75,8 +129,7 @@
 # 			            context={
 # 			                       'user': i.organizer_name,
 # 			                    },
-
-# admin.site.register(CampusCollege, CampusCollegeAdmin)
-# admin.site.register(CampusDepartment, CampusDepartmentAdmin)
-# admin.site.register(Postevent, PosteventAdmin)
+admin.site.register(CampusCollege, CampusCollegeAdmin)
+admin.site.register(CampusDepartment, CampusDepartmentAdmin)
+admin.site.register(Postevent, PosteventAdmin)
 # admin.site.register(Organizer,OrganizerAdmin)
