@@ -35,6 +35,14 @@ import datetime
 import time
 import openpyxl
 
+#Import for google calendar
+# from __future__ import print_function
+import httplib2
+import os
+from apiclient import discovery
+import oauth2client
+from oauth2client import client
+from oauth2client import tools
 
 class JSONResponse(HttpResponse):
 	def __init__(self, data):
@@ -42,10 +50,10 @@ class JSONResponse(HttpResponse):
 				simplejson.dumps(data), mimetype='application/json')
 
 def home(request):
-    if request.user.is_superuser:
-        logout(request)
-        return HttpResponseRedirect('/')
-    return render_to_response("index_v2.html", context_instance=RequestContext(request))
+	if request.user.is_superuser:
+		logout(request)
+		return HttpResponseRedirect('/')
+	return render_to_response("index_v2.html", context_instance=RequestContext(request))
 
 def about(request):
 	return render_to_response("about-us.html", context_instance=RequestContext(request))
@@ -68,17 +76,17 @@ def logout_view(request):
 	return response
 
 def details(request,id=None):
-    # try:
-    postevent=Postevent.objects.get(pk=id)
-    img=str(postevent.poster).split(',')
-    photo=img[0]
-    photos=[n for n in str(postevent.poster).split(',')]
-    organizer=Organizer.objects.filter(postevent__id=postevent.id)
-    review=Review.objects.filter(event_id=postevent.id)
-    related_events = Postevent.objects.filter(category = postevent.category, eventtype=postevent.eventtype, city=postevent.city)
-    return render_to_response("company-profile.html",{'events':postevent,'organizer':organizer,'review':review,'related_events':related_events,'photos':photos,'photo':photo}, context_instance=RequestContext(request))
-    # except:
-    #     return render_to_response("company-profile.html",{'message':'Sorry for inconvenience.Some thing went to wrong'}, context_instance=RequestContext(request))
+	# try:
+	postevent=Postevent.objects.get(pk=id)
+	img=str(postevent.event_poster).split(',')
+	photo=img[0]
+	photos=[n for n in str(postevent.event_poster).split(',')]
+	organizer=Organizer.objects.filter(postevent__id=postevent.id)
+	review=Review.objects.filter(event_id=postevent.id)
+	related_events = Postevent.objects.filter(event_category = postevent.event_category, event_subcategory=postevent.event_subcategory, city=postevent.city)
+	return render_to_response("company-profile.html",{'events':postevent,'organizer':organizer,'review':review,'related_events':related_events,'photos':photos,'photo':photo}, context_instance=RequestContext(request))
+	# except:
+	#     return render_to_response("company-profile.html",{'message':'Sorry for inconvenience.Some thing went to wrong'}, context_instance=RequestContext(request))
 
 def banner(request):
 	return render_to_response("uploadbanner.html",context_instance=RequestContext(request))
@@ -156,32 +164,32 @@ def banner(request):
 # new login code when using ajax (updated by kalai)
 @csrf_exempt
 def user_login(request):    
-    import json 
-    if request.user.is_superuser:
-        logout(request)
-        return HttpResponseRedirect('/')        
-    logout(request)
-    error = {}
-    username = request.POST['username']
-    print "username", username
-    password = request.POST['password']
-    print "password", password
-    context = {}
-    if not User.objects.filter(email=username).exists():
-        error['email_exists'] = True
-        response = HttpResponse(json.dumps(error, ensure_ascii=False),mimetype='application/json')
-    else:
-        user = User.objects.get(email=username)
-        user.backend='django.contrib.auth.backends.ModelBackend'
-        if user:
-            if user.check_password(password):
-                if user.is_active:
-                    login(request, user)
-                    response = HttpResponseRedirect(request.POST.get('next')) 
-            else:
-                error['password'] = True
-                response = HttpResponse(json.dumps(error, ensure_ascii=False),mimetype='application/json')           
-    return response
+	import json 
+	if request.user.is_superuser:
+		logout(request)
+		return HttpResponseRedirect('/')        
+	logout(request)
+	error = {}
+	username = request.POST['username']
+	print "username", username
+	password = request.POST['password']
+	print "password", password
+	context = {}
+	if not User.objects.filter(email=username).exists():
+		error['email_exists'] = True
+		response = HttpResponse(json.dumps(error, ensure_ascii=False),mimetype='application/json')
+	else:
+		user = User.objects.get(email=username)
+		user.backend='django.contrib.auth.backends.ModelBackend'
+		if user:
+			if user.check_password(password):
+				if user.is_active:
+					login(request, user)
+					response = HttpResponseRedirect(request.POST.get('next')) 
+			else:
+				error['password'] = True
+				response = HttpResponse(json.dumps(error, ensure_ascii=False),mimetype='application/json')           
+	return response
 
 @csrf_protect
 def register(request): 
@@ -803,15 +811,15 @@ def home_v2(request):
 							 context_instance=context)
 
 def get_events_for_calendar(request):
-    import datetime
-    events = Postevent.objects.all()
-    time = datetime.time(10, 25)
-    events_list = []
-    for event in events:
-        event_data = {'id':str(event.id), 'title':event.event_title, 'start':smart_unicode(datetime.datetime.combine(event.event_startdate_time,time)),'end':smart_unicode(datetime.datetime.combine(event.event_enddate_time,time))}
-        events_list.append(event_data)
-    # print "event_list", events_list
-    return HttpResponse(simplejson.dumps(events_list), mimetype='application/json')
+	import datetime
+	events = Postevent.objects.all()
+	time = datetime.time(10, 25)
+	events_list = []
+	for event in events:
+		event_data = {'id':str(event.id), 'title':event.event_title, 'start':smart_unicode(datetime.datetime.combine(event.event_startdate_time,time)),'end':smart_unicode(datetime.datetime.combine(event.event_enddate_time,time))}
+		events_list.append(event_data)
+	# print "event_list", events_list
+	return HttpResponse(simplejson.dumps(events_list), mimetype='application/json')
 
 @csrf_exempt
 def user_profile(request):
@@ -872,6 +880,75 @@ def privacy(request):
 	u.set_password(new_password)
 	u.save()
 	return render_to_response("user_profile.html", context_instance=RequestContext(request))
+
+def add_google_calendar(request, id=None):
+	print "add_google_calendar"   
+	try:
+		import argparse
+		flags = argparse.ArgumentParser(parents=[tools.argparser]).parse_args()
+	except ImportError:
+		flags = None
+	SCOPES = 'https://www.googleapis.com/auth/calendar.readonly'
+	print "SCOPES", SCOPES
+	CLIENT_SECRET_FILE = 'client_secret_google_calendar.json'
+	print "CLIENT_SECRET_FILE", CLIENT_SECRET_FILE
+	APPLICATION_NAME = 'Google Calendar API Python Quickstart'
+	print "APPLICATION_NAME", APPLICATION_NAME
+	def get_credentials():
+		"""Gets valid user credentials from storage.
+
+		If nothing has been stored, or if the stored credentials are invalid,
+		the OAuth2 flow is completed to obtain the new credentials.
+
+		Returns:
+			Credentials, the obtained credential.
+		"""
+		home_dir = os.path.expanduser('~')
+		credential_dir = os.path.join(home_dir, '.credentials')
+		if not os.path.exists(credential_dir):
+			os.makedirs(credential_dir)
+		credential_path = os.path.join(credential_dir,
+									   'calendar-python-quickstart.json')
+
+		store = oauth2client.file.Storage(credential_path)
+		credentials = store.get()
+		if not credentials or credentials.invalid:
+			flow = client.flow_from_clientsecrets(CLIENT_SECRET_FILE, SCOPES)
+			flow.user_agent = APPLICATION_NAME
+			if flags:
+				credentials = tools.run_flow(flow, store, flags)
+			else: # Needed only for compatibility with Python 2.6
+				credentials = tools.run(flow, store)
+			print('Storing credentials to ' + credential_path)
+		return credentials
+
+	def main():
+		"""Shows basic usage of the Google Calendar API.
+
+		Creates a Google Calendar API service object and outputs a list of the next
+		10 events on the user's calendar.
+		"""
+		credentials = get_credentials()
+		http = credentials.authorize(httplib2.Http())
+		service = discovery.build('calendar', 'v3', http=http)
+
+		now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
+		print('Getting the upcoming 10 events')
+		eventsResult = service.events().list(
+			calendarId='primary', timeMin=now, maxResults=10, singleEvents=True,
+			orderBy='startTime').execute()
+		events = eventsResult.get('items', [])
+
+		if not events:
+			print('No upcoming events found.')
+		for event in events:
+			start = event['start'].get('dateTime', event['start'].get('date'))
+			print(start, event['summary'])
+
+
+	if __name__ == '__main__':
+		main()
+
 
 
 

@@ -39,6 +39,7 @@ class EventSearchFilter(FacetedSearchForm):
 	event_title = forms.CharField(required=False)
 	payment = forms.CharField(required=False)
 	filterdata = forms.CharField(required=False)
+	admin_status = forms.IntegerField(required=False)
 
 	def filter_by_calendar(self):
 	  data = self.searchqueryset.all()  
@@ -49,10 +50,12 @@ class EventSearchFilter(FacetedSearchForm):
 		  print "self.cleaned_data['filterdata']", self.cleaned_data['filterdata']
 		  if self.cleaned_data['filterdata']:
 			  today = datetime.now().date()
+			  this_week_dates = [today + timedelta(days=i) for i in range(0 - today.weekday(), 7 - today.weekday())] 
 			  if (self.cleaned_data['filterdata'] == "allevent"):
 				data = data.filter(admin_status=1)
 				print "data", data	  
-			  if (self.cleaned_data['filterdata'] == "today"):	  	  
+			  if (self.cleaned_data['filterdata'] == "today"):	
+				print "today", today  	  
 				data = data.filter(Q(event_startdate_time=str(today))|Q(event_enddate_time=str(today)))
 				print "data", data
 			  if (self.cleaned_data['filterdata'] == "tomorrow"):
@@ -60,12 +63,28 @@ class EventSearchFilter(FacetedSearchForm):
 				print "tomorrow",tomorrow
 				data = data.filter(Q(event_startdate_time=str(tomorrow))|Q(event_enddate_time=str(tomorrow)))
 				print "data", data	  
-			  if (self.cleaned_data['filterdata'] == "thisweek"):  
-				data = data.filter(admin_status=1).filter(status='active').filter(available__gt=0).order_by('-price')	  
-			  if (self.cleaned_data['filterdata'] == "thisweekend"):  
-				data = data.filter(admin_status=1).filter(status='active').filter(available__gt=0).order_by('-price')		  
-			  if (self.cleaned_data['filterdata'] == "thismonth"):  
-				data = data.filter(admin_status=1).filter(status='active').filter(available__gt=0).order_by('-price')   
+			  if (self.cleaned_data['filterdata'] == "thisweek"): 
+				for dates in this_week_dates:
+					if dates < today:
+						this_week_dates.remove(dates)
+				print "this_week_dates",this_week_dates
+				this_week_dates = [dates.strftime('%Y-%m-%d') for dates in this_week_dates]
+				print "this_week_dates",this_week_dates
+				first_date = this_week_dates[0]
+				print "first_date", first_date
+				last_date = this_week_dates[-1]
+				print "last_date", last_date
+				data = data.filter(Q(event_startdate_time__range=(first_date, last_date))|Q(event_enddate_time__range=(first_date, last_date)))
+				print "data", data
+			  if (self.cleaned_data['filterdata'] == "thisweekend"): 
+				first_date = this_week_dates[-2]
+				last_date = this_week_dates[-1] 
+				data = data.filter(Q(event_startdate_time__range=(first_date, last_date))|Q(event_enddate_time__range=(first_date, last_date)))
+				print "data", data
+			  if (self.cleaned_data['filterdata'] == "thismonth"): 
+				import calendar
+				current_month_last_date = datetime(today.year,today.month,calendar.mdays[today.month]).strftime('%Y-%m-%d') 
+				data = data.filter(Q(event_startdate_time__range=(today, current_month_last_date))|Q(event_enddate_time__range=(today, current_month_last_date)))
 	  return data
   
 	def get_default_filters(self):

@@ -108,7 +108,8 @@ urlpatterns = patterns('',
    	url(r'^get_events_for_calendar/',  'events.views.get_events_for_calendar', name='eventcalendar'),
    	url(r'^user_profile/',  'events.views.user_profile', name='user_profile'),
    	# url(r'^profile_picture_upload/', 'events.views.profile_picture_upload', name='profile_picture_upload'),
-   	url(r'^privacy/', 'events.views.privacy', name='privacy')
+   	url(r'^privacy/', 'events.views.privacy', name='privacy'),
+   	url(r'^add_google_calendar/(?P<id>[0-9]+)/$', 'events.views.add_google_calendar', name='add_google_calendar'),
    
 
 )+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
