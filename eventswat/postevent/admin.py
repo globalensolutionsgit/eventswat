@@ -26,9 +26,19 @@ class OraganizerInLine(admin.TabularInline):
 
 class SubCategoryRelatedFieldValueInLine(admin.TabularInline):
     model = SubCategoryRelatedFieldValue
-    extra = 0
+    extra = 2
+    max_num = 2
 
+class OrganizerAdmin(admin.ModelAdmin):
+	fields = ['postevent','organizer_name','organizer_mobile','organizer_email']
+	list_display = ('postevent','organizer_name','organizer_mobile','organizer_email')
+	list_filter = ['organizer_name']
+	search_fields = ['organizer_name']
 
+class PostEventKeywordAdmin(admin.ModelAdmin):
+	fields = ['keyword']
+	list_display = ('id','keyword')
+	search_fields = ['organizer_name']
 # class SubCategorywidget(FlexSelectWidget):
 #     """
 #     The widget must extend FlexSelectWidget and implement trigger_fields,
@@ -65,11 +75,14 @@ class SubCategoryRelatedFieldValueInLine(admin.TabularInline):
 class PosteventAdmin(admin.ModelAdmin):
 
     filelds = ['event_type', 'event_category', 'event_subcategory']
-    list_display = ('id', 'event_type', 'event_category', 'event_subcategory')
+    list_display = ('id', 'event_type', 'event_category', 'event_subcategory','event_title','city','payment','admin_status',)
+    list_filter = ['payment','admin_status','event_subcategory']
     inlines = [ SubCategoryRelatedFieldValueInLine, OraganizerInLine ]
+    list_per_page = 50
 
     class Media:
-        js = ('js/jquery.js', 'js/admin.js' )
+        css = {'all': ('css/jquery-ui.css',)}
+        js = ('js/jquery.js', 'js/admin.js', 'js/jquery-ui.js')
 
     # def formfield_for_foreignkey(self, db_field, request, **kwargs):
     # 	"""Alters the widget displayed for the base field."""
@@ -109,13 +122,13 @@ class PosteventAdmin(admin.ModelAdmin):
 # 			return self.readonly_fields + ('payment',)
 # 		return self.readonly_fields
 
-# class OrganizerAdmin(admin.ModelAdmin):
-# 	fields = ['postevent','organizer_name','organizer_mobile','organizer_email']
-# 	list_display = ('postevent','organizer_name','organizer_mobile','organizer_email')
-# 	list_filter = ['organizer_name']
-# 	search_fields = ['organizer_name']
-# 	list_per_page = 50
-# 	actions = ['send_invitations']
+class OrganizerAdmin(admin.ModelAdmin):
+	fields = ['postevent','organizer_name','organizer_mobile','organizer_email']
+	list_display = ('postevent','organizer_name','organizer_mobile','organizer_email')
+	list_filter = ['organizer_name']
+	search_fields = ['organizer_name']
+	list_per_page = 50
+	#actions = ['send_invitations']
 
 # 	def send_invitations(self, request, queryset):
 # 		from templated_email import send_templated_mail
@@ -132,4 +145,5 @@ class PosteventAdmin(admin.ModelAdmin):
 admin.site.register(CampusCollege, CampusCollegeAdmin)
 admin.site.register(CampusDepartment, CampusDepartmentAdmin)
 admin.site.register(Postevent, PosteventAdmin)
-# admin.site.register(Organizer,OrganizerAdmin)
+admin.site.register(Organizer,OrganizerAdmin)
+admin.site.register(PostEventKeyword,PostEventKeywordAdmin)

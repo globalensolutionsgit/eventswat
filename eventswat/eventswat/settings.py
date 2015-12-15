@@ -52,7 +52,6 @@ INSTALLED_APPS = (
     'postevent',
     'usermanagement',
     'logs',
-    'flexselect',
 
 )
 
@@ -199,15 +198,11 @@ EMAIL_HOST_USER = 'eventswat@gmail.com'
 EMAIL_HOST_PASSWORD = 'street11'
 EMAIL_PORT = 587
 
-
-
-TEMPLATED_EMAIL_BACKEND = 'templated_email.backends.vanilla_django.TemplateBackend'
-
-# You can use a shortcut version
-TEMPLATED_EMAIL_BACKEND = 'templated_email.backends.vanilla_django'
-
-# You can also use a class directly
-from templated_email.backends.vanilla_django import TemplateBackend
-TEMPLATED_EMAIL_BACKEND = TemplateBackend
-
 LATEST_INDEX=1
+
+TEMPLATE_LOADERS = (
+
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
+
+)

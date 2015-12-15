@@ -110,5 +110,7 @@ urlpatterns = patterns('',
    	# url(r'^profile_picture_upload/', 'events.views.profile_picture_upload', name='profile_picture_upload'),
    	url(r'^privacy/', 'events.views.privacy', name='privacy'),
 	url(r'^admin_subcategory/','postevent.views.admin_subcategory',name='admin_subcategory'),
+	url(r'^test/','postevent.views.test',name='test'),
+	#url(r'^admin/postevnet',include('postevent.urls')),
 
 )+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
