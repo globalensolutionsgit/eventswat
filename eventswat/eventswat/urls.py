@@ -5,7 +5,6 @@ from django.contrib import admin
 from events.views import *
 from events.models import *
 from django.views.generic import RedirectView
-# from reviews.views import *
 # Custom Search View
 from search.eventsearch import EventSearchView
 from search.searchform import EventSearchFilter
@@ -110,7 +109,5 @@ urlpatterns = patterns('',
    	# url(r'^profile_picture_upload/', 'events.views.profile_picture_upload', name='profile_picture_upload'),
    	url(r'^privacy/', 'events.views.privacy', name='privacy'),
    	url(r'^add_google_calendar/(?P<id>[0-9]+)/$', 'events.views.add_google_calendar', name='add_google_calendar'),
-   	# url(r'^comments/', include('django_comments.urls')),
-   	# url(r'^comments/post/$', 'core.views.comment_post', name='comment_posted'),
-   	# url(r'^comments/', 'reviews.views.home', name='home'),
+   	
 )+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

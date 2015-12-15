@@ -54,7 +54,7 @@ class JSONResponse(HttpResponse):
 
 @csrf_exempt
 def home(request):
-	registeration_form = 	UserCreationForm()
+	registeration_form = UserCreationForm()
 	login_form = UserLoginForm()
 	feedback_form = WebsiteFeedbackForm()
 	if request.user.is_superuser:
@@ -83,7 +83,7 @@ def logout_view(request):
 	response = HttpResponseRedirect("/")
 	return response
 
-
+#comments implemented by priya
 @csrf_exempt
 def details(request,id=None):
 	# try:
@@ -92,129 +92,41 @@ def details(request,id=None):
 	photo=img[0]
 	photos=[n for n in str(postevent.event_poster).split(',')]
 	organizer=Organizer.objects.filter(postevent__id=postevent.id)
-	user = request.user
+	registeration_form = UserCreationForm()
+	login_form = UserLoginForm()
 	comment_form = CommentForm(request.POST or None)
-	if request.is_ajax():
-		if user.is_authenticated():
-			if request.method == "POST":
-				if comment_form.is_valid():
-					temp = comment_form.save(commit=False)
-					parent = comment_form['parent'].value()
+	if request.method == "POST": 
+		if comment_form.is_valid(): 
+			print "comment"
+			temp = comment_form.save(commit=False) 
+			temp.postevent_id = request.POST.get('postent')
+			parent = comment_form['parent'].value() 
+			if parent == "": 
+				temp.path = [] 
+				temp.save() 				
+				id = temp.id 
+				print "id",id
+				temp.path = [id] 
+			else: 
+				
+				node = Comment.objects.get(id = parent) 
+				temp.depth = node.depth + 1 
+				s = str(node.path) 
+				temp.path = eval(s) 
+				temp.save() 
+				id= temp.id 
+				temp.path.append(id) 
 
-
-					if parent == '':
-						#Set a blank path then save it to get an ID
-						temp.path = []
-						# temp.save()
-						id = int(0 if temp.id is None else temp.id)
-						temp.path = [id] 
-					else:
-						#Get the parent node
-						node = Comment.objects.get(id=parent)
-						temp.depth = node.depth + 1
-						s = str(node.path)
-						temp.path = eval(s)
-
-						
-						#Store parents path then apply comment ID
-						# temp.save()
-						id= int(0 if temp.id is None else temp.id)
-						temp.path.append(id) 
-						
-					print request.POST  
-					#Final save for parents and children
-					temp.postevent_id = request.POST.get('postent')
-					print temp.postevent,"temp.postevent"
-					temp.save()
-					comment_form = CommentForm()
-		else:
-			comment_form = CommentForm()
-			
-	else:
-		msg = "Fail"            
-		
-		#Retrieve all comments and sort them by path
+			temp.postevent_id = request.POST.get('postent')
+			temp.save()
 	comment_tree=Comment.objects.filter(postevent_id=postevent.id).order_by('path')
-	print comment_tree
 	related_events = Postevent.objects.filter(event_category = postevent.event_category, event_subcategory=postevent.event_subcategory, city=postevent.city)
-	# comment_tree=Comment.objects.filter(postevent_id=postevent.id).order_by('path')
-	# print comment_tree
-	return render_to_response("company-profile.html",{'events':postevent,'organizer':organizer,'photos':photos,'photo':photo, 'comment_form':comment_form, 'comment_tree':comment_tree}, context_instance=RequestContext(request))
+	return render_to_response("company-profile.html",{'comment_tree':comment_tree,'events':postevent,'organizer':organizer,'photos':photos,'photo':photo, 'registeration_form':registeration_form, 'login_form':login_form, 'comment_form':comment_form}, context_instance=RequestContext(request))
 	# except:
 	#     return render_to_response("company-profile.html",{'message':'Sorry for inconvenience.Some thing went to wrong'}, context_instance=RequestContext(request))
 
 def banner(request):
 	return render_to_response("uploadbanner.html",context_instance=RequestContext(request))
-
-# old login code when not using ajax
-# @csrf_protect
-# def user_login(request):
-#     """
-#     Login User
-#     """
-#     logout(request)
-#     username = password = ''
-#     if request.POST.get("next") is None:
-#         return HttpResponseRedirect('/')
-#     elif request.POST.get("next"):
-#         email = request.POST['username']
-#         print 'login email', email
-#         password = request.POST['password']
-#         user = authenticate(email=email, password=password)
-#         print 'user login', user
-#         if user is not None:
-#             if user.is_active:
-#                 login(request, user)
-#                 return HttpResponseRedirect(request.POST.get("next"))
-#         try:
-#             error={}
-#             if not User.objects.filter(email=email).exists():
-#                 error['email_exists'] = ugettext('Email Does not exists')
-#                 raise ValidationError(error['email_exists'], 1)
-#             # else:
-#             #     if not User.objects.filter(username=username).exists():
-#             #         error['username_exists'] = ugettext('Username Does not exists')
-#             #         raise ValidationError(error['username_exists'], 2)
-#         except ValidationError as e:
-#             messages.add_message(request, messages.ERROR, e.messages[-1])
-#             redirect_path = request.POST["next"]
-#             query_string = 'lst=%d' % e.code
-#             redirect_url = format_redirect_url(redirect_path, query_string)
-#             return HttpResponseRedirect(redirect_url)
-#         if not error:
-#             # if not '@' in username:
-#             #     user = User.objects.get(username=username)
-#             # else:
-#             user = User.objects.get(email=email)
-#             user.backend='django.contrib.auth.backends.ModelBackend'
-#             try:
-#                 error={}
-#                 if user.check_password(password):
-#                     print user
-#                 else:
-#                     error['password'] = ugettext('Invalid password')
-#                     raise ValidationError(error['password'], 3)
-#             except ValidationError as e:
-#                 messages.add_message(request, messages.ERROR, e.messages[-1])
-#                 redirect_path = request.POST["next"]
-#                 query_string = 'lst=%d' % e.code
-#                 redirect_url = format_redirect_url(redirect_path, query_string)
-#                 return HttpResponseRedirect(redirect_url)
-#             if user:
-#                 if user.is_active:
-#                     login(request, user)
-#                     user_id=user.id
-#                     response=HttpResponseRedirect(request.POST["next"])
-#                     return response
-#     else:
-#         email = request.POST['username']
-#         password = request.POST['password']
-#         user = authenticate(email=email, password=password)
-#         print 'user login else', user
-#         if user is not None:
-#             if user.is_active:
-#                 login(request, user)
-#                 return HttpResponseRedirect('/')
 
 # login and registration implemanted by ramya
 @csrf_exempt
@@ -234,14 +146,14 @@ def user_login(request):
 		login_password = login_form.cleaned_data['login_password']
 		print 'Login_password', login_password	 
 		context = {}
-		if not Userprofile.objects.filter(email=login_email).exists():
+		if not User.objects.filter(email=login_email).exists():
 			print 'Userprofile.objects.filter(email=login_email)', Userprofile.objects.filter(email=login_email).exists()
 			error['email_exists'] = True
 			response = HttpResponse(json.dumps(error, ensure_ascii=False),mimetype='application/json')
 			return response
 		
 		if login_form.is_valid():
-			user = Userprofile.objects.get(email=login_email)
+			user = User.objects.get(email=login_email)
 			user.backend='django.contrib.auth.backends.ModelBackend'
 			if user:
 				print 'user', user			
@@ -321,57 +233,6 @@ def register(request):
 		user_id = userprofile.id
 	return render_to_response('index_v2.html', {'user_id':user_id, 'registeration_form':registeration_form } ,context_instance=RequestContext(request))
 
-# @csrf_exempt
-# def register(request):
-#     print "register"
-#     context = RequestContext(request)
-#     registered = False
-#     user=User()
-#     userprofile=Userprofile()
-#     if request.method == 'POST':
-#         email=request.POST['email_id']
-#         username=request.POST['username']
-#         if User.objects.filter(email=email).exists():
-#             error={}
-#             print 'User.objects.filter(email=email).exists()', User.objects.filter(email=email).exists()
-#             error['email_exists'] = True
-#             return HttpResponse(json.dumps(error, ensure_ascii=False),mimetype='application/json')
-#         if not error:
-#             user.is_active = True
-#             user.username=request.POST['username']
-#             print 'username', user.username
-#             user.email=request.POST['email_id']
-#             print 'email', user.email
-#             user.password=request.POST['password']
-#             print 'pswd', user.password
-#             user.set_password(user.password)
-#             user.save()
-#             print "user saved"
-#             userprofile = Userprofile()
-#             userprofile.user_id=user.id
-#             userprofile.mobile=request.POST['mobile']
-#             userprofile.save()
-#             print "userprofile saved"
-#             send_templated_mail(
-#               template_name = 'welcome',
-#               subject = 'Welcome Evewat',
-#               from_email = 'eventswat@gmail.com',
-#               recipient_list = [user.email],
-#               context={
-#                        'user': user.username,
-#               },
-#             )
-#             registered = True
-#             user = User.objects.get(email=user.email)
-#             print 'user after reg', user
-#             user.backend='django.contrib.auth.backends.ModelBackend'
-#             login(request, user)
-#             return HttpResponseRedirect('/start/?user_id=' + str(user.id))
-#     elif user.id is None:
-#         return HttpResponseRedirect('/')
-#     else:
-#         user_id = user.id
-#         return render_to_response('index_v2.html', {'user_id':user_id} ,context_instance=RequestContext(request))
 
 @csrf_exempt
 @login_required(login_url='/?lst=1')

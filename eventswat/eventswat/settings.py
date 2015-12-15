@@ -78,9 +78,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    # 'tracking.middleware.VisitorTrackingMiddleware',
-    # 'tracking.middleware.VisitorCleanUpMiddleware',
-    # 'tracking.middleware.BannedIPMiddleware',
+    'tracking.middleware.VisitorTrackingMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
