@@ -36,6 +36,14 @@ import datetime
 import time
 import openpyxl
 
+#Import for google calendar
+# from __future__ import print_function
+# import httplib2
+# import os
+# from apiclient import discovery
+# import oauth2client
+# from oauth2client import client
+# from oauth2client import tools
 
 
 class JSONResponse(HttpResponse):
@@ -81,51 +89,9 @@ def details(request,id=None):
 	photos=[n for n in str(postevent.event_poster).split(',')]
 	organizer=Organizer.objects.filter(postevent__id=postevent.id)
 	form = CommentForm()
-	# if request.is_ajax():
-	# 	if user.is_authenticated():
-	# # print request.POST.get('postevent'),"request"
-	# 		if request.method == "POST":
-	# 			if form.is_valid():
-	# 				temp = form.save(commit=False)
-	# 				parent = form['parent'].value()
-
-
-	# 				if parent == '':
-	# 					#Set a blank path then save it to get an ID
-	# 					temp.path = []
-	# 					# temp.save()
-	# 					id = int(0 if temp.id is None else temp.id)
-	# 					temp.path = [id] 
-	# 				else:
-	# 					#Get the parent node
-	# 					node = Comment.objects.get(id=parent)
-	# 					temp.depth = node.depth + 1
-	# 					s = str(node.path)
-	# 					temp.path = eval(s)
-
-						
-	# 					#Store parents path then apply comment ID
-	# 					# temp.save()
-	# 					id= int(0 if temp.id is None else temp.id)
-	# 					temp.path.append(id) 
-						
-	# 				print request.POST  
-	# 				#Final save for parents and children
-	# 				temp.postevent_id = request.POST.get('postent')
-	# 				print temp.postevent,"temp.postevent"
-	# 				temp.save()
-	# 				form = CommentForm()
-	# 	else:
-	# 		form = CommentForm()
-			
-	# else:
-	# 	msg = "Fail"			
-		
-		#Retrieve all comments and sort them by path
+	related_events = Postevent.objects.filter(event_category = postevent.event_category, event_subcategory=postevent.event_subcategory, city=postevent.city)
 	comment_tree=Comment.objects.filter(postevent_id=postevent.id).order_by('path')
 	print comment_tree
-	# comment_tree = Comment.objects.all().order_by('path')
-	# related_events = Postevent.objects.filter(category = postevent.event_category, eventtype=postevent.event_type, city=postevent.city)
 	return render_to_response("company-profile.html",{'events':postevent,'organizer':organizer,'photos':photos,'photo':photo, 'form':form, 'comment_tree':comment_tree}, context_instance=RequestContext(request))
 	# except:
 	#     return render_to_response("company-profile.html",{'message':'Sorry for inconvenience.Some thing went to wrong'}, context_instance=RequestContext(request))
@@ -232,7 +198,6 @@ def user_login(request):
 				error['password'] = True
 				response = HttpResponse(json.dumps(error, ensure_ascii=False),mimetype='application/json')           
 	return response
-
 
 @csrf_protect
 def register(request):
@@ -855,17 +820,15 @@ def home_v2(request):
 							 context_instance=context)
 
 def get_events_for_calendar(request):
-
 	import datetime
 	events = Postevent.objects.all()
 	time = datetime.time(10, 25)
 	events_list = []
 	for event in events:
-		event_data = {'id':str(event.id), 'title':event.event_title, 'start':smart_unicode(datetime.datetime.combine(event.startdate,time)),'end':smart_unicode(datetime.datetime.combine(event.enddate,time))}
+		event_data = {'id':str(event.id), 'title':event.event_title, 'start':smart_unicode(datetime.datetime.combine(event.event_startdate_time,time)),'end':smart_unicode(datetime.datetime.combine(event.event_enddate_time,time))}
 		events_list.append(event_data)
 	# print "event_list", events_list
 	return HttpResponse(simplejson.dumps(events_list), mimetype='application/json')
-
 
 @csrf_exempt
 def user_profile(request):
@@ -926,4 +889,72 @@ def privacy(request):
 	u.set_password(new_password)
 	u.save()
 	return render_to_response("user_profile.html", context_instance=RequestContext(request))
+
+def add_google_calendar(request, id=None):
+	print "add_google_calendar"   
+	try:
+		import argparse
+		flags = argparse.ArgumentParser(parents=[tools.argparser]).parse_args()
+	except ImportError:
+		flags = None
+	SCOPES = 'https://www.googleapis.com/auth/calendar.readonly'
+	print "SCOPES", SCOPES
+	CLIENT_SECRET_FILE = 'client_secret_google_calendar.json'
+	print "CLIENT_SECRET_FILE", CLIENT_SECRET_FILE
+	APPLICATION_NAME = 'Google Calendar API Python Quickstart'
+	print "APPLICATION_NAME", APPLICATION_NAME
+	def get_credentials():
+		"""Gets valid user credentials from storage.
+
+		If nothing has been stored, or if the stored credentials are invalid,
+		the OAuth2 flow is completed to obtain the new credentials.
+
+		Returns:
+			Credentials, the obtained credential.
+		"""
+		home_dir = os.path.expanduser('~')
+		credential_dir = os.path.join(home_dir, '.credentials')
+		if not os.path.exists(credential_dir):
+			os.makedirs(credential_dir)
+		credential_path = os.path.join(credential_dir,
+									   'calendar-python-quickstart.json')
+
+		store = oauth2client.file.Storage(credential_path)
+		credentials = store.get()
+		if not credentials or credentials.invalid:
+			flow = client.flow_from_clientsecrets(CLIENT_SECRET_FILE, SCOPES)
+			flow.user_agent = APPLICATION_NAME
+			if flags:
+				credentials = tools.run_flow(flow, store, flags)
+			else: # Needed only for compatibility with Python 2.6
+				credentials = tools.run(flow, store)
+			print('Storing credentials to ' + credential_path)
+		return credentials
+
+	def main():
+		"""Shows basic usage of the Google Calendar API.
+
+		Creates a Google Calendar API service object and outputs a list of the next
+		10 events on the user's calendar.
+		"""
+		credentials = get_credentials()
+		http = credentials.authorize(httplib2.Http())
+		service = discovery.build('calendar', 'v3', http=http)
+
+		now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
+		print('Getting the upcoming 10 events')
+		eventsResult = service.events().list(
+			calendarId='primary', timeMin=now, maxResults=10, singleEvents=True,
+			orderBy='startTime').execute()
+		events = eventsResult.get('items', [])
+
+		if not events:
+			print('No upcoming events found.')
+		for event in events:
+			start = event['start'].get('dateTime', event['start'].get('date'))
+			print(start, event['summary'])
+
+
+	if __name__ == '__main__':
+		main()
 
