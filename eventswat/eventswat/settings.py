@@ -53,7 +53,7 @@ INSTALLED_APPS = (
     'usermanagement',
     'logs',
     'core',
-    # 'tracking',
+    'tracking',
 
 )
 
@@ -78,6 +78,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'tracking.middleware.VisitorTrackingMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -204,6 +205,8 @@ EMAIL_HOST_PASSWORD = 'street11'
 EMAIL_PORT = 587
 
 LATEST_INDEX=1
+TRACK_PAGEVIEWS = True
+
 
 TEMPLATE_LOADERS = (
 

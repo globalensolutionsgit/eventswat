@@ -112,5 +112,6 @@ urlpatterns = patterns('',
 	url(r'^test/','postevent.views.test',name='test'),
 	#url(r'^admin/postevnet',include('postevent.urls')),
    	url(r'^add_google_calendar/(?P<id>[0-9]+)/$', 'events.views.add_google_calendar', name='add_google_calendar'),
+   	url(r'^tracking/', include('tracking.urls')),
    	
 )+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
