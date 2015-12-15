@@ -41,34 +41,43 @@
     <div class="feedback_popup">
         <form action="{%url 'events.views.feedback' %}" id="form" method="post" name="form" class="feedback_form">
         {% csrf_token %}
+
             <a class="close"> <i class="fa fa-times"></i></a>
             <h2 class="text_rate">Rate my website!</h2>
             <div class="content">
-               <div class="form-group">
-                  <input type="name" class="form-control" placeholder="Name" id="name" name="name">
-                   <label class="error" for="name" id="name_error" style="color:red;">This field is required.</label>
-                </div>
-                <div class="form-group">
-                  <input type="email" class="form-control" placeholder="Email" id="email" name="email">
-                  <label class="error" for="email" id="email_error" style="color:red;">This field is required.</label>
-                </div>
-                <div class="form-group">
-                   <textarea class="form-control" rows="1" cols="33" placeholder="Comments" id="comments" name="comments"></textarea>
-                   <label class="error" for="comments" id="comments_error" style="color:red;">This field is required.</label>
-                </div>
-                <fieldset class="rating" name="rating" id="rating">
-                    <legend class="feedback_star">How satisfied are you with our services</legend>
-                    <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="Rocks!">5 stars</label>
-                    <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="Pretty good">4 stars</label>
-                    <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="Modrate">3 stars</label>
-                    <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="Kinda bad">2 stars</label>
-                    <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="Poor">1 star</label>
-                </fieldset>
-                <label class="error" for="rating" id="rating_error" style="color:red;">This field is required.</label>
-                <button class="btn btn-default" id="feed_btn" type="submit" >Submit</button>
+                {{ feedback_form.non_field_errors }}
+                        <div class="field_wapper">
+                            <label for="id_name">{{ feedback_form.name.label_tag }}</label>
+                                {{feedback_form.name.errors}}
+                                {{ feedback_form.name }}
+                            <span class="error">Enter your name</span>
+                           
+                       </div>
+                        <div class="field_wapper">
+                            <label for="id_email">{{ feedback_form.email.label_tag }}</label>
+                                {{feedback_form.email.errors}}
+                                {{ feedback_form.email }}
+                            <span class="error">Enter your email</span>
+                        </div>
+                        <div class="field_wapper">
+                            <label for="id_comments">{{ feedback_form.comments.label_tag }}</label>
+                                {{feedback_form.comments.errors}}
+                                {{ feedback_form.comments }}
+                            <span class="error">Enter your comments</span>
+                        </div>
+                        <div class="field_wapper">
+                            <label for="id_rating">{{ feedback_form.rating.label_tag }}</label>
+                                {{feedback_form.rating.errors}}
+                                {{ feedback_form.rating }}
+                            <span class="error">Enter your rating</span>
+                        </div>
+                        
+               <button class="btn btn-default" id="feed_btn" type="submit" >Submit</button>
             </div>
         </form>
     </div>
+    
+                                                                     
     <div id="page-content" class="home-slider-content">
         <div class="container">
             <div class="home-with-slide">
@@ -270,7 +279,7 @@
                                     <ul class="filterdata">                                    
                                         <li><a href="" data-value="allevent">All</a></li>
                                         <li><a href="" data-value="today">Today</a></li>
-                                        <li><a href="" data-value="tomorrow">Tomorrow</a></li>
+                                        <li><a href="" data-value="tommorrow">Tomorrow</a></li>
                                         <li><a href="" data-value="thisweek">This Week</a></li>
                                         <li><a href="" data-value="thisweekend">This Weekend</a></li>
                                         <li><a href="" data-value="thismonth">This Month</a></li>

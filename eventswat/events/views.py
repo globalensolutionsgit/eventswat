@@ -1,4 +1,4 @@
-from django.shortcuts import render_to_response, redirect, render
+from django.shortcuts import render_to_response, redirect, render,get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.files import File
 from django.core.exceptions import ValidationError
@@ -20,9 +20,11 @@ from eventswat.models import *
 from eventswat.forms import *
 from events.models import *
 from usermanagement	.models import Userprofile
+from usermanagement.forms import UserCreationForm, UserLoginForm
 from events.extra import JSONResponse
 from postevent.models import Postevent, Organizer, CampusCollege, CampusDepartment
 from reviews.models import *
+from reviews.forms import *
 from postbanner.models import *
 from payu.models import *
 from eventswat.util import format_redirect_url
@@ -35,12 +37,31 @@ import datetime
 import time
 import openpyxl
 
+#Import for google calendar
+# from __future__ import print_function
+# import httplib2
+# import os
+# from apiclient import discovery
+# import oauth2client
+# from oauth2client import client
+# from oauth2client import tools
 
+
+class JSONResponse(HttpResponse):
+	def __init__(self, data):
+		super(JSONResponse, self).__init__(
+				simplejson.dumps(data), mimetype='application/json')
+
+@csrf_exempt
 def home(request):
-    if request.user.is_superuser:
-        logout(request)
-        return HttpResponseRedirect('/')
-    return render_to_response("index_v2.html", context_instance=RequestContext(request))
+	registeration_form = 	UserCreationForm()
+	login_form = UserLoginForm()
+	feedback_form = WebsiteFeedbackForm()
+	if request.user.is_superuser:
+		logout(request)
+		return HttpResponseRedirect('/')
+	return render_to_response("index_v2.html",{'registeration_form':registeration_form, 'login_form':login_form, 'feedback_form':feedback_form}, context_instance=RequestContext(request))
+
 
 def about(request):
 	return render_to_response("about-us.html", context_instance=RequestContext(request))
@@ -62,18 +83,65 @@ def logout_view(request):
 	response = HttpResponseRedirect("/")
 	return response
 
+
+@csrf_exempt
 def details(request,id=None):
-    # try:
-    postevent=Postevent.objects.get(pk=id)
-    img=str(postevent.poster).split(',')
-    photo=img[0]
-    photos=[n for n in str(postevent.poster).split(',')]
-    organizer=Organizer.objects.filter(postevent__id=postevent.id)
-    review=Review.objects.filter(event_id=postevent.id)
-    related_events = Postevent.objects.filter(category = postevent.category, eventtype=postevent.eventtype, city=postevent.city)
-    return render_to_response("company-profile.html",{'events':postevent,'organizer':organizer,'review':review,'related_events':related_events,'photos':photos,'photo':photo}, context_instance=RequestContext(request))
-    # except:
-    #     return render_to_response("company-profile.html",{'message':'Sorry for inconvenience.Some thing went to wrong'}, context_instance=RequestContext(request))
+	# try:
+	postevent=Postevent.objects.get(pk=id)
+	img=str(postevent.event_poster).split(',')
+	photo=img[0]
+	photos=[n for n in str(postevent.event_poster).split(',')]
+	organizer=Organizer.objects.filter(postevent__id=postevent.id)
+	user = request.user
+	comment_form = CommentForm(request.POST or None)
+	if request.is_ajax():
+		if user.is_authenticated():
+			if request.method == "POST":
+				if comment_form.is_valid():
+					temp = comment_form.save(commit=False)
+					parent = comment_form['parent'].value()
+
+
+					if parent == '':
+						#Set a blank path then save it to get an ID
+						temp.path = []
+						# temp.save()
+						id = int(0 if temp.id is None else temp.id)
+						temp.path = [id] 
+					else:
+						#Get the parent node
+						node = Comment.objects.get(id=parent)
+						temp.depth = node.depth + 1
+						s = str(node.path)
+						temp.path = eval(s)
+
+						
+						#Store parents path then apply comment ID
+						# temp.save()
+						id= int(0 if temp.id is None else temp.id)
+						temp.path.append(id) 
+						
+					print request.POST  
+					#Final save for parents and children
+					temp.postevent_id = request.POST.get('postent')
+					print temp.postevent,"temp.postevent"
+					temp.save()
+					comment_form = CommentForm()
+		else:
+			comment_form = CommentForm()
+			
+	else:
+		msg = "Fail"            
+		
+		#Retrieve all comments and sort them by path
+	comment_tree=Comment.objects.filter(postevent_id=postevent.id).order_by('path')
+	print comment_tree
+	related_events = Postevent.objects.filter(event_category = postevent.event_category, event_subcategory=postevent.event_subcategory, city=postevent.city)
+	# comment_tree=Comment.objects.filter(postevent_id=postevent.id).order_by('path')
+	# print comment_tree
+	return render_to_response("company-profile.html",{'events':postevent,'organizer':organizer,'photos':photos,'photo':photo, 'comment_form':comment_form, 'comment_tree':comment_tree}, context_instance=RequestContext(request))
+	# except:
+	#     return render_to_response("company-profile.html",{'message':'Sorry for inconvenience.Some thing went to wrong'}, context_instance=RequestContext(request))
 
 def banner(request):
 	return render_to_response("uploadbanner.html",context_instance=RequestContext(request))
@@ -148,98 +216,110 @@ def banner(request):
 #                 login(request, user)
 #                 return HttpResponseRedirect('/')
 
-# new login code when using ajax (updated by kalai)
+# login and registration implemanted by ramya
 @csrf_exempt
-def user_login(request):
-    import json
-    if request.user.is_superuser:
-        logout(request)
-        return HttpResponseRedirect('/')
-    logout(request)
-    error = {}
-    username = request.POST['username']
-    print "username", username
-    password = request.POST['password']
-    print "password", password
-    context = {}
-    if not User.objects.filter(email=username).exists():
-        error['email_exists'] = True
-        response = HttpResponse(json.dumps(error, ensure_ascii=False),mimetype='application/json')
-    else:
-        user = User.objects.get(email=username)
-        user.backend='django.contrib.auth.backends.ModelBackend'
-        if user:
-            if user.check_password(password):
-                if user.is_active:
-                    login(request, user)
-                    response = HttpResponseRedirect(request.POST.get('next'))
-            else:
-                error['password'] = True
-                response = HttpResponse(json.dumps(error, ensure_ascii=False),mimetype='application/json')
-    return response
-
+def user_login(request):    
+	import json 
+	if request.user.is_superuser:
+		logout(request)
+		return HttpResponseRedirect('/')        
+	logout(request)
+	error = {}
+	if request.method == 'POST':
+		print "post1"
+		login_form = UserLoginForm(request.POST)
+		print 'form', login_form
+		login_email = login_form.cleaned_data['login_email']		
+		print 'email form form', login_email
+		login_password = login_form.cleaned_data['login_password']
+		print 'Login_password', login_password	 
+		context = {}
+		if not Userprofile.objects.filter(email=login_email).exists():
+			print 'Userprofile.objects.filter(email=login_email)', Userprofile.objects.filter(email=login_email).exists()
+			error['email_exists'] = True
+			response = HttpResponse(json.dumps(error, ensure_ascii=False),mimetype='application/json')
+			return response
+		
+		if login_form.is_valid():
+			user = Userprofile.objects.get(email=login_email)
+			user.backend='django.contrib.auth.backends.ModelBackend'
+			if user:
+				print 'user', user			
+				if user.check_password(login_password):
+					if user.is_active:
+						login(request, user)
+						response = HttpResponseRedirect(request.POST.get('next')) 
+				else:
+					error['password'] = True
+					print 'errorpass', error['password']
+					response = HttpResponse(json.dumps(error, ensure_ascii=False),mimetype='application/json')
+					return response
+	else:
+		print 'this else'
+		login_form = UserLoginForm()
+	return render_to_response('index_v2.html', {'login_form':login_form}, context_instance=RequestContext(request))				           
+	
 @csrf_protect
 def register(request):
-	print "register"
-	context = RequestContext(request)
 	registered = False
 	user=User()
 	userprofile=Userprofile()
 	if request.method == 'POST':
-		email=request.POST['email_id']
-		username=request.POST['username']
+		print "post1"
+		registeration_form = UserCreationForm(request.POST)
+		print 'form', registeration_form
+		print 'request username', request.POST.get('username')
+		username = registeration_form.data.get('username')
+		print 'username', username
+		email = registeration_form.cleaned_data['email']
+		print 'email form form', email 
 		try:
 			error={}
-			# if User.objects.filter(username=username).exists():
-			#     error['username_exists'] = ugettext('Username already exists')
-			#     raise ValidationError(error['username_exists'], 1)
-			if User.objects.filter(email=email).exists():
-				print 'User.objects.filter(email=email).exists()', User.objects.filter(email=email).exists()
+			if Userprofile.objects.filter(username=username).exists():
+				print 'Userprofile.objects.filter(username=username).exists()', Userprofile.objects.filter(username=username).exists()
+				error['username_exists'] = ugettext('Username already exists')
+				raise ValidationError(error['username_exists'], 1)
+			if Userprofile.objects.filter(email=email).exists():
+				print 'Userprofile.objects.filter(email=email).exists()', Userprofile.objects.filter(email=email).exists()
 				error['email_exists'] = ugettext('Email already exists')
-				raise ValidationError(error['email_exists'], 2)
+				raise ValidationError(error['email_exists'], 2) 
+
 		except ValidationError as e:
-			messages.add_message(request, messages.ERROR, e.messages[-1])
+			print 'except'
+			messages.add_message(request, messages.ERROR, e.messages[-1]) 
 			redirect_path = "/"
 			query_string = 'rst=%d' % e.code
 			redirect_url = format_redirect_url(redirect_path, query_string)
 			return HttpResponseRedirect(redirect_url)
 
-		if not error:
-			user.is_active = True
-			user.username=request.POST['username']
-			print 'username', user.username
-			user.email=request.POST['email_id']
-			print 'email', user.email
-			user.password=request.POST['password']
-			print 'pswd', user.password
-			user.set_password(user.password)
-			user.save()
-			print "user saved"
-			userprofile = Userprofile()
-			userprofile.user_id=user.id
-			userprofile.mobile=request.POST['mobile']
-			userprofile.save()
-			print "userprofile saved"
+		if registeration_form.is_valid():
+			print 'is_valid'
+			userprofile.is_active = True			
+			userprofile = registeration_form.save()
 			send_templated_mail(
-			  template_name = 'welcome',
-			  subject = 'Welcome Evewat',
-			  from_email = 'eventswat@gmail.com',
-			  recipient_list = [user.email],
-			  context={
-					   'user': user.username,
-			  },
-			)
+              template_name = 'welcome',
+              subject = 'Welcome Evewat',
+              from_email = 'eventswat@gmail.com',
+              recipient_list = [userprofile.email],
+              context={
+                       'userprofile': userprofile.username,
+              },
+            )   
 			registered = True
-			user = User.objects.get(email=user.email)
-			print 'user after reg', user
-			user.backend='django.contrib.auth.backends.ModelBackend'
-			login(request, user)
-			return HttpResponseRedirect('/start/?user_id=' + str(user.id))
-	elif user.id is None:
-		return HttpResponseRedirect('/')
+			registered_user = Userprofile.objects.get(email= email)
+			print 'user after reg', registered_user
+			registered_user.backend='django.contrib.auth.backends.ModelBackend'
+			login(request, registered_user)    
+			return HttpResponseRedirect('/start/?user_id=' + str(registered_user.id))
+		elif userprofile.id is None:
+			print 'userprofile is none'
+			return HttpResponseRedirect('/')
+	
 	else:
-		user_id = user.id
-		return render_to_response('index_v2.html', {'user_id':user_id} ,context_instance=RequestContext(request))
+		print "else"
+		registeration_form = 	UserCreationForm()
+		user_id = userprofile.id
+	return render_to_response('index_v2.html', {'user_id':user_id, 'registeration_form':registeration_form } ,context_instance=RequestContext(request))
 
 # @csrf_exempt
 # def register(request):
@@ -614,20 +694,21 @@ def importcollegedata(request):
 @csrf_exempt
 def feedback(request):
 	if request.is_ajax():
-		if request.method=="POST":
-			print "enter in post"
-			feedback=Feedback()
-			feedback.name=request.POST.get('name')
-			print feedback.name
-			feedback.email=request.POST.get('email')
-			print feedback.email
-			feedback.comments=request.POST.get('comments')
-			print feedback.comments
-			feedback.rating=request.POST.get('rating')
-			feedback.save()
+		if request.method == 'POST':
+			print "enter"
+			form = WebsiteFeedbackForm(request.POST)
+			if form.is_valid():
+				print "form is valid"
+				# print "form",form
+				form.save()
+				print "save"
+			else:
+				form = WebsiteFeedbackForm()
+			
 			msg = "The operation has been received correctly."
 	else:
 		msg = "Fail"
+
 	return HttpResponse(msg)
 
 def getstate(request):
@@ -795,15 +876,15 @@ def home_v2(request):
 							 context_instance=context)
 
 def get_events_for_calendar(request):
-    import datetime
-    events = Postevent.objects.all()
-    time = datetime.time(10, 25)
-    events_list = []
-    for event in events:
-        event_data = {'id':str(event.id), 'title':event.event_title, 'start':smart_unicode(datetime.datetime.combine(event.event_startdate_time,time)),'end':smart_unicode(datetime.datetime.combine(event.event_enddate_time,time))}
-        events_list.append(event_data)
-    # print "event_list", events_list
-    return HttpResponse(simplejson.dumps(events_list), mimetype='application/json')
+	import datetime
+	events = Postevent.objects.all()
+	time = datetime.time(10, 25)
+	events_list = []
+	for event in events:
+		event_data = {'id':str(event.id), 'title':event.event_title, 'start':smart_unicode(datetime.datetime.combine(event.event_startdate_time,time)),'end':smart_unicode(datetime.datetime.combine(event.event_enddate_time,time))}
+		events_list.append(event_data)
+	# print "event_list", events_list
+	return HttpResponse(simplejson.dumps(events_list), mimetype='application/json')
 
 @csrf_exempt
 def user_profile(request):
@@ -856,6 +937,7 @@ def user_profile(request):
 		except:
 			events_for_user=Postevent.objects.filter(email=request.user.email)
 			return render_to_response("user_profile.html", {'requested_user':requested_user, 'events_for_user':events_for_user}, context_instance=RequestContext(request))
+
 @csrf_exempt
 def privacy(request):
 	print 'request.user.email',request.user.email
@@ -864,3 +946,72 @@ def privacy(request):
 	u.set_password(new_password)
 	u.save()
 	return render_to_response("user_profile.html", context_instance=RequestContext(request))
+
+def add_google_calendar(request, id=None):
+	print "add_google_calendar"   
+	try:
+		import argparse
+		flags = argparse.ArgumentParser(parents=[tools.argparser]).parse_args()
+	except ImportError:
+		flags = None
+	SCOPES = 'https://www.googleapis.com/auth/calendar.readonly'
+	print "SCOPES", SCOPES
+	CLIENT_SECRET_FILE = 'client_secret_google_calendar.json'
+	print "CLIENT_SECRET_FILE", CLIENT_SECRET_FILE
+	APPLICATION_NAME = 'Google Calendar API Python Quickstart'
+	print "APPLICATION_NAME", APPLICATION_NAME
+	def get_credentials():
+		"""Gets valid user credentials from storage.
+
+		If nothing has been stored, or if the stored credentials are invalid,
+		the OAuth2 flow is completed to obtain the new credentials.
+
+		Returns:
+			Credentials, the obtained credential.
+		"""
+		home_dir = os.path.expanduser('~')
+		credential_dir = os.path.join(home_dir, '.credentials')
+		if not os.path.exists(credential_dir):
+			os.makedirs(credential_dir)
+		credential_path = os.path.join(credential_dir,
+									   'calendar-python-quickstart.json')
+
+		store = oauth2client.file.Storage(credential_path)
+		credentials = store.get()
+		if not credentials or credentials.invalid:
+			flow = client.flow_from_clientsecrets(CLIENT_SECRET_FILE, SCOPES)
+			flow.user_agent = APPLICATION_NAME
+			if flags:
+				credentials = tools.run_flow(flow, store, flags)
+			else: # Needed only for compatibility with Python 2.6
+				credentials = tools.run(flow, store)
+			print('Storing credentials to ' + credential_path)
+		return credentials
+
+	def main():
+		"""Shows basic usage of the Google Calendar API.
+
+		Creates a Google Calendar API service object and outputs a list of the next
+		10 events on the user's calendar.
+		"""
+		credentials = get_credentials()
+		http = credentials.authorize(httplib2.Http())
+		service = discovery.build('calendar', 'v3', http=http)
+
+		now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
+		print('Getting the upcoming 10 events')
+		eventsResult = service.events().list(
+			calendarId='primary', timeMin=now, maxResults=10, singleEvents=True,
+			orderBy='startTime').execute()
+		events = eventsResult.get('items', [])
+
+		if not events:
+			print('No upcoming events found.')
+		for event in events:
+			start = event['start'].get('dateTime', event['start'].get('date'))
+			print(start, event['summary'])
+
+
+	if __name__ == '__main__':
+		main()
+

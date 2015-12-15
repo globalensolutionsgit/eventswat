@@ -1,115 +1,78 @@
-from datetime import datetime
 import logging
-import traceback
+import calendar
+from datetime import date, timedelta
+from django.db.models import Min
+from django.shortcuts import render
+from django.contrib.auth.decorators import permission_required
+from tracking.models import Visitor, Pageview
+from tracking.settings import TRACK_PAGEVIEWS
 
-from django.conf import settings
-from django.http import Http404, HttpResponse
-from django.shortcuts import render_to_response
-from django.template import RequestContext, Context, loader
-try:
-    from json import JSONEncoder #Python 2.6
-except ImportError:
-    from django.utils.simplejson import JSONEncoder #Older Django
-from django.utils.translation import ungettext
-from django.views.decorators.cache import never_cache
-from tracking.models import Visitor
-from tracking.utils import u_clean as uc
+log = logging.getLogger(__file__)
 
-DEFAULT_TRACKING_TEMPLATE = getattr(settings, 'DEFAULT_TRACKING_TEMPLATE',
-                                    'tracking/visitor_map.html')
-log = logging.getLogger('tracking.views')
+def parse_partial_date(date_str, upper=False):
+    if not date_str:
+        return
 
-def update_active_users(request):
-    """
-    Returns a list of all active users
-    """
-    if request.is_ajax():
-        active = Visitor.objects.active()
-        user = getattr(request, 'user', None)
+    day = None
+    toks = [int(x) for x in date_str.split('-')]
 
-        info = {
-            'active': active,
-            'registered': active.filter(user__isnull=False),
-            'guests': active.filter(user__isnull=True),
-            'user': user
-        }
+    if len(toks) > 3:
+        return None
 
-        # render the list of active users
-        t = loader.get_template('tracking/_active_users.html')
-        c = Context(info)
-        users = {'users': t.render(c)}
+    if len(toks) == 3:
+        year, month, day = toks
+    # Nissing day
+    elif len(toks) == 2:
+        year, month = toks
+    # Only year
+    elif len(toks) == 1:
+        year, = toks
+        month = 1 if upper else 12
 
-        return HttpResponse(content=JSONEncoder().encode(users))
+    if not day:
+        day = calendar.monthrange(year, month)[0] if upper else 1
 
-    # if the request was not made via AJAX, raise a 404
-    raise Http404
+    return date(year, month, day)
 
-@never_cache
-def get_active_users(request):
-    """
-    Retrieves a list of active users which is returned as plain JSON for
-    easier manipulation with JavaScript.
-    """
-    if request.is_ajax():
-        active = Visitor.objects.active().reverse()
-        now = datetime.now()
 
-        # we don't put the session key or IP address here for security reasons
-        try:
-            data = {'users': [{
-                    'id': v.id,
-                    #'user': uc(v.user),
-                    'user_agent': uc(v.user_agent),
-                    'referrer': uc(v.referrer),
-                    'url': uc(v.url),
-                    'page_views': v.page_views,
-                    'geoip': v.geoip_data_json,
-                    'last_update': (now - v.last_update).seconds,
-                    'friendly_time': ', '.join(friendly_time((now - v.last_update).seconds)),
-                } for v in active]}
-        except:
-            log.error('There was a problem putting all of the visitor data together:\n%s\n\n%s' % (traceback.format_exc(), locals()))
-            return HttpResponse(content='{}', mimetype='text/javascript')
+@permission_required('tracking.view_visitor')
+def stats(request):
+    "Counts, aggregations and more!"
+    errors = []
+    start_date, end_date = None, None
 
-        response = HttpResponse(content=JSONEncoder().encode(data),
-                                mimetype='text/javascript')
-        response['Content-Length'] = len(response.content)
+    try:
+        start_str = request.GET.get('start', None)
+        start_date = parse_partial_date(start_str)
+    except (ValueError, TypeError):
+        errors.append('<code>{0}</code> is not a valid start date'.format(start_str))
 
-        return response
+    try:
+        end_str = request.GET.get('end', None)
+        end_date = parse_partial_date(end_str, upper=True)
+    except (ValueError, TypeError):
+        errors.append('<code>{0}</code> is not a valid end date'.format(end_str))
 
-    # if the request was not made via AJAX, raise a 404
-    raise Http404
+    user_stats = list(Visitor.objects.user_stats(start_date, end_date))
 
-def friendly_time(last_update):
-    minutes = last_update / 60
-    seconds = last_update % 60
+    track_start_time = Visitor.objects.order_by('start_time')[0].start_time
+    # If the start_date is later than when tracking began, no reason
+    # to warn about missing data
+    if start_date and calendar.timegm(start_date.timetuple()) < calendar.timegm(track_start_time.timetuple()):
+        warn_start_time = track_start_time
+    else:
+        warn_start_time = None
 
-    friendly_time = []
-    if minutes > 0:
-        friendly_time.append(ungettext(
-                '%(minutes)i minute',
-                '%(minutes)i minutes',
-                minutes
-        ) % {'minutes': minutes })
-    if seconds > 0:
-        friendly_time.append(ungettext(
-                '%(seconds)i second',
-                '%(seconds)i seconds',
-                seconds
-        ) % {'seconds': seconds })
+    context = {
+        'errors': errors,
+        'track_start_time': track_start_time,
+        'warn_start_time': warn_start_time,
+        'visitor_stats': Visitor.objects.stats(start_date, end_date),
+        'user_stats': user_stats,
+        'tracked_dates': Visitor.objects.tracked_dates(),
+    }
 
-    return friendly_time or 0
+    if TRACK_PAGEVIEWS:
+        context['pageview_stats'] = Pageview.objects.stats(start_date, end_date)
 
-def display_map(request, template_name=DEFAULT_TRACKING_TEMPLATE,
-        extends_template='base.html'):
-    """
-    Displays a map of recently active users.  Requires a Google Maps API key
-    and GeoIP in order to be most effective.
-    """
-
-    GOOGLE_MAPS_KEY = getattr(settings, 'GOOGLE_MAPS_KEY', None)
-
-    return render_to_response(template_name,
-                              {'GOOGLE_MAPS_KEY': GOOGLE_MAPS_KEY,
-                               'template': extends_template},
-                              context_instance=RequestContext(request))
+    return render(request, 'tracking/dashboard.html', context)

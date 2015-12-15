@@ -1,189 +1,167 @@
-from datetime import datetime, timedelta
-import logging
 import re
-import traceback
+import logging
 
-from django.conf import settings
-from django.contrib.auth.models import AnonymousUser
-from django.core.cache import cache
-from django.core.urlresolvers import reverse, NoReverseMatch
-from django.db.utils import DatabaseError
-from django.http import Http404
+from core import helper
+from actors import actor_ip
+from control.models import RecentlySearch
+from leads.models import Lead
+from leads.search import search as leadsearch
+from tracking.models import Visitor, Pageview
+from tracking.utils import get_ip_address, update_recently_view_lead
+from tracking.settings import (TRACK_AJAX_REQUESTS,
+    TRACK_ANONYMOUS_USERS, TRACK_PAGEVIEWS, TRACK_IGNORE_URLS)
+from fixido.util import ip_checking
 
-from tracking import utils
-from tracking.models import Visitor, UntrackedUserAgent, BannedIP
-
-title_re = re.compile('<title>(.*?)</title>')
-log = logging.getLogger('tracking.middleware')
+TRACK_IGNORE_URLS = map(lambda x: re.compile(x), TRACK_IGNORE_URLS)
+log = logging.getLogger(__file__)
 
 class VisitorTrackingMiddleware(object):
-    """
-    Keeps track of your active users.  Anytime a visitor accesses a valid URL,
-    their unique record will be updated with the page they're on and the last
-    time they requested a page.
+  def process_response(self, request, response):
+    # Session framework not installed, nothing to see here..
 
-    Records are considered to be unique when the session key and IP address
-    are unique together.  Sometimes the same user used to have two different
-    records, so I added a check to see if the session key had changed for the
-    same IP and user agent in the last 5 minutes
-    """
+    if not hasattr(request, 'session'):            
+      return response
+    # Do not track AJAX requests..
+    #if request.is_ajax() and not TRACK_AJAX_REQUESTS:
+    #    return response
+    
+    # If dealing with a non-authenticated user, we still should track the
+    # session since if authentication happens, the `session_key` carries
+    # over, thus having a more accurate start time of session
+    user = getattr(request, 'user', None)
 
-    @property
-    def prefixes(self):
-        """Returns a list of URL prefixes that we should not track"""
+    # Check for anonymous users
+    if not user or user.is_anonymous():
+      if not TRACK_ANONYMOUS_USERS:
+        return response
+      user = None
+    
+    elif not hasattr(user, 'actor'):
+      user = None
+    
+    elif not user.is_staff:
+      user = user.actor
 
-        if not hasattr(self, '_prefixes'):
-            self._prefixes = getattr(settings, 'NO_TRACKING_PREFIXES', [])
+    # Force a save to generate a session key if one does not exist
+    if not request.session.session_key:
+      request.session.save()
 
-            if not getattr(settings, '_FREEZE_TRACKING_PREFIXES', False):
-                for name in ('MEDIA_URL', 'STATIC_URL'):
-                    url = getattr(settings, name)
-                    if url and url != '/':
-                        self._prefixes.append(url)
+    # A Visitor row is unique by session_key
+    session_key = request.session.session_key
 
-                try:
-                    # finally, don't track requests to the tracker update pages
-                    self._prefixes.append(reverse('tracking-refresh-active-users'))
-                except NoReverseMatch:
-                    # django-tracking hasn't been included in the URLconf if we
-                    # get here, which is not a bad thing
-                    pass
-
-                settings.NO_TRACKING_PREFIXES = self._prefixes
-                settings._FREEZE_TRACKING_PREFIXES = True
-
-        return self._prefixes
-
-    def process_request(self, request):
-        # don't process AJAX requests
-        if request.is_ajax(): return
-
-        # create some useful variables
-        ip_address = utils.get_ip(request)
-        user_agent = unicode(request.META.get('HTTP_USER_AGENT', '')[:255], errors='ignore')
-
-        # retrieve untracked user agents from cache
-        ua_key = '_tracking_untracked_uas'
-        untracked = cache.get(ua_key)
-        if untracked is None:
-            log.info('Updating untracked user agent cache')
-            untracked = UntrackedUserAgent.objects.all()
-            cache.set(ua_key, untracked, 3600)
-
-        # see if the user agent is not supposed to be tracked
-        for ua in untracked:
-            # if the keyword is found in the user agent, stop tracking
-            if user_agent.find(ua.keyword) != -1:
-                log.debug('Not tracking UA "%s" because of keyword: %s' % (user_agent, ua.keyword))
-                return
-
-        if hasattr(request, 'session') and request.session.session_key:
-            # use the current session key if we can
-            session_key = request.session.session_key
-        else:
-            # otherwise just fake a session key
-            session_key = '%s:%s' % (ip_address, user_agent)
-            session_key = session_key[:40]
-
-        # ensure that the request.path does not begin with any of the prefixes
-        for prefix in self.prefixes:
-            if request.path.startswith(prefix):
-                log.debug('Not tracking request to: %s' % request.path)
-                return
-
-        # if we get here, the URL needs to be tracked
-        # determine what time it is
-        now = datetime.now()
-        if getattr(settings, 'USE_TZ', False):
-            import pytz
-            tz = pytz.timezone(settings.TIME_ZONE)
-            now = tz.localize(now)
-
-        attrs = {
-            'session_key': session_key,
-            'ip_address': ip_address
-        }
-
-        # for some reason, Visitor.objects.get_or_create was not working here
-        try:
-            visitor = Visitor.objects.get(**attrs)
-        except Visitor.DoesNotExist:
-            # see if there's a visitor with the same IP and user agent
-            # within the last 5 minutes
-            cutoff = now - timedelta(minutes=5)
-            visitors = Visitor.objects.filter(
-                ip_address=ip_address,
-                user_agent=user_agent,
-                last_update__gte=cutoff
-            )
-
-            if len(visitors):
-                visitor = visitors[0]
-                visitor.session_key = session_key
-                log.debug('Using existing visitor for IP %s / UA %s: %s' % (ip_address, user_agent, visitor.id))
-            else:
-                # it's probably safe to assume that the visitor is brand new
-                visitor = Visitor(**attrs)
-                log.debug('Created a new visitor: %s' % attrs)
-        except:
-            return
-
-        # determine whether or not the user is logged in
-        user = request.user
-        if isinstance(user, AnonymousUser):
-            user = None
-
-        # update the tracking information
+    try:
+      visitor = Visitor.objects.get(pk=session_key)
+      # Update the user field if the visitor user is not set. This
+      # implies authentication has occured on this request and now
+      # the user is object exists. Check using `user_id` to prevent
+      # a database hit.
+      if user and not visitor.user_id:
         visitor.user = user
-        visitor.user_agent = user_agent
+    except Visitor.DoesNotExist:
+      # Log the ip address. Start time is managed via the
+      # field `default` value
+      visitor = Visitor(pk=session_key, ip_address=get_ip_address(request),
+          user_agent=request.META.get('HTTP_USER_AGENT', None))
 
-        # if the visitor record is new, or the visitor hasn't been here for
-        # at least an hour, update their referrer URL
-        one_hour_ago = now - timedelta(hours=1)
-        if not visitor.last_update or visitor.last_update <= one_hour_ago:
-            visitor.referrer = utils.u_clean(request.META.get('HTTP_REFERER', 'unknown')[:255])
+    visitor.expiry_age = request.session.get_expiry_age()
+    visitor.expiry_time = request.session.get_expiry_date()
 
-            # reset the number of pages they've been to
-            visitor.page_views = 0
-            visitor.session_start = now
+    # Be conservative with the determining time on site since simply
+    # increasing the session timeout could greatly skew results. This
+    # is the only time we can guarantee.
+    now = helper.get_now()
+    time_on_site = 0
+    if visitor.start_time:
+      time_on_site = (now - visitor.start_time).seconds
+    visitor.time_on_site = time_on_site
+    
+    ip_number = actor_ip()
+    #if not get_ip_address(request).startswith("66.249"):
+    if not ip_checking(get_ip_address(request)):
+      visitor.save()
 
-        visitor.url = request.path
-        visitor.page_views += 1
-        visitor.last_update = now
-        try:
-            visitor.save()
-        except DatabaseError:
-            log.error('There was a problem saving visitor information:\n%s\n\n%s' % (traceback.format_exc(), locals()))
+    if TRACK_PAGEVIEWS:
+      # Match against `path_info` to not include the SCRIPT_NAME..
+      path = request.path_info.lstrip('/')
+      for url in TRACK_IGNORE_URLS:
+        if url.match(path):
+          break
+      else:
+        if  'admin' in request.path or \
+            'password_reset' in request.path or \
+            'jsi18n' in request.path or \
+            '/change-password/' in request.path or \
+            '/media/' in request.path or \
+            '/show_me_the_money/' in request.path: 
+          pass
+        else:
+          #if not get_ip_address(request).startswith("66.249"):
+          if not ip_checking(get_ip_address(request)):
+            pageview = Pageview(visitor=visitor, view_time=now, actor=user,
+              url=request.get_full_path(), ip_address=get_ip_address(request))
+            pageview.save()
+          
+          system_id = request.COOKIES.get('csrftoken')
+          if 'access_secret' in request.GET:
+            method = 'api'
+          else:  
+            method = 'websearch'
+          
+          query = request.REQUEST.get('q')
+          if query or query == '':
+            if query != None:
+              l_search = leadsearch(query)
+              leads_count = l_search.count()
+              
+              if not user:
+                rs = RecentlySearch.objects.filter(
+                  activity_view=query, system_id=system_id, method=method)
+                
+                if rs.count() > 1:
+                  rs = rs.order_by('-modified')
+                  rs = rs.exclude(id=rs[0].id)
+                  rs.delete()
+                
+                #if not ip_number.startswith("66.249"):
+                if not ip_checking(get_ip_address(request)):
+                  search_q, created = RecentlySearch.objects.get_or_create(
+                  activity_view=query, system_id=system_id, method=method)
+                
+                  if created:
+                    search_q.user = user
+                
+              else:
+                rs = RecentlySearch.objects.filter(
+                  activity_view=query, method=method, user=user)
+                
+                if rs.count() > 1:
+                  rs = rs.order_by('-modified')
+                  rs = rs.exclude(id=rs[0].id)
+                  rs.delete()
 
-class VisitorCleanUpMiddleware:
-    """Clean up old visitor tracking records in the database"""
+                #if not ip_number.startswith("66.249"):
+                if not ip_checking(get_ip_address(request)):
+                  search_q, created = RecentlySearch.objects.get_or_create(
+                  activity_view=query, method=method, user=user)
+                
+                  if created:
+                    search_q.system_id = system_id
+              
+              
+              #if not ip_number.startswith("66.249"):
+              if not ip_checking(get_ip_address(request)):
+                search_q.ip_number = ip_number
+                search_q.modified = now
+                search_q.leadscount = leads_count
+                search_q.save()    
 
-    def process_request(self, request):
-        timeout = utils.get_cleanup_timeout()
-
-        if str(timeout).isdigit():
-            log.debug('Cleaning up visitors older than %s hours' % timeout)
-            timeout = datetime.now() - timedelta(hours=int(timeout))
-            Visitor.objects.filter(last_update__lte=timeout).delete()
-
-class BannedIPMiddleware:
-    """
-    Raises an Http404 error for any page request from a banned IP.  IP addresses
-    may be added to the list of banned IPs via the Django admin.
-
-    The banned users do not actually receive the 404 error--instead they get
-    an "Internal Server Error", effectively eliminating any access to the site.
-    """
-
-    def process_request(self, request):
-        key = '_tracking_banned_ips'
-        ips = cache.get(key)
-        if ips is None:
-            # compile a list of all banned IP addresses
-            log.info('Updating banned IPs cache')
-            ips = [b.ip_address for b in BannedIP.objects.all()]
-            cache.set(key, ips, 3600)
-
-        # check to see if the current user's IP address is in that list
-        if utils.get_ip(request) in ips:
-            raise Http404
+          lead_id = re.match('.*/leads/([0-9]+)/', request.path)
+          if lead_id:
+            lead_id = lead_id.group(1)
+            if Lead.objects.filter(pk=lead_id).exists():
+              lead = Lead.objects.get(pk=lead_id)
+              update_recently_view_lead(lead, request,'websearch')
+            else:
+              print 'Lead is not in our system'
+    
+    return response

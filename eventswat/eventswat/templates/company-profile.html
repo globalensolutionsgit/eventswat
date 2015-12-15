@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static from staticfiles %}
 {% load i18n %}
+{% load humanize %}
 {% block content %}
 <script type="text/javascript" src="{% static "js/imagelightbox.js" %}"></script>
     <div id="main-wrapper">
@@ -98,6 +99,7 @@
                               <strong>End date</strong>
                               <span>{{events.enddate}}</span>
                             </li>
+                            <li><a href="/add_google_calendar/{{events.id}}">Add To Google Calendar</a></li>
                         </ul>
                     </div><!--end opening-hours-->
                     <!-- <div class="square-button">
@@ -120,61 +122,17 @@
     <p>Your comment has been successfully posted</p>
 </div>
 
+
+<!-- comments django package starts-->
 <div class="comments-section">
-    <form class="comment-form" action="{%url "reviews.views.post" %}" method="post" name="form" id="review_form">
-    {% csrf_token %}
-        <div class="row">
-            <div class="col-md-4">
-                <input type="text"  placeholder="Name *" name="name" id="name">
-                 <label class="error" for="name" id="name_error" style="color:red;">This field is required.</label>
-            </div>
 
-            <div class="col-md-4">
-                <input type="email" name="email" id="email" placeholder="Email *">
-                 <label class="error" for="email" id="email_error" style="color:red;">This field is required.</label>
-            </div>
-
-            <div class="col-md-4">
-                <!-- <input type="text" placeholder="Ratings" name="rating"> -->
-                <fieldset class="rating" name="rating" id="rating">
-                    <legend>Please rate:</legend>
-                    <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="Rocks!">5 stars</label>
-                    <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="Pretty good">4 stars</label>
-                    <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="Modrate">3 stars</label>
-                    <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="Kinda bad">2 stars</label>
-                    <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="Poor">1 star</label>
-                </fieldset>
-                <label class="error" for="rating" id="rating_error" style="color:red;">This field is required.</label>
-            </div>
-        </div>
-
-        <textarea  placeholder="Your Comment ..." name="content" id="content"></textarea>
-        <label class="error" for="content" id="content_error" style="color:red;">This field is required.</label>
-        <button class="btn btn-default" type="submit" id="review_btn" ><i class="fa fa-envelope-o"></i> Send Message</button>
-        <input type="hidden" name="postevent" value="{{events.id}}" id="postevent">
-    </form>
+{% include 'index_comments.html' %}
+ 
 </div>
-<div class="reviews">
-{% for reviews in review %}
-        <div class="cau clearfix">
-            <img width="38" height="38" class="avatar avatar-loaded fl" src="{{STATIC_URL}}img/user.png">            <div class="aum">
-                <h4>{{reviews.name}}</h4>
-                
-            </div>
-        </div>
-        <div class="ctx">
-            <p class="comments">{{reviews.content}}</p>
-        </div>
-        
-{% endfor %}
+<!-- package ends -->
 
-   <!--  <span>NAME: 
-    {{reviews.name}}</span><br/>
-    <span>COMMENTS:
-    {{reviews.content}}</span><br/>
-    <br/>
- -->
-</div>
+
+
 {% if related_events %}
 <div class="featured-listing" id= "featured-list">
         <div class="our-partners">

@@ -35,8 +35,10 @@ INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    # 'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'events',
     'eventswat',
     'haystack',
@@ -44,18 +46,19 @@ INSTALLED_APPS = (
     'payu',
     'commerce',
     'postbanner',
-    # 'social.apps.django_app.default',
-    # 'tracking',
     'reviews',
     'worker',
     'south',
     'postevent',
     'usermanagement',
     'logs',
+    'core',
+    'tracking',
 
 )
 
-SITE_ID = 1
+
+
 
 HAYSTACK_CONNECTIONS = {
     'default': {
@@ -114,6 +117,7 @@ USE_L10N = True
 USE_TZ = True
 
 
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
@@ -147,6 +151,12 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     # 'social_auth.context_processors.social_auth_login_redirect',
 )
 
+AUTH_USER_EMAIL_UNIQUE = True
+
+# from django.contrib.auth.models import User
+# User._meta.get_field("username")._unique = False
+
+
 LOGIN_REDIRECT_URL = '/'
 SOCIAL_AUTH_FACEBOOK_KEY ='1659129517705839'
 SOCIAL_AUTH_FACEBOOK_SECRET ='8b2ebde6051b128b0f453b8384bc5989'
@@ -162,9 +172,6 @@ COMPRESS_ENABLED = True
 COMPRESS_JS_FILTERS = [
     'compressor.filters.template.TemplateFilter',
 ]
-FLEXSELECT = {
-    'include_jquery': True,
-}
 #EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # GEOS_LIBRARY_PATH = '/usr/local/lib/libgeos_c.so'
@@ -206,3 +213,4 @@ TEMPLATE_LOADERS = (
     'django.template.loaders.app_directories.Loader',
 
 )
+LATEST_INDEX=1

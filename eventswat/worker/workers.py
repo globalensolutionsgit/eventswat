@@ -80,7 +80,7 @@ class EmailNotificationWorker(WorkerBase):
 				# yesterday = now - timedelta(hours=24)
 				print "task", task
 				for postevents in postevent:
-					user=str(postevents.name)
+					user=str(postevents.user_name)
 					postevent_id = str(postevents.id)
 					print "user",user
 					print "postevent_id", postevent_id
@@ -90,14 +90,14 @@ class EmailNotificationWorker(WorkerBase):
 						subject="Your " + str(postevents.event_title) + " Your event will be removed from today onwards"
 						
 					postevents.status_isactive = False      
-					print postevents.email
+					print postevents.user_email
 					# ctx={'user':user}
 					 
 					send_templated_mail(
 						template_name = 'welcome',
 						subject = "subject",
 						from_email = 'info@eventswat.com',
-						recipient_list = [postevents.email],
+						recipient_list = [postevents.user_email],
 						context = {'user':user},
 							)
 					print "mail sent successfully"

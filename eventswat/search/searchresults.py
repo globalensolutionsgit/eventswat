@@ -86,7 +86,7 @@ def searchresults(q=None, params=None, orderby=None, groupby=None,
     model_cls = Postevent
 
   if params is None:
-    params = OrderedDict([('category', None), ('eventtype', None), ('city', None), ('eventtitle', None),('payment', None),('filterdata', None)])   
+    params = OrderedDict([('category', None), ('eventtype', None), ('city', None), ('eventtitle', None),('payment', None)])   
   #   params = OrderedDict([('locations', None), ('keywords', None), ('lang', ['en', 'sv', 'de']), ('category', None), ('budget_start', None), ('budget_end', None), ('deal_start', None), ('deal_end', None), ('price_start', None), ('price_end', None), ('created_start', None), ('created_end', None), ('ranking_start', None), ('ranking_end', None), ('rating_start', None), ('rating_end', None)]) 
  
   
@@ -124,8 +124,10 @@ def searchresults(q=None, params=None, orderby=None, groupby=None,
   if orderby:
     sqs = sqs.order_by(orderby)
 
-  if filter_by_calendar:
+  if filter_by_calendar is None:
     print "yes filter_by_calendar"
+    sqs = None
+  else:
     sqs = filter_by_calendar
 
   # if geo_location:

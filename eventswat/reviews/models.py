@@ -6,6 +6,8 @@ from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
 from events.models import *
 from datetime import datetime
+from django import forms
+from postevent.models import Postevent
 
 class WebsiteFeedback(models.Model):
 	name= models.CharField(max_length=50, null=True)
@@ -13,11 +15,26 @@ class WebsiteFeedback(models.Model):
 	comments= models.TextField()
 	rating=models.IntegerField()
 
-class Review(models.Model):
-    name =  models.CharField(max_length=255)
-    rating = models.PositiveSmallIntegerField(null = True, blank= True)  
-    content = models.TextField(max_length=500)
-    date = models.DateTimeField(default=datetime.now(), blank=True)   
-    event_id = models.CharField(max_length=255, null=True,
-                             blank=True)
+  
+
+
+class Comment(models.Model):
+    name= models.CharField(max_length=50, null=True)
+    email= models.EmailField(max_length=50)
+    content = models.TextField()
+    date = models.DateTimeField(auto_now_add=True)
+    path = models.CommaSeparatedIntegerField(blank=True, editable=False,  max_length=500)
+    depth = models.PositiveSmallIntegerField(default=0)
+    postevent = models.ForeignKey(Postevent)
+    def __unicode__(self):
+        return self.content
     
+class CommentForm(forms.ModelForm):
+    #Hidden value to get a child's parent
+
+    parent = forms.CharField(widget=forms.HiddenInput(
+                            attrs={'class': 'parent'}), required=False,)
+    # postevent = forms.CharField(widget = forms.HiddenInput())
+    class Meta:
+        model = Comment
+        fields = ('content','name','email',)

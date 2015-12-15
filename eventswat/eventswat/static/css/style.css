@@ -9156,9 +9156,9 @@ mark
     font-family: Verdana,Arial,sans-serif;
     font-size: 0.9em;
     display: none;
-    position: absolute;
+    position: relative;
     /*float: right;*/
-    top: 35px;
+    top: 0px;
     left: 225px;
 }
 
@@ -9168,9 +9168,9 @@ mark
     font-family: Verdana,Arial,sans-serif;
     font-size: 0.9em;
     display: none;
-    position: absolute;
+    position: relative;
     /*float: right;*/
-    top: 46px;
+    top: 0px;
     left: 257px;
 }
 .error1{
@@ -10274,3 +10274,42 @@ color: #fff;
     height: 60%;
     width: 396px;
 }
+
+
+        #commenters {
+            padding-left: 0px;
+        }
+        
+            #commenters li {
+                list-style-type: none;
+            }
+        
+        .poster {
+            font-size: 12px;
+            color: #AAAAAA;
+        }
+        
+        #postcomment ul {
+            padding-left: 0px;
+        }
+        
+            #postcomment ul li {
+                list-style-type:  none;
+                /*padding-bottom: 5px;*/
+            }
+                
+        #postcomment label {
+            width: 74px;
+            display: inline-block;
+        }
+        
+        .c {
+            font-size: 14px;
+           
+            -webkit-border-radius: 10px;
+            -moz-border-radius: 10px;
+            border-radius: 10px;
+            
+            padding: 10px;
+            margin-bottom: 10px;
+        }

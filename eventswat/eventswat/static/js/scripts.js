@@ -500,25 +500,25 @@ $('.error').hide();
          $('.error').hide();
           var name = $('input[name="name"]').val();
           if (name == "") {
-            $("label#name_error").show();
+            $(".error").show();
             $("input#name").focus();
             return false;
           }
           var email = $('input[name="email"]').val();
           if (email == "") {
-            $("label#email_error").show();
+           $(".error").show();
             $("input#email").focus();
             return false;
           }
           var rating = $('input[name="rating"]').val();
           if (rating == "") {
-            $("label#rating_error").show();
+            $(".error").show();
             $("input#rating").focus();
             return false;
           }
           var comments = $('input[name="comments"]').val();
           if (comments == "") {
-            $("label#comments_error").show();
+            $(".error").show();
             $("input#comments").focus();
             return false;
           }
@@ -527,10 +527,10 @@ $('.error').hide();
                type:"POST",
                url:"/feed/",
                data: {
-                      'name': $('#name').val(),
-                      'email': $('#email').val(),
+                      'name': $('input[name="name"]').val(),
+                      'email':$('input[name="email"]').val(),
                       'rating': $('input[name="rating"]').val(),
-                      'comments': $('#comments').val(),
+                      'comments': $('input[name="comments"]').val(),
                       
                       },
                success: function(){
@@ -538,10 +538,10 @@ $('.error').hide();
                    setTimeout(function() { $("#mgs").hide(); }, 5000);
                   }
           });
-          $('#name').val('');
-          $('#email').val('');
-          $('#rating').val('');
-          $('#comments').val('');
+          $('#id_name').val('');
+          $('#id_email').val('');
+          $('#id_rating').val('');
+          $('#id_comments').val('');
           return false;
         
        });
@@ -1068,13 +1068,13 @@ $('.events').click(function(){
   // New Registration form validation code for popup design
   jQuery('#create_user').click(function(){  
     // alert("create_user");
-    var sign_up_required =["emailid_signup", "username_signup", "mobile_signup", "password_signup", "confirm_password_signup" ];  
+    var sign_up_required =["id_username", "id_email", "id_mobile", "id_password", "id_confirm_password"];  
     for (i=0;i<sign_up_required.length;i++) {
       var input = jQuery('#'+sign_up_required[i]);
-      if (input.val() == "")  {   
+      if (input.val() == "") {   
         input.addClass("error_input_field");
         input.next().next('.error').hide();
-        input.next('.error').show();         
+        input.next('.error').show();
       } else {    
         input.removeClass("error_input_field");
 
@@ -1082,45 +1082,45 @@ $('.events').click(function(){
       }
     }
     //password
-    if($('#password_signup').val() == ''){   
-        $('#password_signup').addClass("error_input_field");
-        $('#password_signup').next('.error').show();         
+    if($('#id_password').val() == ''){   
+        $('#id_password').addClass("error_input_field");
+        $('#id_password').next('.error').show();         
       } else {    
-        $('#password_signup').removeClass("error_input_field");
-        $('#password_signup').next('.error').hide();       
+        $('#id_password').removeClass("error_input_field");
+        $('#id_password').next('.error').hide();       
       }
     // confirm password
-    if($('#confirm_password_signup').val() == ''){   
-        $('#confirm_password_signup').addClass("error_input_field");
-        $('#confirm_password_signup').next().next('.error').hide(); 
-        $('#confirm_password_signup').next('.error').show();             
+    if($('#id_confirm_password').val() == ''){   
+        $('#id_confirm_password').addClass("error_input_field");
+        $('#id_confirm_password').next().next('.error').hide(); 
+        $('#id_confirm_password').next('.error').show();             
       } 
-      else if ($('#confirm_password_signup').val() != $('#password_signup').val()){
-        $('#confirm_password_signup').addClass("error_input_field");
-        $('#confirm_password_signup').next('.error').hide();  
-        $('#confirm_password_signup').next().next('.error').show(); 
+      else if ($('#id_confirm_password').val() != $('#id_password').val()){
+        $('#id_confirm_password').addClass("error_input_field");
+        $('#id_confirm_password').next('.error').hide();  
+        $('#id_confirm_password').next().next('.error').show(); 
       }
       else {    
-        $('#confirm_password_signup').removeClass("error_input_field");
-        $('#confirm_password_signup').next('.error').hide();    
-        $('#confirm_password_signup').next().next('.error').hide();    
+        $('#id_confirm_password').removeClass("error_input_field");
+        $('#id_confirm_password').next('.error').hide();    
+        $('#id_confirm_password').next().next('.error').hide();    
       }
     //Validate the e-mail
-    if($('#emailid_signup').val() != ''){
-    if (!/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/.test($('#emailid_signup').val())) {
-      $('#emailid_signup').addClass("error_input_field");
-      $('#emailid_signup').next('.error').hide();
-      $('#emailid_signup').next().next('.error').show();
+    if($('#id_email').val() != ''){
+    if (!/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/.test($('#id_email').val())) {
+      $('#id_email').addClass("error_input_field");
+      $('#id_email').next('.error').hide();
+      $('#id_email').next().next('.error').show();
     }
     else
     {
-      $('#emailid_signup').removeClass("error_input_field");
-      $('#emailid_signup').next().next('.error').hide();
+      $('#id_email').removeClass("error_input_field");
+      $('#id_email').next().next('.error').hide();
     }
     }
     //Validate the mobile
-    if($('#mobile_signup').val() != ''){
-      mobile_validation('#mobile_signup');
+    if($('#id_mobile').val() != ''){
+      mobile_validation('#id_mobile');
     }
 
      if ($("#user_form :input").hasClass("error_input_field")){
@@ -1146,7 +1146,7 @@ $('.events').click(function(){
         }
 
         id = "#" + $(this).attr('id');
-        if ((id=="#emailid_signup" && $(id).val() != '') || (id=="#emailid_signin")){
+        if ((id=="#id_email" && $(id).val() != '') || (id=="#id_login_email")){
            if (!/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/.test($(id).val())) {
               $(id).addClass("error_input_field");
               $(id).siblings('.email_exists_error').hide();
@@ -1161,12 +1161,12 @@ $('.events').click(function(){
             } 
         }
 
-        if(id=="#mobile_signup")
+        if(id=="#id_mobile")
           mobile_validation(id);
 
 
-        if ((id=="#confirm_password_signup") && ($(id).val()!='')){
-          if($(id).val()!=$('#password_signup').val()){
+        if ((id=="#id_confirm_password") && ($(id).val()!='')){
+          if($(id).val()!=$('#id_password').val()){
             $(id).addClass("error_input_field");
             $(id).next('.error').hide();  
             $(id).next().next('.error').show(); 
@@ -1207,7 +1207,7 @@ $('.events').click(function(){
     return false;
   }
   // sign in form validation
-  var sign_in_required =["emailid_signin", "password_signin"];
+  var sign_in_required =["id_login_email", "id_login_password"];
   jQuery('#sign_in').click(function(){ 
       // email = $('#emailid_signin').val();    
       for (i=0;i<sign_in_required.length;i++) {
@@ -1222,28 +1222,28 @@ $('.events').click(function(){
       }
     }
 
-    if(($('#emailid_signin').val() != '') && (!/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/.test($('#emailid_signin').val()))){
-      $('#emailid_signin').addClass("error_input_field");
-      $('#emailid_signin').next().next('.error').show();
+    if(($('#id_login_email').val() != '') && (!/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/.test($('#id_login_email').val()))){
+      $('#id_login_email').addClass("error_input_field");
+      $('#id_login_email').next().next('.error').show();
     }
     else
     {
-      $('#emailid_signin').removeClass("error_input_field");
-      $('#emailid_signin').next().next('.error').hide();
+      $('#id_login_email').removeClass("error_input_field");
+      $('#id_login_email').next().next('.error').hide();
     }
 
-    if((($('#emailid_signin').val() != '') && (/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/.test($('#emailid_signin').val()))) && ($('#password_signin').val() != '')){
+    if((($('#id_login_email').val() != '') && (/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/.test($('#id_login_email').val()))) && ($('#id_login_password').val() != '')){
         $.post("/login/", $('#login_val').serialize(),
           function (data) {
           if (data.email_exists)
-            $('#emailid_signin').siblings('.email_exists_error').show();
+            $('#id_login_email').siblings('.email_exists_error').show();
           else
-            $('#emailid_signin').siblings('.email_exists_error').hide();
+            $('#id_login_email').siblings('.email_exists_error').hide();
 
           if(data.password)
-            $('#password_signin').siblings('.error_pwd').show();
+            $('#id_login_password').siblings('.error_pwd').show();
           else
-            $('#password_signin').siblings('.error_pwd').hide();
+            $('#id_login_password').siblings('.error_pwd').hide();
 
           if (isHTML(data))
             top.location.href= $('input[name="next"]').val();             
@@ -1265,33 +1265,33 @@ $('.events').click(function(){
         $(this).removeClass("error_input_field");
         $(this).next('.error').hide();        
       }
-      if(($('#emailid_signin').val() != '') && (!/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/.test($('#emailid_signin').val()))){
-        $('#emailid_signin').addClass("error_input_field");
+      if(($('#id_login_email').val() != '') && (!/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/.test($('#id_login_email').val()))){
+        $('#id_login_email').addClass("error_input_field");
         $(this).siblings('.email_exists_error').hide();
         $(this).siblings('.error').hide();
-        $('#emailid_signin').next().next('.error').show();
+        $('#id_login_email').next().next('.error').show();
       }
       else
       {
-        $('#emailid_signin').removeClass("error_input_field");
-        $('#emailid_signin').next().next('.error').hide();
+        $('#id_login_email').removeClass("error_input_field");
+        $('#id_login_email').next().next('.error').hide();
       }
-      if((($('#emailid_signin').val() != '') && (/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/.test($('#emailid_signin').val()))) || ($('#password_signin').val() != '')){
+      if((($('#id_login_email').val() != '') && (/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/.test($('#id_login_email').val()))) || ($('#password_signin').val() != '')){
         $.post("/login/", $('#login_val').serialize(),
           function (data) {
           if (data.email_exists){
-            $('#emailid_signin').siblings('.error').hide();
-            $('#emailid_signin').siblings('.email_exists_error').show();
+            $('#id_login_email').siblings('.error').hide();
+            $('#id_login_email').siblings('.email_exists_error').show();
           }
           else
-            $('#emailid_signin').siblings('.email_exists_error').hide();
+            $('#id_login_email').siblings('.email_exists_error').hide();
 
           if(data.password){
-            $('#password_signin').siblings('.error').hide();
-            $('#password_signin').siblings('.error_pwd').show();
+            $('#id_login_password').siblings('.error').hide();
+            $('#id_login_password').siblings('.error_pwd').show();
           }
           else
-            $('#password_signin').siblings('.error_pwd').hide();
+            $('#id_login_password').siblings('.error_pwd').hide();
 
           // if (isHTML(data))
           //   top.location.href= $('input[name="next"]').val();             
@@ -1669,10 +1669,10 @@ $(document).on('change','.banner',function(){
   //   mobile_validation($(this));
   // });
 
-  $('#password_signup').keyup(function(){
-     strength_status = checkStrength($('#password_signup').val());
+  $('#id_password').keyup(function(){
+     strength_status = checkStrength($('#id_password').val());
      // alert(strength_status);
-     $('#password_signup').addClass("error_input_field"); 
+     $('#id_password').addClass("error_input_field"); 
      error = $(this).next().next('.error').text(strength_status);
      if (error.html() == "Too short" || error.html() == "Weak")
       $(this).next().next('.error').css({"color":"#900"});

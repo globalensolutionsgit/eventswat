@@ -2,7 +2,7 @@ from django.contrib import admin
 from postevent.models import *
 from events.models import SubcategoryRelatedField
 from django import forms
-from flexselect import FlexSelectWidget
+# from flexselect import FlexSelectWidget
 
 
 class CampusCollegeAdmin(admin.ModelAdmin):
