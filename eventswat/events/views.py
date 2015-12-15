@@ -56,26 +56,8 @@ def home(request):
 	if request.user.is_superuser:
 		logout(request)
 		return HttpResponseRedirect('/')
-<<<<<<< HEAD
-	return render_to_response("index_v2.html", context_instance=RequestContext(request))
-=======
 	form = WebsiteFeedbackForm()
-	# if request.is_ajax():
-	# 	if request.method == 'POST':
-	# 		print "enter"
-	# 		if form.is_valid():
-	# 			form.save()
-	# 			return HttpResponseRedirect('/thanks/')
-	# 		else:
-	# 			form = WebsiteFeedbackForm()
-			
-	# 		msg = "The operation has been received correctly."
-	# else:
-	# 	msg = "Fail"
-
-	# # return HttpResponse(msg)
 	return render_to_response("index_v2.html", {'form':form},context_instance=RequestContext(request))
->>>>>>> ab69a061970fc4d2e917bb3834c4945fc4c1cd25
 
 def about(request):
 	return render_to_response("about-us.html", context_instance=RequestContext(request))
@@ -102,24 +84,14 @@ def logout_view(request):
 def details(request,id=None):
 	# try:
 	postevent=Postevent.objects.get(pk=id)
-<<<<<<< HEAD
-=======
-	print postevent,"postevent"
->>>>>>> ab69a061970fc4d2e917bb3834c4945fc4c1cd25
 	img=str(postevent.event_poster).split(',')
 	photo=img[0]
 	photos=[n for n in str(postevent.event_poster).split(',')]
 	organizer=Organizer.objects.filter(postevent__id=postevent.id)
-<<<<<<< HEAD
 	review=Review.objects.filter(event_id=postevent.id)
 	related_events = Postevent.objects.filter(event_category = postevent.event_category, event_subcategory=postevent.event_subcategory, city=postevent.city)
 	return render_to_response("company-profile.html",{'events':postevent,'organizer':organizer,'review':review,'related_events':related_events,'photos':photos,'photo':photo}, context_instance=RequestContext(request))
-=======
-	print "enter"
-	print request.user,"user"
 	user= request.user
-	
-	
 	form = CommentForm(request.POST or None)
 	if request.is_ajax():
 		if user.is_authenticated():
@@ -167,7 +139,6 @@ def details(request,id=None):
 	# comment_tree = Comment.objects.all().order_by('path')
 	# related_events = Postevent.objects.filter(category = postevent.event_category, eventtype=postevent.event_type, city=postevent.city)
 	return render_to_response("company-profile.html",{'events':postevent,'organizer':organizer,'photos':photos,'photo':photo, 'form':form, 'comment_tree':comment_tree}, context_instance=RequestContext(request))
->>>>>>> ab69a061970fc4d2e917bb3834c4945fc4c1cd25
 	# except:
 	#     return render_to_response("company-profile.html",{'message':'Sorry for inconvenience.Some thing went to wrong'}, context_instance=RequestContext(request))
 
@@ -273,10 +244,6 @@ def user_login(request):
 				error['password'] = True
 				response = HttpResponse(json.dumps(error, ensure_ascii=False),mimetype='application/json')           
 	return response
-<<<<<<< HEAD
-=======
-
->>>>>>> ab69a061970fc4d2e917bb3834c4945fc4c1cd25
 
 @csrf_protect
 def register(request):
@@ -899,27 +866,15 @@ def home_v2(request):
 							 context_instance=context)
 
 def get_events_for_calendar(request):
-<<<<<<< HEAD
-=======
-
->>>>>>> ab69a061970fc4d2e917bb3834c4945fc4c1cd25
 	import datetime
 	events = Postevent.objects.all()
 	time = datetime.time(10, 25)
 	events_list = []
 	for event in events:
-<<<<<<< HEAD
 		event_data = {'id':str(event.id), 'title':event.event_title, 'start':smart_unicode(datetime.datetime.combine(event.event_startdate_time,time)),'end':smart_unicode(datetime.datetime.combine(event.event_enddate_time,time))}
 		events_list.append(event_data)
 	# print "event_list", events_list
 	return HttpResponse(simplejson.dumps(events_list), mimetype='application/json')
-=======
-		event_data = {'id':str(event.id), 'title':event.event_title, 'start':smart_unicode(datetime.datetime.combine(event.startdate,time)),'end':smart_unicode(datetime.datetime.combine(event.enddate,time))}
-		events_list.append(event_data)
-	# print "event_list", events_list
-	return HttpResponse(simplejson.dumps(events_list), mimetype='application/json')
-
->>>>>>> ab69a061970fc4d2e917bb3834c4945fc4c1cd25
 
 @csrf_exempt
 def user_profile(request):
