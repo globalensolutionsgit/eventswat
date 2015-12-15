@@ -20,6 +20,7 @@ from eventswat.models import *
 from eventswat.forms import *
 from events.models import *
 from usermanagement	.models import Userprofile
+from usermanagement.forms import UserCreationForm, UserLoginForm
 from events.extra import JSONResponse
 from postevent.models import Postevent, Organizer
 from reviews.models import *
@@ -53,11 +54,14 @@ class JSONResponse(HttpResponse):
 
 @csrf_exempt
 def home(request):
+	registeration_form = 	UserCreationForm()
+	login_form = UserLoginForm()
+	feedback_form = WebsiteFeedbackForm()
 	if request.user.is_superuser:
 		logout(request)
 		return HttpResponseRedirect('/')
-	feedback_form = WebsiteFeedbackForm()
-	return render_to_response("index_v2.html", {'feedback_form':feedback_form},context_instance=RequestContext(request))
+	return render_to_response("index_v2.html",{'registeration_form':registeration_form, 'login_form':login_form, 'feedback_form':feedback_form}, context_instance=RequestContext(request))
+
 
 def about(request):
 	return render_to_response("about-us.html", context_instance=RequestContext(request))
@@ -212,7 +216,7 @@ def banner(request):
 #                 login(request, user)
 #                 return HttpResponseRedirect('/')
 
-# new login code when using ajax (updated by kalai)
+# login and registration implemanted by ramya
 @csrf_exempt
 def user_login(request):    
 	import json 
@@ -221,89 +225,101 @@ def user_login(request):
 		return HttpResponseRedirect('/')        
 	logout(request)
 	error = {}
-	username = request.POST['username']
-	print "username", username
-	password = request.POST['password']
-	print "password", password
-	context = {}
-	if not User.objects.filter(email=username).exists():
-		error['email_exists'] = True
-		response = HttpResponse(json.dumps(error, ensure_ascii=False),mimetype='application/json')
+	if request.method == 'POST':
+		print "post1"
+		login_form = UserLoginForm(request.POST)
+		print 'form', login_form
+		login_email = login_form.cleaned_data['login_email']		
+		print 'email form form', login_email
+		login_password = login_form.cleaned_data['login_password']
+		print 'Login_password', login_password	 
+		context = {}
+		if not Userprofile.objects.filter(email=login_email).exists():
+			print 'Userprofile.objects.filter(email=login_email)', Userprofile.objects.filter(email=login_email).exists()
+			error['email_exists'] = True
+			response = HttpResponse(json.dumps(error, ensure_ascii=False),mimetype='application/json')
+			return response
+		
+		if login_form.is_valid():
+			user = Userprofile.objects.get(email=login_email)
+			user.backend='django.contrib.auth.backends.ModelBackend'
+			if user:
+				print 'user', user			
+				if user.check_password(login_password):
+					if user.is_active:
+						login(request, user)
+						response = HttpResponseRedirect(request.POST.get('next')) 
+				else:
+					error['password'] = True
+					print 'errorpass', error['password']
+					response = HttpResponse(json.dumps(error, ensure_ascii=False),mimetype='application/json')
+					return response
 	else:
-		user = User.objects.get(email=username)
-		user.backend='django.contrib.auth.backends.ModelBackend'
-		if user:
-			if user.check_password(password):
-				if user.is_active:
-					login(request, user)
-					response = HttpResponseRedirect(request.POST.get('next')) 
-			else:
-				error['password'] = True
-				response = HttpResponse(json.dumps(error, ensure_ascii=False),mimetype='application/json')           
-	return response
-
+		print 'this else'
+		login_form = UserLoginForm()
+	return render_to_response('index_v2.html', {'login_form':login_form}, context_instance=RequestContext(request))				           
+	
 @csrf_protect
 def register(request):
-	print "register"
-	context = RequestContext(request)
 	registered = False
 	user=User()
 	userprofile=Userprofile()
 	if request.method == 'POST':
-		email=request.POST['email_id']
-		username=request.POST['username']
+		print "post1"
+		registeration_form = UserCreationForm(request.POST)
+		print 'form', registeration_form
+		print 'request username', request.POST.get('username')
+		username = registeration_form.data.get('username')
+		print 'username', username
+		email = registeration_form.cleaned_data['email']
+		print 'email form form', email 
 		try:
 			error={}
-			# if User.objects.filter(username=username).exists():
-			#     error['username_exists'] = ugettext('Username already exists')
-			#     raise ValidationError(error['username_exists'], 1)
-			if User.objects.filter(email=email).exists():
-				print 'User.objects.filter(email=email).exists()', User.objects.filter(email=email).exists()
+			if Userprofile.objects.filter(username=username).exists():
+				print 'Userprofile.objects.filter(username=username).exists()', Userprofile.objects.filter(username=username).exists()
+				error['username_exists'] = ugettext('Username already exists')
+				raise ValidationError(error['username_exists'], 1)
+			if Userprofile.objects.filter(email=email).exists():
+				print 'Userprofile.objects.filter(email=email).exists()', Userprofile.objects.filter(email=email).exists()
 				error['email_exists'] = ugettext('Email already exists')
-				raise ValidationError(error['email_exists'], 2)
+				raise ValidationError(error['email_exists'], 2) 
+
 		except ValidationError as e:
-			messages.add_message(request, messages.ERROR, e.messages[-1])
+			print 'except'
+			messages.add_message(request, messages.ERROR, e.messages[-1]) 
 			redirect_path = "/"
 			query_string = 'rst=%d' % e.code
 			redirect_url = format_redirect_url(redirect_path, query_string)
 			return HttpResponseRedirect(redirect_url)
 
-		if not error:
-			user.is_active = True
-			user.username=request.POST['username']
-			print 'username', user.username
-			user.email=request.POST['email_id']
-			print 'email', user.email
-			user.password=request.POST['password']
-			print 'pswd', user.password
-			user.set_password(user.password)
-			user.save()
-			print "user saved"
-			userprofile = Userprofile()
-			userprofile.user_id=user.id
-			userprofile.mobile=request.POST['mobile']
-			userprofile.save()
-			print "userprofile saved"
+		if registeration_form.is_valid():
+			print 'is_valid'
+			userprofile.is_active = True			
+			userprofile = registeration_form.save()
 			send_templated_mail(
-			  template_name = 'welcome',
-			  subject = 'Welcome Evewat',
-			  from_email = 'eventswat@gmail.com',
-			  recipient_list = [user.email],
-			  context={
-					   'user': user.username,
-			  },
-			)
+              template_name = 'welcome',
+              subject = 'Welcome Evewat',
+              from_email = 'eventswat@gmail.com',
+              recipient_list = [userprofile.email],
+              context={
+                       'userprofile': userprofile.username,
+              },
+            )   
 			registered = True
-			user = User.objects.get(email=user.email)
-			print 'user after reg', user
-			user.backend='django.contrib.auth.backends.ModelBackend'
-			login(request, user)
-			return HttpResponseRedirect('/start/?user_id=' + str(user.id))
-	elif user.id is None:
-		return HttpResponseRedirect('/')
+			registered_user = Userprofile.objects.get(email= email)
+			print 'user after reg', registered_user
+			registered_user.backend='django.contrib.auth.backends.ModelBackend'
+			login(request, registered_user)    
+			return HttpResponseRedirect('/start/?user_id=' + str(registered_user.id))
+		elif userprofile.id is None:
+			print 'userprofile is none'
+			return HttpResponseRedirect('/')
+	
 	else:
-		user_id = user.id
-		return render_to_response('index_v2.html', {'user_id':user_id} ,context_instance=RequestContext(request))
+		print "else"
+		registeration_form = 	UserCreationForm()
+		user_id = userprofile.id
+	return render_to_response('index_v2.html', {'user_id':user_id, 'registeration_form':registeration_form } ,context_instance=RequestContext(request))
 
 # @csrf_exempt
 # def register(request):
@@ -924,6 +940,7 @@ def user_profile(request):
 		except:
 			events_for_user=Postevent.objects.filter(email=request.user.email)
 			return render_to_response("user_profile.html", {'requested_user':requested_user, 'events_for_user':events_for_user}, context_instance=RequestContext(request))
+
 @csrf_exempt
 def privacy(request):
 	print 'request.user.email',request.user.email
