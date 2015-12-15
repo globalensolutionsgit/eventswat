@@ -114,6 +114,7 @@ USE_L10N = True
 USE_TZ = True
 
 
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
@@ -146,6 +147,12 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     # 'social_auth.context_processors.social_auth_by_type_backends',
     # 'social_auth.context_processors.social_auth_login_redirect',
 )
+
+AUTH_USER_EMAIL_UNIQUE = True
+
+# from django.contrib.auth.models import User
+# User._meta.get_field("username")._unique = False
+
 
 LOGIN_REDIRECT_URL = '/'
 SOCIAL_AUTH_FACEBOOK_KEY ='1659129517705839'
@@ -208,3 +215,4 @@ from templated_email.backends.vanilla_django import TemplateBackend
 TEMPLATED_EMAIL_BACKEND = TemplateBackend
 
 LATEST_INDEX=1
+

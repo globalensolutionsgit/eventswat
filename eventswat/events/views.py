@@ -20,6 +20,7 @@ from eventswat.models import *
 from eventswat.forms import *
 from events.models import *
 from usermanagement	.models import Userprofile
+from usermanagement.forms import UserCreationForm, UserLoginForm
 from postevent.models import Postevent, Organizer
 from reviews.models import *
 from postbanner.models import *
@@ -42,10 +43,12 @@ class JSONResponse(HttpResponse):
 				simplejson.dumps(data), mimetype='application/json')
 
 def home(request):
-    if request.user.is_superuser:
-        logout(request)
-        return HttpResponseRedirect('/')
-    return render_to_response("index_v2.html", context_instance=RequestContext(request))
+	form = 	UserCreationForm()
+	login_form = UserLoginForm()
+	if request.user.is_superuser:
+		logout(request)
+		return HttpResponseRedirect('/')
+	return render_to_response("index_v2.html",{'form':form, 'login_form':login_form}, context_instance=RequestContext(request))
 
 def about(request):
 	return render_to_response("about-us.html", context_instance=RequestContext(request))
@@ -68,17 +71,17 @@ def logout_view(request):
 	return response
 
 def details(request,id=None):
-    # try:
-    postevent=Postevent.objects.get(pk=id)
-    img=str(postevent.poster).split(',')
-    photo=img[0]
-    photos=[n for n in str(postevent.poster).split(',')]
-    organizer=Organizer.objects.filter(postevent__id=postevent.id)
-    review=Review.objects.filter(event_id=postevent.id)
-    related_events = Postevent.objects.filter(category = postevent.category, eventtype=postevent.eventtype, city=postevent.city)
-    return render_to_response("company-profile.html",{'events':postevent,'organizer':organizer,'review':review,'related_events':related_events,'photos':photos,'photo':photo}, context_instance=RequestContext(request))
-    # except:
-    #     return render_to_response("company-profile.html",{'message':'Sorry for inconvenience.Some thing went to wrong'}, context_instance=RequestContext(request))
+	# try:
+	postevent=Postevent.objects.get(pk=id)
+	img=str(postevent.poster).split(',')
+	photo=img[0]
+	photos=[n for n in str(postevent.poster).split(',')]
+	organizer=Organizer.objects.filter(postevent__id=postevent.id)
+	review=Review.objects.filter(event_id=postevent.id)
+	related_events = Postevent.objects.filter(category = postevent.category, eventtype=postevent.eventtype, city=postevent.city)
+	return render_to_response("company-profile.html",{'events':postevent,'organizer':organizer,'review':review,'related_events':related_events,'photos':photos,'photo':photo}, context_instance=RequestContext(request))
+	# except:
+	#     return render_to_response("company-profile.html",{'message':'Sorry for inconvenience.Some thing went to wrong'}, context_instance=RequestContext(request))
 
 def banner(request):
 	return render_to_response("uploadbanner.html",context_instance=RequestContext(request))
@@ -153,98 +156,111 @@ def banner(request):
 #                 login(request, user)
 #                 return HttpResponseRedirect('/')
 
-# new login code when using ajax (updated by kalai)
+# login and registration implemanted by ramya
 @csrf_exempt
 def user_login(request):    
-    import json 
-    if request.user.is_superuser:
-        logout(request)
-        return HttpResponseRedirect('/')        
-    logout(request)
-    error = {}
-    username = request.POST['username']
-    print "username", username
-    password = request.POST['password']
-    print "password", password
-    context = {}
-    if not User.objects.filter(email=username).exists():
-        error['email_exists'] = True
-        response = HttpResponse(json.dumps(error, ensure_ascii=False),mimetype='application/json')
-    else:
-        user = User.objects.get(email=username)
-        user.backend='django.contrib.auth.backends.ModelBackend'
-        if user:
-            if user.check_password(password):
-                if user.is_active:
-                    login(request, user)
-                    response = HttpResponseRedirect(request.POST.get('next')) 
-            else:
-                error['password'] = True
-                response = HttpResponse(json.dumps(error, ensure_ascii=False),mimetype='application/json')           
-    return response
+	import json 
+	if request.user.is_superuser:
+		logout(request)
+		return HttpResponseRedirect('/')        
+	logout(request)
+	error = {}
+	if request.method == 'POST':
+		print "post1"
+		login_form = UserLoginForm(request.POST)
+		print 'form', login_form
+		login_email = login_form.cleaned_data['login_email']		
+		print 'email form form', login_email
+		login_password = login_form.cleaned_data['login_password']
+		print 'Login_password', login_password	 
+		context = {}
+		if not Userprofile.objects.filter(email=login_email).exists():
+			print 'Userprofile.objects.filter(email=login_email)', Userprofile.objects.filter(email=login_email).exists()
+			error['email_exists'] = True
+			response = HttpResponse(json.dumps(error, ensure_ascii=False),mimetype='application/json')
+			return response
+		
+		if login_form.is_valid():
+			user = Userprofile.objects.get(email=login_email)
+			user.backend='django.contrib.auth.backends.ModelBackend'
+			if user:
+				print 'user', user			
+				if user.check_password(login_password):
+					if user.is_active:
+						login(request, user)
+						response = HttpResponseRedirect(request.POST.get('next')) 
+				else:
+					error['password'] = True
+					print 'errorpass', error['password']
+					response = HttpResponse(json.dumps(error, ensure_ascii=False),mimetype='application/json')
+					return response
 
+	else:
+		print 'this else'
+		login_form = UserLoginForm()
+	return render_to_response('index_v2.html', {'login_form':login_form}, context_instance=RequestContext(request))				           
+	
 @csrf_protect
-def register(request): 
-	print "register" 
-	context = RequestContext(request) 
+def register(request):
 	registered = False
 	user=User()
 	userprofile=Userprofile()
-	if request.method == 'POST': 
-		email=request.POST['email_id']      
-		username=request.POST['username']       
+	if request.method == 'POST':
+		print "post1"
+		form = UserCreationForm(request.POST)
+		print 'form', form
+		print 'request username', request.POST.get('username')
+		username = form.data.get('username')
+		print 'username', username
+		email = form.cleaned_data['email']
+		print 'email form form', email 
 		try:
 			error={}
-			# if User.objects.filter(username=username).exists():
-			#     error['username_exists'] = ugettext('Username already exists')
-			#     raise ValidationError(error['username_exists'], 1)
-			if User.objects.filter(email=email).exists():
-				print 'User.objects.filter(email=email).exists()', User.objects.filter(email=email).exists()
+			if Userprofile.objects.filter(username=username).exists():
+				print 'Userprofile.objects.filter(username=username).exists()', Userprofile.objects.filter(username=username).exists()
+				error['username_exists'] = ugettext('Username already exists')
+				raise ValidationError(error['username_exists'], 1)
+			if Userprofile.objects.filter(email=email).exists():
+				print 'Userprofile.objects.filter(email=email).exists()', Userprofile.objects.filter(email=email).exists()
 				error['email_exists'] = ugettext('Email already exists')
-				raise ValidationError(error['email_exists'], 2)     
+				raise ValidationError(error['email_exists'], 2) 
+
 		except ValidationError as e:
+			print 'except'
 			messages.add_message(request, messages.ERROR, e.messages[-1]) 
 			redirect_path = "/"
 			query_string = 'rst=%d' % e.code
 			redirect_url = format_redirect_url(redirect_path, query_string)
 			return HttpResponseRedirect(redirect_url)
 
-		if not error:
-			user.is_active = True
-			user.username=request.POST['username']
-			print 'username', user.username
-			user.email=request.POST['email_id']
-			print 'email', user.email
-			user.password=request.POST['password']
-			print 'pswd', user.password
-			user.set_password(user.password)
-			user.save()
-			print "user saved"
-			userprofile = Userprofile()
-			userprofile.user_id=user.id
-			userprofile.mobile=request.POST['mobile'] 
-			userprofile.save() 
-			print "userprofile saved"
+		if form.is_valid():
+			print 'is_valid'
+			userprofile.is_active = True			
+			userprofile = form.save()
 			send_templated_mail(
-			  template_name = 'welcome',
-			  subject = 'Welcome Evewat',
-			  from_email = 'eventswat@gmail.com',
-			  recipient_list = [user.email],
-			  context={
-					   'user': user.username,
-			  },
-			)              
+              template_name = 'welcome',
+              subject = 'Welcome Evewat',
+              from_email = 'eventswat@gmail.com',
+              recipient_list = [userprofile.email],
+              context={
+                       'userprofile': userprofile.username,
+              },
+            )   
 			registered = True
-			user = User.objects.get(email=user.email)
-			print 'user after reg', user
-			user.backend='django.contrib.auth.backends.ModelBackend'
-			login(request, user)    
-			return HttpResponseRedirect('/start/?user_id=' + str(user.id))
-	elif user.id is None:
-		return HttpResponseRedirect('/')
-	else:    
-		user_id = user.id
-		return render_to_response('index_v2.html', {'user_id':user_id} ,context_instance=RequestContext(request))
+			registered_user = Userprofile.objects.get(email= email)
+			print 'user after reg', registered_user
+			registered_user.backend='django.contrib.auth.backends.ModelBackend'
+			login(request, registered_user)    
+			return HttpResponseRedirect('/start/?user_id=' + str(registered_user.id))
+		elif userprofile.id is None:
+			print 'userprofile is none'
+			return HttpResponseRedirect('/')
+	
+	else:
+		print "else"
+		form = 	UserCreationForm()
+		user_id = userprofile.id
+	return render_to_response('index_v2.html', {'user_id':user_id, 'form':form } ,context_instance=RequestContext(request))
 
 # @csrf_exempt
 # def register(request): 
@@ -803,67 +819,69 @@ def home_v2(request):
 							 context_instance=context)
 
 def get_events_for_calendar(request):
-    import datetime
-    events = Postevent.objects.all()
-    time = datetime.time(10, 25)
-    events_list = []
-    for event in events:
-        event_data = {'id':str(event.id), 'title':event.event_title, 'start':smart_unicode(datetime.datetime.combine(event.startdate,time)),'end':smart_unicode(datetime.datetime.combine(event.enddate,time))}
-        events_list.append(event_data)
-    # print "event_list", events_list
-    return HttpResponse(simplejson.dumps(events_list), mimetype='application/json')
+	import datetime
+	events = Postevent.objects.all()
+	time = datetime.time(10, 25)
+	events_list = []
+	for event in events:
+		event_data = {'id':str(event.id), 'title':event.event_title, 'start':smart_unicode(datetime.datetime.combine(event.startdate,time)),'end':smart_unicode(datetime.datetime.combine(event.enddate,time))}
+		events_list.append(event_data)
+	# print "event_list", events_list
+	return HttpResponse(simplejson.dumps(events_list), mimetype='application/json')
 
 @csrf_exempt
 def user_profile(request):
-	if request.user.is_authenticated:
-		requested_user=User.objects.get(email=request.user.email)
-		if request.method == 'POST':
-			# last_name=request.POST.get('last_name', '')			
-			user_mobile=request.POST.get('mobile', '')
-			print 'user_mobile', user_mobile
-			gender=request.POST.get('gender', '')		
-			date_of_birth=request.POST.get('dob', '')
-			if date_of_birth=='':
-				date_of_birth=None
-			user_address=request.POST.get('address', '')			
-			profile_picture = request.FILES.get('profile_poster')
-			print 'profile_picture', profile_picture
-			def handle_uploaded_file(f):
-				print "settings.MEDIA_ROOT", settings.MEDIA_ROOT
-				profile_picture = open(settings.MEDIA_ROOT+'/events/' + '%s' % f.name, 'wb+')
-				for chunk in f.chunks():
-					profile_picture.write(chunk)
-				profile_picture.close()
-			handle_uploaded_file(profile_picture)
-			profile_picture = '/events/' + str(profile_picture)					
-			if Userprofile.objects.filter(user_id=requested_user.id).exists():
-				user_id=Userprofile.objects.get(user_id=requested_user.id)
-				# user_id.lastname=last_name
-				user_id.mobile=user_mobile
-				user_id.gender=gender
-				user_id.date_of_birth=date_of_birth
-				user_id.user_address=user_address
-				user_id.profile_pic=profile_picture		
-				user_id.save()
+	# if request.user.is_authenticated:
+		# requested_user=Userprofile.objects.get(email=request.user.email)
+		# if request.method == 'POST':
+		# 	# last_name=request.POST.get('last_name', '')			
+		# 	user_mobile=request.POST.get('mobile', '')
+		# 	print 'user_mobile', user_mobile
+		# 	gender=request.POST.get('gender', '')		
+		# 	date_of_birth=request.POST.get('dob', '')
+		# 	if date_of_birth=='':
+		# 		date_of_birth=None
+		# 	user_address=request.POST.get('address', '')			
+		# 	profile_picture = request.FILES.get('profile_poster')
+		# 	print 'profile_picture', profile_picture
+		# 	def handle_uploaded_file(f):
+		# 		print "settings.MEDIA_ROOT", settings.MEDIA_ROOT
+		# 		profile_picture = open(settings.MEDIA_ROOT+'/events/' + '%s' % f.name, 'wb+')
+		# 		for chunk in f.chunks():
+		# 			profile_picture.write(chunk)
+		# 		profile_picture.close()
+		# 	handle_uploaded_file(profile_picture)
+		# 	profile_picture = '/events/' + str(profile_picture)					
+		# 	if Userprofile.objects.filter(user_id=requested_user.id).exists():
+		# 		user_id=Userprofile.objects.get(user_id=requested_user.id)
+		# 		# user_id.lastname=last_name
+		# 		user_id.mobile=user_mobile
+		# 		user_id.gender=gender
+		# 		user_id.date_of_birth=date_of_birth
+		# 		user_id.user_address=user_address
+		# 		user_id.profile_pic=profile_picture		
+		# 		user_id.save()
 				
-			else:
-				userprofile=Userprofile()
-				userprofile.user_id=requested_user.id
-				# userprofile.lastname=last_name	
-				userprofile.mobile=user_mobile
-				userprofile.gender=gender
-				userprofile.date_of_birth=date_of_birth
-				userprofile.user_address=user_address
-				userprofile.profile_pic=profile_picture
-				userprofile.save()			
-		try:			     
-			requested_user_profile=Userprofile.objects.get(user_id=requested_user.id)		
-			events_for_user=Postevent.objects.filter(email=request.user.email)
-			print 'events_for_user', events_for_user			
-			return render_to_response("user_profile.html", {'requested_user':requested_user, 'requested_user_profile':requested_user_profile, 'events_for_user':events_for_user}, context_instance=RequestContext(request))        
-		except:			
-			events_for_user=Postevent.objects.filter(email=request.user.email)
-			return render_to_response("user_profile.html", {'requested_user':requested_user, 'events_for_user':events_for_user}, context_instance=RequestContext(request))
+		# 	else:
+		# 		userprofile=Userprofile()
+		# 		userprofile.user_id=requested_user.id
+		# 		# userprofile.lastname=last_name	
+		# 		userprofile.mobile=user_mobile
+		# 		userprofile.gender=gender
+		# 		userprofile.date_of_birth=date_of_birth
+		# 		userprofile.user_address=user_address
+		# 		userprofile.profile_pic=profile_picture
+		# 		userprofile.save()			
+		# try:			     
+		# 	requested_user_profile=Userprofile.objects.get(user_id=requested_user.id)		
+		# 	events_for_user=Postevent.objects.filter(email=request.user.email)
+		# 	print 'events_for_user', events_for_user			
+		# 	# return render_to_response("user_profile.html", {'requested_user':requested_user, 'requested_user_profile':requested_user_profile, 'events_for_user':events_for_user}, context_instance=RequestContext(request))        
+		# 	return render_to_response("user_profile.html", {'requested_user':requested_user, 'requested_user_profile':requested_user_profile, 'events_for_user':events_for_user}, context_instance=RequestContext(request)) 
+		# except:			
+		# 	events_for_user=Postevent.objects.filter(email=request.user.email)
+		# 	return render_to_response("user_profile.html", {'requested_user':requested_user, 'events_for_user':events_for_user}, context_instance=RequestContext(request))
+		return render_to_response('user_profile.html', context_instance=RequestContext(request))
 @csrf_exempt
 def privacy(request):
 	print 'request.user.email',request.user.email

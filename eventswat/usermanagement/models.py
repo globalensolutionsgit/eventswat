@@ -30,5 +30,14 @@ class Userprofile(User):
 	
 	# Override the __unicode__() method to return out something meaningful!
 	def __unicode__(self):
-		return self.user.username 
+		return self.username 
 
+	
+		
+	class Meta:
+		"""
+		used to set verbose_name as Userprofile
+		"""
+		verbose_name = 'Userprofile'
+		verbose_name_plural = 'Userprofiles'
+			

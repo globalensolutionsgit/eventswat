@@ -9156,9 +9156,9 @@ mark
     font-family: Verdana,Arial,sans-serif;
     font-size: 0.9em;
     display: none;
-    position: absolute;
+    position: relative;
     /*float: right;*/
-    top: 35px;
+    top: 0px;
     left: 225px;
 }
 
@@ -9168,9 +9168,9 @@ mark
     font-family: Verdana,Arial,sans-serif;
     font-size: 0.9em;
     display: none;
-    position: absolute;
+    position: relative;
     /*float: right;*/
-    top: 46px;
+    top: 0px;
     left: 257px;
 }
 .error1{
