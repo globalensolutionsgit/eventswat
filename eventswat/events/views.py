@@ -22,7 +22,7 @@ from events.models import *
 from usermanagement	.models import Userprofile
 from usermanagement.forms import UserCreationForm, UserLoginForm
 from events.extra import JSONResponse
-from postevent.models import Postevent, Organizer
+from postevent.models import Postevent, Organizer, CampusCollege, CampusDepartment
 from reviews.models import *
 from reviews.forms import *
 from postbanner.models import *
@@ -590,26 +590,23 @@ def getstate(request):
 
 	return HttpResponse(simplejson.dumps(results), mimetype='application/json')
 
+#admin side using
 def getcollege(request):
 	from collections import OrderedDict
 	results = []
 	unsort_dict = {}
 	key_loc = request.GET.get('term')
-	city=request.GET.get('city')
-	filterargs = { 'city_id': city, 'college_name__icontains': key_loc }
-	college_lists = CampusCollege.objects.filter(**filterargs)
-
+	college_lists = CampusCollege.objects.filter(college_name__icontains=key_loc)
 	for college_list in college_lists:
 		collegename = college_list.college_name.strip()
-		collegeid = college_list.id
-		unsort_dict[collegename] = {'collegeid':collegeid, 'label':collegename, 'value':collegename}
+		unsort_dict[collegename] = {'label':collegename, 'value':collegename}
 
 	sorted_dic = OrderedDict(sorted(unsort_dict.iteritems(), key=lambda v: v[0]))
 	for k, v in sorted_dic.iteritems():
 		results.append(v)
 
 	return HttpResponse(simplejson.dumps(results), mimetype='application/json')
-
+#admin side using
 def getdept(request):
 	from collections import OrderedDict
 	results = []

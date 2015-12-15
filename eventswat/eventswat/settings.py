@@ -55,7 +55,6 @@ INSTALLED_APPS = (
     'core',
     'tracking',
 
-
 )
 
 
@@ -171,9 +170,6 @@ COMPRESS_ENABLED = True
 COMPRESS_JS_FILTERS = [
     'compressor.filters.template.TemplateFilter',
 ]
-FLEXSELECT = {
-    'include_jquery': True,
-}
 #EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # GEOS_LIBRARY_PATH = '/usr/local/lib/libgeos_c.so'
@@ -207,16 +203,12 @@ EMAIL_HOST_USER = 'eventswat@gmail.com'
 EMAIL_HOST_PASSWORD = 'street11'
 EMAIL_PORT = 587
 
-
-
-TEMPLATED_EMAIL_BACKEND = 'templated_email.backends.vanilla_django.TemplateBackend'
-
-# You can use a shortcut version
-TEMPLATED_EMAIL_BACKEND = 'templated_email.backends.vanilla_django'
-
-# You can also use a class directly
-from templated_email.backends.vanilla_django import TemplateBackend
-TEMPLATED_EMAIL_BACKEND = TemplateBackend
-
 LATEST_INDEX=1
 
+TEMPLATE_LOADERS = (
+
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
+
+)
+LATEST_INDEX=1

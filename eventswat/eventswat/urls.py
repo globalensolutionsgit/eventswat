@@ -25,30 +25,30 @@ urlpatterns = patterns('',
 	url(r'^register/$', 'events.views.register', name='register'),
 	# for registeration confirm
 	# url(r'^confirm/$', 'events.views.confirm', name='confirm'),
-	
+
 	# forget password
 	url(r'^(?i)password_reset/$', 'django.contrib.auth.views.password_reset', {
 	  'template_name':'registration/password_reset_form.html',
 	  'email_template_name':'registration/password_reset_email.html'
 	}, name="password_reset"),
-	url(r'^(?i)user/password/reset/$', 
-		'django.contrib.auth.views.password_reset', 
+	url(r'^(?i)user/password/reset/$',
+		'django.contrib.auth.views.password_reset',
 		{'post_reset_redirect' : '/user/password/reset/done/'}),
 	url(r'^(?i)user/password/reset/done/$',
 		'django.contrib.auth.views.password_reset_done'),
-	url(r'^(?i)user/password/reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$', 
-		'django.contrib.auth.views.password_reset_confirm', 
+	url(r'^(?i)user/password/reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$',
+		'django.contrib.auth.views.password_reset_confirm',
 		{'post_reset_redirect' : '/user/password/done/'}),
-	url(r'^(?i)user/password/done/$', 
+	url(r'^(?i)user/password/done/$',
 		'django.contrib.auth.views.password_reset_complete'),
-	
+
 	# url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$',
  #    'django.contrib.auth.views.password_reset_confirm',
  #    name='password_reset_confirm'),
 
 	 # getting tarted
 	url(r'^start/$', 'events.views.start',name='start'),
-	url(r'^post_event$', 'events.views.post_event', name='post_event'),    
+	url(r'^post_event$', 'events.views.post_event', name='post_event'),
 	url(r'^banner$', 'events.views.banner', name='banner'),
 	url(r'^submit_event_v2$', 'events.views.submit_event_v2', name='submit_event_v2'),
 	url(r'^upload_banner$', 'events.views.upload_banner', name='upload_banner'),
@@ -59,7 +59,7 @@ urlpatterns = patterns('',
 	url(r'^terms_and_conditions$', 'events.views.terms_and_conditions', name='terms_and_conditions'),
 	url(r'^faqs$', 'events.views.faqs', name='faqs'),
 	# url(r'^(?i)event/(?P<pname>.*)/$', 'events.views.event',name='event'),
-	url(r'^details/(?P<id>[0-9]+)/$','events.views.details',name='details'),    
+	url(r'^details/(?P<id>[0-9]+)/$','events.views.details',name='details'),
 	url(r'^payment/', 'payu.views.buy_order', name='payment'),
 	url(r'^payment_event/', 'payu.views.paid_user', name='payment'),
 	#getting subcategory
@@ -69,18 +69,18 @@ urlpatterns = patterns('',
 	# Find event when ajax call
 	url(r'^event_for_subcategory/$', 'events.views.event_for_subcategory',name='event'),
 
-	# Search & Advance Search     
+	# Search & Advance Search
 	url(r'^(?i)search/', EventSearchView(
-	  template='search-result.html', 
-	  form_class=EventSearchFilter, 
+	  template='search-result.html',
+	  form_class=EventSearchFilter,
 	  #results_per_page=settings.SEARCH_PAGE_NUMBER_OF_LEADS
-	), name='newsearchPageV2'), 
+	), name='newsearchPageV2'),
 
 	url(r'^(?i)ajax_search/', EventSearchView(
-	  template='index_v2.html', 
-	  form_class=EventSearchFilter, 
+	  template='index_v2.html',
+	  form_class=EventSearchFilter,
 	  #results_per_page=settings.SEARCH_PAGE_NUMBER_OF_LEADS
-	), name='newsearchPageV2'), 
+	), name='newsearchPageV2'),
 
 	# url(r'^blog/', include('blog.urls')),
 
@@ -108,6 +108,9 @@ urlpatterns = patterns('',
    	url(r'^user_profile/',  'events.views.user_profile', name='user_profile'),
    	# url(r'^profile_picture_upload/', 'events.views.profile_picture_upload', name='profile_picture_upload'),
    	url(r'^privacy/', 'events.views.privacy', name='privacy'),
+	url(r'^admin_subcategory/','postevent.views.admin_subcategory',name='admin_subcategory'),
+	url(r'^test/','postevent.views.test',name='test'),
+	#url(r'^admin/postevnet',include('postevent.urls')),
    	url(r'^add_google_calendar/(?P<id>[0-9]+)/$', 'events.views.add_google_calendar', name='add_google_calendar'),
    	
 )+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
