@@ -56,8 +56,8 @@ def home(request):
 	if request.user.is_superuser:
 		logout(request)
 		return HttpResponseRedirect('/')
-	form = WebsiteFeedbackForm()
-	return render_to_response("index_v2.html", {'form':form},context_instance=RequestContext(request))
+	feedback_form = WebsiteFeedbackForm()
+	return render_to_response("index_v2.html", {'feedback_form':feedback_form},context_instance=RequestContext(request))
 
 def about(request):
 	return render_to_response("about-us.html", context_instance=RequestContext(request))
@@ -88,11 +88,54 @@ def details(request,id=None):
 	photo=img[0]
 	photos=[n for n in str(postevent.event_poster).split(',')]
 	organizer=Organizer.objects.filter(postevent__id=postevent.id)
-	form = CommentForm()
-	related_events = Postevent.objects.filter(event_category = postevent.event_category, event_subcategory=postevent.event_subcategory, city=postevent.city)
+	user = request.user
+	comment_form = CommentForm(request.POST or None)
+	if request.is_ajax():
+		if user.is_authenticated():
+			if request.method == "POST":
+				if comment_form.is_valid():
+					temp = comment_form.save(commit=False)
+					parent = comment_form['parent'].value()
+
+
+					if parent == '':
+						#Set a blank path then save it to get an ID
+						temp.path = []
+						# temp.save()
+						id = int(0 if temp.id is None else temp.id)
+						temp.path = [id] 
+					else:
+						#Get the parent node
+						node = Comment.objects.get(id=parent)
+						temp.depth = node.depth + 1
+						s = str(node.path)
+						temp.path = eval(s)
+
+						
+						#Store parents path then apply comment ID
+						# temp.save()
+						id= int(0 if temp.id is None else temp.id)
+						temp.path.append(id) 
+						
+					print request.POST  
+					#Final save for parents and children
+					temp.postevent_id = request.POST.get('postent')
+					print temp.postevent,"temp.postevent"
+					temp.save()
+					comment_form = CommentForm()
+		else:
+			comment_form = CommentForm()
+			
+	else:
+		msg = "Fail"            
+		
+		#Retrieve all comments and sort them by path
 	comment_tree=Comment.objects.filter(postevent_id=postevent.id).order_by('path')
 	print comment_tree
-	return render_to_response("company-profile.html",{'events':postevent,'organizer':organizer,'photos':photos,'photo':photo, 'form':form, 'comment_tree':comment_tree}, context_instance=RequestContext(request))
+	related_events = Postevent.objects.filter(event_category = postevent.event_category, event_subcategory=postevent.event_subcategory, city=postevent.city)
+	# comment_tree=Comment.objects.filter(postevent_id=postevent.id).order_by('path')
+	# print comment_tree
+	return render_to_response("company-profile.html",{'events':postevent,'organizer':organizer,'photos':photos,'photo':photo, 'comment_form':comment_form, 'comment_tree':comment_tree}, context_instance=RequestContext(request))
 	# except:
 	#     return render_to_response("company-profile.html",{'message':'Sorry for inconvenience.Some thing went to wrong'}, context_instance=RequestContext(request))
 

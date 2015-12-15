@@ -45,30 +45,30 @@
             <a class="close"> <i class="fa fa-times"></i></a>
             <h2 class="text_rate">Rate my website!</h2>
             <div class="content">
-                {{ form.non_field_errors }}
+                {{ feedback_form.non_field_errors }}
                         <div class="field_wapper">
-                            <label for="id_name">{{ form.name.label_tag }}</label>
-                                {{form.name.errors}}
-                                {{ form.name }}
+                            <label for="id_name">{{ feedback_form.name.label_tag }}</label>
+                                {{feedback_form.name.errors}}
+                                {{ feedback_form.name }}
                             <span class="error">Enter your name</span>
                            
                        </div>
                         <div class="field_wapper">
-                            <label for="id_email">{{ form.email.label_tag }}</label>
-                                {{form.email.errors}}
-                                {{ form.email }}
+                            <label for="id_email">{{ feedback_form.email.label_tag }}</label>
+                                {{feedback_form.email.errors}}
+                                {{ feedback_form.email }}
                             <span class="error">Enter your email</span>
                         </div>
                         <div class="field_wapper">
-                            <label for="id_comments">{{ form.comments.label_tag }}</label>
-                                {{form.comments.errors}}
-                                {{ form.comments }}
+                            <label for="id_comments">{{ feedback_form.comments.label_tag }}</label>
+                                {{feedback_form.comments.errors}}
+                                {{ feedback_form.comments }}
                             <span class="error">Enter your comments</span>
                         </div>
                         <div class="field_wapper">
-                            <label for="id_rating">{{ form.rating.label_tag }}</label>
-                                {{form.rating.errors}}
-                                {{ form.rating }}
+                            <label for="id_rating">{{ feedback_form.rating.label_tag }}</label>
+                                {{feedback_form.rating.errors}}
+                                {{ feedback_form.rating }}
                             <span class="error">Enter your rating</span>
                         </div>
                         
