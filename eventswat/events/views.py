@@ -49,20 +49,6 @@ def home(request):
 		logout(request)
 		return HttpResponseRedirect('/')
 	form = WebsiteFeedbackForm()
-	# if request.is_ajax():
-	# 	if request.method == 'POST':
-	# 		print "enter"
-	# 		if form.is_valid():
-	# 			form.save()
-	# 			return HttpResponseRedirect('/thanks/')
-	# 		else:
-	# 			form = WebsiteFeedbackForm()
-			
-	# 		msg = "The operation has been received correctly."
-	# else:
-	# 	msg = "Fail"
-
-	# # return HttpResponse(msg)
 	return render_to_response("index_v2.html", {'form':form},context_instance=RequestContext(request))
 
 def about(request):
@@ -90,56 +76,50 @@ def logout_view(request):
 def details(request,id=None):
 	# try:
 	postevent=Postevent.objects.get(pk=id)
-	print postevent,"postevent"
 	img=str(postevent.event_poster).split(',')
 	photo=img[0]
 	photos=[n for n in str(postevent.event_poster).split(',')]
 	organizer=Organizer.objects.filter(postevent__id=postevent.id)
-	print "enter"
-	print request.user,"user"
-	user= request.user
-	
-	
-	form = CommentForm(request.POST or None)
-	if request.is_ajax():
-		if user.is_authenticated():
-	# print request.POST.get('postevent'),"request"
-			if request.method == "POST":
-				if form.is_valid():
-					temp = form.save(commit=False)
-					parent = form['parent'].value()
+	form = CommentForm()
+	# if request.is_ajax():
+	# 	if user.is_authenticated():
+	# # print request.POST.get('postevent'),"request"
+	# 		if request.method == "POST":
+	# 			if form.is_valid():
+	# 				temp = form.save(commit=False)
+	# 				parent = form['parent'].value()
 
 
-					if parent == '':
-						#Set a blank path then save it to get an ID
-						temp.path = []
-						# temp.save()
-						id = int(0 if temp.id is None else temp.id)
-						temp.path = [id] 
-					else:
-						#Get the parent node
-						node = Comment.objects.get(id=parent)
-						temp.depth = node.depth + 1
-						s = str(node.path)
-						temp.path = eval(s)
+	# 				if parent == '':
+	# 					#Set a blank path then save it to get an ID
+	# 					temp.path = []
+	# 					# temp.save()
+	# 					id = int(0 if temp.id is None else temp.id)
+	# 					temp.path = [id] 
+	# 				else:
+	# 					#Get the parent node
+	# 					node = Comment.objects.get(id=parent)
+	# 					temp.depth = node.depth + 1
+	# 					s = str(node.path)
+	# 					temp.path = eval(s)
 
 						
-						#Store parents path then apply comment ID
-						# temp.save()
-						id= int(0 if temp.id is None else temp.id)
-						temp.path.append(id) 
+	# 					#Store parents path then apply comment ID
+	# 					# temp.save()
+	# 					id= int(0 if temp.id is None else temp.id)
+	# 					temp.path.append(id) 
 						
-					print request.POST  
-					#Final save for parents and children
-					temp.postevent_id = request.POST.get('postent')
-					print temp.postevent,"temp.postevent"
-					temp.save()
-					form = CommentForm()
-		else:
-			form = CommentForm()
+	# 				print request.POST  
+	# 				#Final save for parents and children
+	# 				temp.postevent_id = request.POST.get('postent')
+	# 				print temp.postevent,"temp.postevent"
+	# 				temp.save()
+	# 				form = CommentForm()
+	# 	else:
+	# 		form = CommentForm()
 			
-	else:
-		msg = "Fail"			
+	# else:
+	# 	msg = "Fail"			
 		
 		#Retrieve all comments and sort them by path
 	comment_tree=Comment.objects.filter(postevent_id=postevent.id).order_by('path')
@@ -695,7 +675,7 @@ def feedback(request):
 			form = WebsiteFeedbackForm(request.POST)
 			if form.is_valid():
 				print "form is valid"
-				print "form",form
+				# print "form",form
 				form.save()
 				print "save"
 			else:
