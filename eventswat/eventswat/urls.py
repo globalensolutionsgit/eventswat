@@ -56,7 +56,7 @@ urlpatterns = patterns('',
 	url(r'^success$', 'events.views.success', name='success'),
 	url(r'^about$', 'events.views.about', name='about'),
 	url(r'^feed/$', 'events.views.feedback', name='feedback'),
-	url(r'^privacy$', 'events.views.privacy', name='privacy'),
+	# url(r'^privacy$', 'events.views.privacy', name='privacy'),
 	url(r'^terms_and_conditions$', 'events.views.terms_and_conditions', name='terms_and_conditions'),
 	url(r'^faqs$', 'events.views.faqs', name='faqs'),
 	# url(r'^(?i)event/(?P<pname>.*)/$', 'events.views.event',name='event'),
@@ -102,13 +102,15 @@ urlpatterns = patterns('',
 	# url('', include('social.apps.django_app.urls', namespace='social')),
    	url('', include('django.contrib.auth.urls', namespace='auth')),
    	url(r'^home_v2/$', 'events.views.home_v2', name='home_v2'),
-   	url(r'^review/',  'reviews.views.post', name='post'),
+   	# url(r'^review/',  'reviews.views.post', name='post'),
    	# url(r'^post/$', 'reviews.views.post_review', name='reviews-post-review'),
 
    	url(r'^get_events_for_calendar/',  'events.views.get_events_for_calendar', name='eventcalendar'),
    	url(r'^user_profile/',  'events.views.user_profile', name='user_profile'),
    	# url(r'^profile_picture_upload/', 'events.views.profile_picture_upload', name='profile_picture_upload'),
-   	url(r'^privacy/', 'events.views.privacy', name='privacy')
-   
-
+   	url(r'^privacy/', 'events.views.privacy', name='privacy'),
+   	url(r'^add_google_calendar/(?P<id>[0-9]+)/$', 'events.views.add_google_calendar', name='add_google_calendar'),
+   	# url(r'^comments/', include('django_comments.urls')),
+   	# url(r'^comments/post/$', 'core.views.comment_post', name='comment_posted'),
+   	url(r'^comments/', 'reviews.views.home', name='home'),
 )+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

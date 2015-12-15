@@ -93,39 +93,39 @@
 					<span class="text4">Sign up for free</span>		
 					<form class="form-horizontal usercreationform" id="user_form" role="form" method="post" action="/register/" name="sign_up">
 					{% csrf_token %}
-					{{ form.non_field_errors }}
+					{{ registeration_form.non_field_errors }}
 					   	<div class="field_wapper">
-					   		<label for="id_username">{{ form.username.label_tag }}</label>
-					   		{{ form.username.errors }}
-					   		{{ form.username }}
+					   		<label for="id_username">{{ registeration_form.username.label_tag }}</label>
+					   		{{ registeration_form.username.errors }}
+					   		{{ registeration_form.username }}
 					   		<span class="error">Please enter your name</span>
 					   	</div>
 					   	<div class="field_wapper">
-					   		<label for="id_email">{{ form.email.label_tag }}</label>
-					   			{{ form.email.errors }}
-					   			{{ form.email }}
+					   		<label for="id_email">{{ registeration_form.email.label_tag }}</label>
+					   			{{ registeration_form.email.errors }}
+					   			{{ registeration_form.email }}
 					   		 <span class="error">Please Enter your Email</span>
                              <span class="error">Please Enter Valid Email</span>
                              <span class="email_exists_error">Email Already Exists</span>
 					   	</div>
 			   			<div class="field_wapper">
-					   		<label for="id_mobile">{{ form.mobile.label_tag }}</label>
-					   			{{form.mobile.errors}}
-					   			{{ form.mobile }}
+					   		<label for="id_mobile">{{ registeration_form.mobile.label_tag }}</label>
+					   			{{registeration_form.mobile.errors}}
+					   			{{ registeration_form.mobile }}
 					   		<span class="error">Please Enter your number</span>
                             <span class="error">Enter valid mobile number</span>
 					   	</div>
 				   		<div class="field_wapper">
-					   		<label for="id_password">{{ form.password.label_tag }}</label>
-					   			{{form.password.errors}}
-					   			{{ form.password }}			
+					   		<label for="id_password">{{ registeration_form.password.label_tag }}</label>
+					   			{{registeration_form.password.errors}}
+					   			{{ registeration_form.password }}			
 					   		<span class="error">Please Enter Password</span>
                             <span class="error strength"></span>
 					   	</div>
 				   		<div class="field_wapper">
-					   		<label for="id_confirm_password">{{ form.confirm_password.label_tag }}</label>
-					   			{{form.confirm_password.errors}}
-					   			{{ form.confirm_password }}					   			
+					   		<label for="id_confirm_password">{{ registeration_form.confirm_password.label_tag }}</label>
+					   			{{registeration_form.confirm_password.errors}}
+					   			{{ registeration_form.confirm_password }}					   			
 					   		<span class="error">Please Re-enter Password</span>
                             <span class="error">Password does not match</span>
 					   	</div>						

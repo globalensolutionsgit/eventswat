@@ -1,7 +1,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django import http
 from django.db import models
-from reviews.forms import ReviewForm
+from reviews.forms import *
 import urllib
 from reviews.models import *
 from django.http import HttpResponseRedirect, HttpResponse
@@ -9,6 +9,7 @@ from django.shortcuts import render_to_response, redirect, render
 from django.template.response import TemplateResponse
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
+from itertools import ifilter
 
 
 # class ReviewPostBadRequest(http.HttpResponseBadRequest):
@@ -23,85 +24,70 @@ from django.views.decorators.csrf import csrf_protect, csrf_exempt
 #             self.content = render_to_string("reviews/400-debug.html", {"why": why})
 
 @csrf_exempt  
-def post(request):
-    if request.is_ajax():
-        if request.method == 'POST':
-            print "enter"
-            review=Review()
-            review.name=request.POST.get('name')
-            print review.name
-            review.email=request.POST.get('email')
-            print review.email
-            review.rating=request.POST.get('rating')
-            print review.rating
-            review.content=request.POST.get('content')
-            print review.content
-            review.event_id=request.POST.get('postevent')
-            print review.event_id
-            review.save()
-            msg = "The operation has been received correctly."
-    else:
-        msg = "Fail"
+# def post(request):
+#     form = WebsiteFeedbackForm(request.POST)
+#     if request.is_ajax():
+#         if request.method == 'POST':
+#             print "enter"
+            
+#             if form.is_valid():
+#                   return HttpResponseRedirect('/thanks/')
+#             else:
+#                 form = WebsiteFeedbackForm()
+            
+#             msg = "The operation has been received correctly."
+#     else:
+#         msg = "Fail"
 
-    return HttpResponse(msg)
+#     return HttpResponse(msg)
     
 
 
+def home(request):
+    postevent=Postevent.objects.all()
+    form = CommentForm(request.POST or None)
+    if request.is_ajax():
+        if user.is_authenticated():
+    # print request.POST.get('postevent'),"request"
+            if request.method == "POST":
+                if form.is_valid():
+                    temp = form.save(commit=False)
+                    parent = form['parent'].value()
 
 
-    # if request.method == 'POST':
-    #     # Fill out some initial data fields from an authenticated user, if present
-    #     data = request.POST.copy()
-   
-    #     # Look up the object we're trying to review about
-    #     ctype = data.get("content_type")
-    #     object_pk = data.get("object_pk")
-    #     if ctype is None or object_pk is None:
-    #         return ReviewPostBadRequest("Missing content_type or object_pk field.")
-    #     try:
-    #         model = models.get_model(*ctype.split(".", 1))
-    #         target = model._default_manager.get(pk=object_pk)
-    #     except TypeError:
-    #         return ReviewPostBadRequest(
-    #             "Invalid content_type value: %r" % escape(ctype))
-    #     except AttributeError:
-    #         return ReviewPostBadRequest(
-    #             "The given content-type %r does not resolve to a valid model." % \
-    #                 escape(ctype))
-    #     except ObjectDoesNotExist:
-    #         return ReviewPostBadRequest(
-    #             "No object matching content-type %r and object PK %r exists." % \
-    #                 (escape(ctype), escape(object_pk)))
-   
-    #     # Construct the review form
-    #     form = ReviewForm(target, data=data)
-   
-    #     # If there are errors or if we requested a preview show the review
-    #     if form.errors:
-    #         template_list = [
-    #             "reviews/%s_%s_preview.html" % tuple(str(model._meta).split(".")),
-    #             "reviews/%s_preview.html" % model._meta.app_label,
-    #             "reviews/preview.html",
-    #         ]
-    #         return render_to_response(
-    #             template_list, {
-    #                 "review" : form.data.get("review", ""),
-    #                 "form" : form,
-    #             },
-    #             RequestContext(request, {})
-    #         )
-   
-    #     # Otherwise create the review
-    #     review = form.get_review_object()
-    #     if request.user.is_authenticated():
-    #         review.user = request.user
-   
-    #     # Save the review
-    #     review.save()
-    #     return HttpResponseRedirect(data.get('next'))
-    #     add_form = ReviewForm(target, data=data)
-    # # else:
-    # #     add_form = ReviewForm(target, data=data)
+                    if parent == '':
+                        #Set a blank path then save it to get an ID
+                        temp.path = []
+                        # temp.save()
+                        id = int(0 if temp.id is None else temp.id)
+                        temp.path = [id] 
+                    else:
+                        #Get the parent node
+                        node = Comment.objects.get(id=parent)
+                        temp.depth = node.depth + 1
+                        s = str(node.path)
+                        temp.path = eval(s)
 
-    # return render_to_response("about-us.html", context_instance=RequestContext(request))
-
+                        
+                        #Store parents path then apply comment ID
+                        # temp.save()
+                        id= int(0 if temp.id is None else temp.id)
+                        temp.path.append(id) 
+                        
+                    print request.POST  
+                    #Final save for parents and children
+                    temp.postevent_id = request.POST.get('postent')
+                    print temp.postevent,"temp.postevent"
+                    temp.save()
+                    form = CommentForm()
+        else:
+            form = CommentForm()
+            
+    else:
+        msg = "Fail"            
+        
+        #Retrieve all comments and sort them by path
+    comment_tree=Comment.objects.filter(postevent_id=postevent.id).order_by('path')
+    print comment_tree
+    return render(request, 'index_comments.html',context)
+    # return render_to_response("index_comments.html",{'events':postevent}, context_instance=RequestContext(request))

@@ -3,6 +3,7 @@
 <!doctype html>
 <html lang="en">
     <head>
+        
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="keywords" content="events,eventswat,evewat,symposium events,technical events,cultural events,online events">
@@ -37,6 +38,9 @@
          
         <!-- GOOGLE FONTS -->
         <link href='https://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+        {% block javascript %}{% endblock %}
+        {% block extrahead %}{% endblock %}
         <!--[if IE 9]>
             <script src="js/media.match.min.js"></script>
         <![endif]-->
@@ -264,8 +268,10 @@
                             <p>Copyright 2014 &copy; <i class="logo_blue">Events</i><i class="logo_red">wat</i>.com. All rights reserved. Powered by  <a href="/"><i class="logo_blue">Events</i><i class="logo_red">wat</i></a></p>
                         </div> <!-- END .container -->
                         <div class="visitor_count">
-                        <span> Visitor's count: </span>
-                        <span><script type="text/javascript" src="http://services.webestools.com/cpt_visitors/32922-1-5.js"></script></span>
+                            <span> Visitor's count: </span>
+                            <a href="#" target="_blank">
+                            <img src="http://hitwebcounter.com/counter/counter.php?page=6251894&style=0001&nbdigits=5&type=ip&initCount=0" title="Free track counters" Alt="Free track counters"   border="0" >
+                            </a> 
                         </div>
                     </div> <!-- end .copyright-->
                 </footer> <!-- end #footer -->

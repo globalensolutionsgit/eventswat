@@ -500,25 +500,25 @@ $('.error').hide();
          $('.error').hide();
           var name = $('input[name="name"]').val();
           if (name == "") {
-            $("label#name_error").show();
+            $(".error").show();
             $("input#name").focus();
             return false;
           }
           var email = $('input[name="email"]').val();
           if (email == "") {
-            $("label#email_error").show();
+           $(".error").show();
             $("input#email").focus();
             return false;
           }
           var rating = $('input[name="rating"]').val();
           if (rating == "") {
-            $("label#rating_error").show();
+            $(".error").show();
             $("input#rating").focus();
             return false;
           }
           var comments = $('input[name="comments"]').val();
           if (comments == "") {
-            $("label#comments_error").show();
+            $(".error").show();
             $("input#comments").focus();
             return false;
           }
@@ -527,10 +527,10 @@ $('.error').hide();
                type:"POST",
                url:"/feed/",
                data: {
-                      'name': $('#name').val(),
-                      'email': $('#email').val(),
+                      'name': $('input[name="name"]').val(),
+                      'email':$('input[name="email"]').val(),
                       'rating': $('input[name="rating"]').val(),
-                      'comments': $('#comments').val(),
+                      'comments': $('input[name="comments"]').val(),
                       
                       },
                success: function(){
@@ -538,10 +538,10 @@ $('.error').hide();
                    setTimeout(function() { $("#mgs").hide(); }, 5000);
                   }
           });
-          $('#name').val('');
-          $('#email').val('');
-          $('#rating').val('');
-          $('#comments').val('');
+          $('#id_name').val('');
+          $('#id_email').val('');
+          $('#id_rating').val('');
+          $('#id_comments').val('');
           return false;
         
        });

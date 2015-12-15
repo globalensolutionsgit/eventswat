@@ -31,8 +31,6 @@ class Userprofile(User):
 	# Override the __unicode__() method to return out something meaningful!
 	def __unicode__(self):
 		return self.username 
-
-	
 		
 	class Meta:
 		"""
