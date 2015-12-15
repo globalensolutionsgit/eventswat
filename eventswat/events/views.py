@@ -38,12 +38,12 @@ import openpyxl
 
 #Import for google calendar
 # from __future__ import print_function
-import httplib2
-import os
-from apiclient import discovery
-import oauth2client
-from oauth2client import client
-from oauth2client import tools
+# import httplib2
+# import os
+# from apiclient import discovery
+# import oauth2client
+# from oauth2client import client
+# from oauth2client import tools
 
 
 class JSONResponse(HttpResponse):
