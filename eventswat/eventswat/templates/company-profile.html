@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static from staticfiles %}
 {% load i18n %}
+{% load app_filters %}
 {% load humanize %}
 {% block content %}
 <script type="text/javascript" src="{% static "js/imagelightbox.js" %}"></script>
@@ -93,13 +94,14 @@
                         <ul class="list-unstyled">
                             <li>
                               <strong>Start date</strong>
-                              <span>{{events.startdate}}</span>
+                              <span>{{events.event_startdate_time}}</span>
                             </li>
                             <li>
                               <strong>End date</strong>
-                              <span>{{events.enddate}}</span>
+                              <span>{{events.event_enddate_time}}</span>
                             </li>
-                            <li><a href="/add_google_calendar/{{events.id}}">Add To Google Calendar</a></li>
+                            <!-- <li><a href="/add_google_calendar/{{events.id}}">Add To Google Calendar</a></li> -->
+                            <li><a href="{{ events|google_calendarize }}" target="_blank">Add To Google Calendar</a></li>
                         </ul>
                     </div><!--end opening-hours-->
                     <!-- <div class="square-button">

@@ -54,8 +54,6 @@ INSTALLED_APPS = (
     'logs',
     'core',
     # 'tracking',
-
-
 )
 
 
