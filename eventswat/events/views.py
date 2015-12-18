@@ -22,7 +22,7 @@ from events.models import *
 from usermanagement	.models import Userprofile
 from usermanagement.forms import UserCreationForm, UserLoginForm
 from events.extra import JSONResponse
-from postevent.models import Postevent, Organizer
+from postevent.models import Postevent, Organizer, CampusCollege, CampusDepartment
 from reviews.models import *
 from reviews.forms import *
 from postbanner.models import *
@@ -37,16 +37,6 @@ import datetime
 import time
 import openpyxl
 
-#Import for google calendar
-# from __future__ import print_function
-# import httplib2
-# import os
-# from apiclient import discovery
-# import oauth2client
-# from oauth2client import client
-# from oauth2client import tools
-
-
 class JSONResponse(HttpResponse):
 	def __init__(self, data):
 		super(JSONResponse, self).__init__(
@@ -56,12 +46,12 @@ class JSONResponse(HttpResponse):
 def home(request):
 	registeration_form = UserCreationForm()
 	login_form = UserLoginForm()
-	form = WebsiteFeedbackForm()
-	# profile_form = UserprofileManagementForm()
+	feedback_form = WebsiteFeedbackForm()
 	if request.user.is_superuser:
 		logout(request)
 		return HttpResponseRedirect('/')
-	return render_to_response("index_v2.html",{'registeration_form':registeration_form, 'login_form':login_form, 'form':form}, context_instance=RequestContext(request))
+	return render_to_response("index_v2.html",{'registeration_form':registeration_form, 'login_form':login_form, 'feedback_form':feedback_form}, context_instance=RequestContext(request))
+
 
 def about(request):
 	return render_to_response("about-us.html", context_instance=RequestContext(request))
@@ -83,7 +73,7 @@ def logout_view(request):
 	response = HttpResponseRedirect("/")
 	return response
 
-
+#comments implemented by priya
 @csrf_exempt
 def details(request,id=None):
 	# try:
@@ -92,19 +82,41 @@ def details(request,id=None):
 	photo=img[0]
 	photos=[n for n in str(postevent.event_poster).split(',')]
 	organizer=Organizer.objects.filter(postevent__id=postevent.id)
-	form = CommentForm()
 	registeration_form = UserCreationForm()
 	login_form = UserLoginForm()
-	related_events = Postevent.objects.filter(event_category = postevent.event_category, event_subcategory=postevent.event_subcategory, city=postevent.city)
+	comment_form = CommentForm(request.POST or None)
+	if request.method == "POST": 
+		if comment_form.is_valid(): 
+			print "comment"
+			temp = comment_form.save(commit=False) 
+			temp.postevent_id = request.POST.get('postent')
+			parent = comment_form['parent'].value() 
+			if parent == "": 
+				temp.path = [] 
+				temp.save() 				
+				id = temp.id 
+				print "id",id
+				temp.path = [id] 
+			else: 
+				
+				node = Comment.objects.get(id = parent) 
+				temp.depth = node.depth + 1 
+				s = str(node.path) 
+				temp.path = eval(s) 
+				temp.save() 
+				id= temp.id 
+				temp.path.append(id) 
+
+			temp.postevent_id = request.POST.get('postent')
+			temp.save()
 	comment_tree=Comment.objects.filter(postevent_id=postevent.id).order_by('path')
-	print comment_tree
-	return render_to_response("company-profile.html",{'events':postevent,'organizer':organizer,'photos':photos,'photo':photo, 'form':form,'registeration_form':registeration_form, 'login_form':login_form, 'comment_tree':comment_tree}, context_instance=RequestContext(request))
+	related_events = Postevent.objects.filter(event_category = postevent.event_category, event_subcategory=postevent.event_subcategory, city=postevent.city)
+	return render_to_response("company-profile.html",{'comment_tree':comment_tree,'events':postevent,'organizer':organizer,'photos':photos,'photo':photo, 'registeration_form':registeration_form, 'login_form':login_form, 'comment_form':comment_form}, context_instance=RequestContext(request))
 	# except:
 	#     return render_to_response("company-profile.html",{'message':'Sorry for inconvenience.Some thing went to wrong'}, context_instance=RequestContext(request))
 
 def banner(request):
 	return render_to_response("uploadbanner.html",context_instance=RequestContext(request))
-
 
 # login and registration implemanted by ramya
 @csrf_exempt
@@ -569,26 +581,23 @@ def getstate(request):
 
 	return HttpResponse(simplejson.dumps(results), mimetype='application/json')
 
+#admin side using
 def getcollege(request):
 	from collections import OrderedDict
 	results = []
 	unsort_dict = {}
 	key_loc = request.GET.get('term')
-	city=request.GET.get('city')
-	filterargs = { 'city_id': city, 'college_name__icontains': key_loc }
-	college_lists = CampusCollege.objects.filter(**filterargs)
-
+	college_lists = CampusCollege.objects.filter(college_name__icontains=key_loc)
 	for college_list in college_lists:
 		collegename = college_list.college_name.strip()
-		collegeid = college_list.id
-		unsort_dict[collegename] = {'collegeid':collegeid, 'label':collegename, 'value':collegename}
+		unsort_dict[collegename] = {'label':collegename, 'value':collegename}
 
 	sorted_dic = OrderedDict(sorted(unsort_dict.iteritems(), key=lambda v: v[0]))
 	for k, v in sorted_dic.iteritems():
 		results.append(v)
 
 	return HttpResponse(simplejson.dumps(results), mimetype='application/json')
-
+#admin side using
 def getdept(request):
 	from collections import OrderedDict
 	results = []
@@ -769,19 +778,7 @@ def user_profile(request):
 				user_id.user_type=user_type
 				user_id.user_interest=user_interest
 				user_id.save()
-				
-			# else:
-			# 	print 'no'
-			# 	userprofile=Userprofile()
-			# 	userprofile.twitter_url=twitter_url
-			# 	userprofile.facebook_url=facebook_url	
-			# 	userprofile.user_type=user_type
-			# 	userprofile.gender=gender
-			# 	userprofile.date_of_birth=date_of_birth
-			# 	userprofile.user_address=user_address
-			# 	userprofile.user_interest=user_interest
-			# 	userprofile.profile_pic=profile_picture
-			# 	userprofile.save()			
+		
 		try:
 			print 'try'			     
 			requested_user_profile = Userprofile.objects.get(email=requested_user.email)
@@ -807,72 +804,4 @@ def privacy(request):
 		return render_to_response("user_profile.html", context_instance=RequestContext(request))
 	else:
 		return HttpResponseRedirect('/')
-
-def add_google_calendar(request, id=None):
-	print "add_google_calendar"   
-	try:
-		import argparse
-		flags = argparse.ArgumentParser(parents=[tools.argparser]).parse_args()
-	except ImportError:
-		flags = None
-	SCOPES = 'https://www.googleapis.com/auth/calendar.readonly'
-	print "SCOPES", SCOPES
-	CLIENT_SECRET_FILE = 'client_secret_google_calendar.json'
-	print "CLIENT_SECRET_FILE", CLIENT_SECRET_FILE
-	APPLICATION_NAME = 'Google Calendar API Python Quickstart'
-	print "APPLICATION_NAME", APPLICATION_NAME
-	def get_credentials():
-		"""Gets valid user credentials from storage.
-
-		If nothing has been stored, or if the stored credentials are invalid,
-		the OAuth2 flow is completed to obtain the new credentials.
-
-		Returns:
-			Credentials, the obtained credential.
-		"""
-		home_dir = os.path.expanduser('~')
-		credential_dir = os.path.join(home_dir, '.credentials')
-		if not os.path.exists(credential_dir):
-			os.makedirs(credential_dir)
-		credential_path = os.path.join(credential_dir,
-									   'calendar-python-quickstart.json')
-
-		store = oauth2client.file.Storage(credential_path)
-		credentials = store.get()
-		if not credentials or credentials.invalid:
-			flow = client.flow_from_clientsecrets(CLIENT_SECRET_FILE, SCOPES)
-			flow.user_agent = APPLICATION_NAME
-			if flags:
-				credentials = tools.run_flow(flow, store, flags)
-			else: # Needed only for compatibility with Python 2.6
-				credentials = tools.run(flow, store)
-			print('Storing credentials to ' + credential_path)
-		return credentials
-
-	def main():
-		"""Shows basic usage of the Google Calendar API.
-
-		Creates a Google Calendar API service object and outputs a list of the next
-		10 events on the user's calendar.
-		"""
-		credentials = get_credentials()
-		http = credentials.authorize(httplib2.Http())
-		service = discovery.build('calendar', 'v3', http=http)
-
-		now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
-		print('Getting the upcoming 10 events')
-		eventsResult = service.events().list(
-			calendarId='primary', timeMin=now, maxResults=10, singleEvents=True,
-			orderBy='startTime').execute()
-		events = eventsResult.get('items', [])
-
-		if not events:
-			print('No upcoming events found.')
-		for event in events:
-			start = event['start'].get('dateTime', event['start'].get('date'))
-			print(start, event['summary'])
-
-
-	if __name__ == '__main__':
-		main()
 

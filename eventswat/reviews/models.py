@@ -13,28 +13,25 @@ class WebsiteFeedback(models.Model):
 	name= models.CharField(max_length=50, null=True)
 	email= models.EmailField(max_length=50)
 	comments= models.TextField()
-	rating=models.IntegerField()
+	rating=models.IntegerField()  
 
-  
-
-
+ 
 class Comment(models.Model):
-    name= models.CharField(max_length=50, null=True)
-    email= models.EmailField(max_length=50)
     content = models.TextField()
     date = models.DateTimeField(auto_now_add=True)
-    path = models.CommaSeparatedIntegerField(blank=True, editable=False,  max_length=500)
+    path = models.CharField(blank=True, max_length=500, editable=False)
     depth = models.PositiveSmallIntegerField(default=0)
     postevent = models.ForeignKey(Postevent)
+
     def __unicode__(self):
-        return self.content
+        return self.content 
     
 class CommentForm(forms.ModelForm):
     #Hidden value to get a child's parent
-
     parent = forms.CharField(widget=forms.HiddenInput(
-                            attrs={'class': 'parent'}), required=False,)
-    # postevent = forms.CharField(widget = forms.HiddenInput())
+                            attrs={'class': 'parent'}), required=False)
+    
     class Meta:
         model = Comment
-        fields = ('content','name','email',)
+        fields = ('content',)
+

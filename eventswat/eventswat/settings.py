@@ -53,13 +53,8 @@ INSTALLED_APPS = (
     'usermanagement',
     'logs',
     'core',
-    # 'tracking',
-
-
+    'tracking',
 )
-
-
-
 
 HAYSTACK_CONNECTIONS = {
     'default': {
@@ -71,16 +66,13 @@ HAYSTACK_CONNECTIONS = {
 
 HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 
-
-
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    # 'tracking.middleware.VisitorTrackingMiddleware',
-    # 'tracking.middleware.VisitorCleanUpMiddleware',
-    # 'tracking.middleware.BannedIPMiddleware',
+    'tracking.middleware.VisitorTrackingMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -173,9 +165,6 @@ COMPRESS_ENABLED = True
 COMPRESS_JS_FILTERS = [
     'compressor.filters.template.TemplateFilter',
 ]
-FLEXSELECT = {
-    'include_jquery': True,
-}
 #EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # GEOS_LIBRARY_PATH = '/usr/local/lib/libgeos_c.so'
@@ -209,16 +198,54 @@ EMAIL_HOST_USER = 'eventswat@gmail.com'
 EMAIL_HOST_PASSWORD = 'street11'
 EMAIL_PORT = 587
 
+LATEST_INDEX=1
+TRACK_PAGEVIEWS = True
 
 
-TEMPLATED_EMAIL_BACKEND = 'templated_email.backends.vanilla_django.TemplateBackend'
+TEMPLATE_LOADERS = (
 
-# You can use a shortcut version
-TEMPLATED_EMAIL_BACKEND = 'templated_email.backends.vanilla_django'
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
 
-# You can also use a class directly
-from templated_email.backends.vanilla_django import TemplateBackend
-TEMPLATED_EMAIL_BACKEND = TemplateBackend
-
+)
 LATEST_INDEX=1
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+        },
+    'handlers': {
+        'file':{
+            'level': 'DEBUG',                      
+            'class': 'logging.FileHandler',
+            'filename': 'eventswatlog.log',
+            'formatter': 'verbose'
+        },
+        'db':{
+            'level': 'WARNING',         
+            'class': 'logs.loggers.MyDbLogHandler',
+            'formatter': 'verbose'
+        }
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['db', 'file'],
+            'level': 'WARNING',
+            'propagate': False,
+            },
+        'myapplog': {
+            'handlers': ['file'],   
+            'level': 'DEBUG',
+            'propagate': False,
+            }
+        }
+}
+
+DEFAULT_FROM_EMAIL = 'eventswat@gmail.com'
