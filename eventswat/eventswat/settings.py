@@ -35,7 +35,7 @@ INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    # 'django.contrib.sites',
+    'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
@@ -71,7 +71,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'tracking.middleware.VisitorTrackingMiddleware',
+    #'tracking.middleware.VisitorTrackingMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -185,9 +185,9 @@ PAYU_INFO = {
              # for production environment use 'https://secure.payu.in/_payment'
              'payment_url': 'https://test.payu.in/_payment',
              #success url for hotel
-             'surl':'http://www.eventswat.com/upload_banner',
-             'curl':'http://www.eventswat.com/post_event',
-             'furl':'http://www.eventswat.com/post_event',
+             'surl':'postbanner/payment_success/',
+             'curl':'post_event',
+             'furl':'post_event',
             }
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -208,3 +208,5 @@ TEMPLATE_LOADERS = (
 
 )
 LATEST_INDEX=1
+
+SITE_ID = 1
