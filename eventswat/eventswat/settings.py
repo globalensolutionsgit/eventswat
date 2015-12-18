@@ -39,21 +39,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
-    'events',
     'eventswat',
-    'haystack',
-    'search',
-    'payu',
-    'commerce',
-    'postbanner',
-    'reviews',
-    'worker',
-    'south',
-    'postevent',
-    'usermanagement',
-    'logs',
-    'core',
-    'tracking',
 )
 
 HAYSTACK_CONNECTIONS = {
@@ -71,7 +57,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'tracking.middleware.VisitorTrackingMiddleware',
+    # 'tracking.middleware.VisitorTrackingMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -136,7 +122,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.media",
     "django.core.context_processors.static",
     "django.core.context_processors.request",
-    'events.context_processors.globalactivity',
+    # 'events.context_processors.globalactivity',
     "django.contrib.messages.context_processors.messages",
     # 'social_auth.context_processors.social_auth_by_name_backends',
     # 'social_auth.context_processors.social_auth_backends',
@@ -210,42 +196,42 @@ TEMPLATE_LOADERS = (
 )
 LATEST_INDEX=1
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'verbose': {
-            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
-        },
-        'simple': {
-            'format': '%(levelname)s %(message)s'
-        },
-        },
-    'handlers': {
-        'file':{
-            'level': 'DEBUG',                      
-            'class': 'logging.FileHandler',
-            'filename': 'eventswatlog.log',
-            'formatter': 'verbose'
-        },
-        'db':{
-            'level': 'WARNING',         
-            'class': 'logs.loggers.MyDbLogHandler',
-            'formatter': 'verbose'
-        }
-    },
-    'loggers': {
-        'django.request': {
-            'handlers': ['db', 'file'],
-            'level': 'WARNING',
-            'propagate': False,
-            },
-        'myapplog': {
-            'handlers': ['file'],   
-            'level': 'DEBUG',
-            'propagate': False,
-            }
-        }
-}
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'formatters': {
+#         'verbose': {
+#             'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+#         },
+#         'simple': {
+#             'format': '%(levelname)s %(message)s'
+#         },
+#         },
+#     'handlers': {
+#         'file':{
+#             'level': 'DEBUG',                      
+#             'class': 'logging.FileHandler',
+#             'filename': 'eventswatlog.log',
+#             'formatter': 'verbose'
+#         },
+#         'db':{
+#             'level': 'WARNING',         
+#             'class': 'logs.loggers.MyDbLogHandler',
+#             'formatter': 'verbose'
+#         }
+#     },
+#     'loggers': {
+#         'django.request': {
+#             'handlers': ['db', 'file'],
+#             'level': 'WARNING',
+#             'propagate': False,
+#             },
+#         'myapplog': {
+#             'handlers': ['file'],   
+#             'level': 'DEBUG',
+#             'propagate': False,
+#             }
+#         }
+# }
 
 DEFAULT_FROM_EMAIL = 'eventswat@gmail.com'
