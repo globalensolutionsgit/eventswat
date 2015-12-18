@@ -1,6 +1,19 @@
 from django import forms
 from django.contrib.auth.models import User
 from usermanagement.models import Userprofile
+from events.models import EventsSubCategory
+
+GENDER_CHOICES = (
+	('male','Male'),
+	('female','Female'),
+	)
+
+
+USER_TYPE_CHOICES = (
+	('institution','Institution'),
+	('organization','Organization'),
+	('corporate','Corporate'),
+	)
 
 
 class UserCreationForm(forms.ModelForm):
@@ -27,8 +40,7 @@ class UserCreationForm(forms.ModelForm):
 		user.set_password(self.cleaned_data["password"])
 		if commit:
 			user.save()
-		return user	
-		
+		return user		
 
 class UserLoginForm(forms.Form):
 	"""This Form is used  for User's Login"""
@@ -37,4 +49,3 @@ class UserLoginForm(forms.Form):
 
 	class Meta:
 		fields = ('login_email', 'login_password')
-
