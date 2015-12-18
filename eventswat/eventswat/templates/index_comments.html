@@ -14,10 +14,7 @@
                 $(this).parent().append(form);
             });
             $('#postcomment').submit(function() { 
-                if($('input[type="text"],textarea, email').val() == ''){
-                    
-                    return false;
-                }
+                
                 $.ajax({ 
                     data: $(this).serialize(), 
                     type: $(this).attr('method'), 
@@ -35,6 +32,7 @@
                 $("#postcomment")[0].reset();
                 return false;
              });
+            
            $(".submit").click(function(){
             $('#signin_popup').show();
             $('.popup_fade').show();
@@ -91,28 +89,23 @@
             margin-bottom: 10px;
         }
     </style>
-
-   <!--  <input type="hidden" value="{{events.id}}" name= "postevent"></input> -->
-    {% if user.is_authenticated %}
-    <form id="postcomment" method="post" action="">
+    {% if request.user.is_authenticated %}
+     <form id="postcomment" method="post" action="">
         {{comment_form.as_p}}
-        <p><input type="submit" value="Submit"  /></p>
+        <p><input type="submit" value="Submit" id="submit" /></p>
         {% csrf_token %}
          <input type='hidden' name="postent" value="{{events.id}}" />
 
     </form>
      <div id="mgs" style="display:none"> Your comment Sucessfully posted</div>
      {% else %}
-     <form id="postcomment" method="post" action="">
+      <form id="postcomment" method="post" action="">
         {{comment_form.as_p}}
-        <!-- <a id="error" herf="{% url 'events.views.user_login' %}">LOGIN</a> -->
-        <p><a herf="" class="submit"><input type="submit" value="Submit"  /></a></p>
+       <p class="submit"><input type="submit" value="Submit" id="submit" /></p>
         {% csrf_token %}
          <input type='hidden' name="postent" value="{{events.id}}" />
 
     </form>
-   
-    
      {% endif %}
     <ul id="commenters">
     {% for c in comment_tree %}     

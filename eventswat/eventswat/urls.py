@@ -5,7 +5,6 @@ from django.contrib import admin
 from events.views import *
 from events.models import *
 from django.views.generic import RedirectView
-# from reviews.views import *
 # Custom Search View
 from search.eventsearch import EventSearchView
 from search.searchform import EventSearchFilter
@@ -116,4 +115,6 @@ urlpatterns = patterns('',
    	# url(r'^comments/post/$', 'core.views.comment_post', name='comment_posted'),
    	# url(r'^comments/', 'reviews.views.home', name='home'),
 	url(r'^(?i)postevent/', include('postevent.urls')),
+   	url(r'^tracking/', include('tracking.urls')),
+
 )+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

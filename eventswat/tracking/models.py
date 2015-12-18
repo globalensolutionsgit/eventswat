@@ -1,5 +1,4 @@
 import logging
-import traceback
 
 from django.utils import timezone
 from django.contrib.gis.geoip import HAS_GEOIP
@@ -7,20 +6,21 @@ if HAS_GEOIP:
     from django.contrib.gis.geoip import GeoIP, GeoIPException
 from django.db import models
 from django.conf import settings
-from django.contrib.auth.models import User
 from django.contrib.auth.signals import user_logged_out
-from django.db.models.signals import post_save, pre_delete
+from django.db.models.signals import post_save
 from tracking.managers import VisitorManager, PageviewManager
 from tracking.settings import TRACK_USING_GEOIP
+from .compat import User
 
 GEOIP_CACHE_TYPE = getattr(settings, 'GEOIP_CACHE_TYPE', 4)
 
 log = logging.getLogger(__file__)
 
+
 class Visitor(models.Model):
     session_key = models.CharField(max_length=40, primary_key=True)
     user = models.ForeignKey(User, related_name='visit_history',
-        null=True, editable=False)
+                             null=True, editable=False)
     # Update to GenericIPAddress in Django 1.4
     ip_address = models.CharField(max_length=39, editable=False)
     user_agent = models.TextField(null=True, editable=False)
@@ -56,7 +56,9 @@ class Visitor(models.Model):
                 gip = GeoIP(cache=GEOIP_CACHE_TYPE)
                 self._geoip_data = gip.city(self.ip_address)
             except GeoIPException:
-                log.error('Error getting GeoIP data for IP "%s": %s' % (self.ip_address, traceback.format_exc()))
+                msg = 'Error getting GeoIP data for IP "{0}"'.format(
+                    self.ip_address)
+                log.exception(msg)
 
         return self._geoip_data
 
@@ -69,10 +71,11 @@ class Visitor(models.Model):
 
 class Pageview(models.Model):
     visitor = models.ForeignKey(Visitor, related_name='pageviews')
-    url = models.CharField(max_length=500)
+    url = models.TextField(null=False, editable=False)
+    referer = models.TextField(null=True, editable=False)
+    query_string = models.TextField(null=True, editable=False)
+    method = models.CharField(max_length=20, null=True)
     view_time = models.DateTimeField()
-    ip_address = models.CharField(max_length=39, editable=False)
-    actor = models.TextField(null=True, editable=False)
 
     objects = PageviewManager()
 

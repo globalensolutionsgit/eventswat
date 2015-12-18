@@ -54,11 +54,7 @@ INSTALLED_APPS = (
     'logs',
     'core',
     'tracking',
-
 )
-
-
-
 
 HAYSTACK_CONNECTIONS = {
     'default': {
@@ -70,16 +66,13 @@ HAYSTACK_CONNECTIONS = {
 
 HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 
-
-
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    # 'tracking.middleware.VisitorTrackingMiddleware',
-    # 'tracking.middleware.VisitorCleanUpMiddleware',
-    # 'tracking.middleware.BannedIPMiddleware',
+    'tracking.middleware.VisitorTrackingMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -205,6 +198,8 @@ EMAIL_HOST_PASSWORD = 'street11'
 EMAIL_PORT = 587
 
 LATEST_INDEX=1
+TRACK_PAGEVIEWS = True
+
 
 TEMPLATE_LOADERS = (
 
