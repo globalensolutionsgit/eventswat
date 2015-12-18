@@ -27,15 +27,14 @@ class Userprofile(User):
 	facebook_url =models.CharField(max_length=200, blank=True)
 	user_type=models.CharField(max_length=50, null=True, blank=True, choices=SELECT_USER_TYPE)
 	profile_pic = models.ImageField(upload_to='/static/img/',null=True, blank=True, max_length=500)
-	
+
 	# Override the __unicode__() method to return out something meaningful!
 	def __unicode__(self):
-		return self.username 
-		
+		return self.username
+
 	class Meta:
 		"""
 		used to set verbose_name as Userprofile
 		"""
 		verbose_name = 'Userprofile'
 		verbose_name_plural = 'Userprofiles'
-			

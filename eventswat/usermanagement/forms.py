@@ -21,14 +21,14 @@ class UserCreationForm(forms.ModelForm):
 		model = Userprofile
 		fields = ('username','email','mobile', 'password', 'confirm_password')
 
-	
+
 	def save(self, commit=True):
 		user = super(UserCreationForm, self).save(commit=False)
 		user.set_password(self.cleaned_data["password"])
 		if commit:
 			user.save()
-		return user	
-		
+		return user
+
 
 class UserLoginForm(forms.Form):
 	"""This Form is used  for User's Login"""
@@ -37,4 +37,3 @@ class UserLoginForm(forms.Form):
 
 	class Meta:
 		fields = ('login_email', 'login_password')
-

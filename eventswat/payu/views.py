@@ -24,12 +24,12 @@ def buy_order(request):
 	pnumber=mobile
 	email=request.user.email
 	txnid=my_random_string(8)
-	cleaned_data = {'key': settings.PAYU_INFO['merchant_key'], 
-					'txnid':txnid,'amount': request.COOKIES.get('price'), 
+	cleaned_data = {'key': settings.PAYU_INFO['merchant_key'],
+					'txnid':txnid,'amount': request.COOKIES.get('price'),
 					'productinfo':request.COOKIES.get('banner'),
 					'firstname':fname,
-					'email': email, 
-					'udf1':'', 'udf2': '', 'udf3': '', 
+					'email': email,
+					'udf1':'', 'udf2': '', 'udf3': '',
 					'udf4': '', 'udf5': '', 'udf6': '',
 					'udf7': '','udf8': '', 'udf9': '', 'udf10': ''}
 	hash_o = generate_hash(cleaned_data)
@@ -55,7 +55,7 @@ def buy_order(request):
 			</body>
 			<script language='javascript'>window.onload = function(){ document.forms['payu'].submit() }</script>
 			</html>'''% (settings.PAYU_INFO['payment_url'],
-						 fname,                         
+						 fname,                      
 						 settings.PAYU_INFO['surl'],
 						 pnumber,
 						 settings.PAYU_INFO['merchant_key'],
@@ -81,12 +81,12 @@ def paid_user(request):
 	pnumber=request.POST.get('pnumber',request.COOKIES.get('mobile'))
 	email=request.POST.get('email',request.COOKIES.get('email'))
 	txnid=my_random_string(8)
-	cleaned_data = {'key': settings.PAYU_INFO['merchant_key'], 
-					'txnid':txnid,'amount': request.COOKIES.get('plan'), 
+	cleaned_data = {'key': settings.PAYU_INFO['merchant_key'],
+					'txnid':txnid,'amount': request.COOKIES.get('plan'),
 					'productinfo':request.COOKIES.get('plan'),
 					'firstname':fname,
-					'email': email, 
-					'udf1':'', 'udf2': '', 'udf3': '', 
+					'email': email,
+					'udf1':'', 'udf2': '', 'udf3': '',
 					'udf4': '', 'udf5': '', 'udf6': '',
 					'udf7': '','udf8': '', 'udf9': '', 'udf10': ''}
 	hash_o = generate_hash(cleaned_data)
@@ -111,7 +111,7 @@ def paid_user(request):
 			</body>
 			<script language='javascript'>window.onload = function(){ document.forms['payu'].submit() }</script>
 			</html>'''% (settings.PAYU_INFO['payment_url'],
-						 fname,                         
+						 fname,
 						 settings.PAYU_INFO['surl1'],
 						 pnumber,
 						 settings.PAYU_INFO['merchant_key'],

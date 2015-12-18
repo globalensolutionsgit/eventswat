@@ -193,7 +193,6 @@ PAYU_INFO = {
              'payment_url': 'https://test.payu.in/_payment',
              #success url for hotel
              'surl':'http://www.eventswat.com/upload_banner',
-             'surl1':'http://www.eventswat.com/success',
              'curl':'http://www.eventswat.com/post_event',
              'furl':'http://www.eventswat.com/post_event',
             }

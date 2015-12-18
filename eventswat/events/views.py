@@ -107,7 +107,7 @@ def details(request,id=None):
 						temp.path = []
 						# temp.save()
 						id = int(0 if temp.id is None else temp.id)
-						temp.path = [id] 
+						temp.path = [id]
 					else:
 						#Get the parent node
 						node = Comment.objects.get(id=parent)
@@ -115,13 +115,13 @@ def details(request,id=None):
 						s = str(node.path)
 						temp.path = eval(s)
 
-						
+
 						#Store parents path then apply comment ID
 						# temp.save()
 						id= int(0 if temp.id is None else temp.id)
-						temp.path.append(id) 
-						
-					print request.POST  
+						temp.path.append(id)
+
+					print request.POST
 					#Final save for parents and children
 					temp.postevent_id = request.POST.get('postent')
 					print temp.postevent,"temp.postevent"
@@ -129,10 +129,10 @@ def details(request,id=None):
 					comment_form = CommentForm()
 		else:
 			comment_form = CommentForm()
-			
+
 	else:
-		msg = "Fail"            
-		
+		msg = "Fail"
+
 		#Retrieve all comments and sort them by path
 	comment_tree=Comment.objects.filter(postevent_id=postevent.id).order_by('path')
 	print comment_tree
@@ -218,37 +218,37 @@ def banner(request):
 
 # login and registration implemanted by ramya
 @csrf_exempt
-def user_login(request):    
-	import json 
+def user_login(request):
+	import json
 	if request.user.is_superuser:
 		logout(request)
-		return HttpResponseRedirect('/')        
+		return HttpResponseRedirect('/')
 	logout(request)
 	error = {}
 	if request.method == 'POST':
 		print "post1"
 		login_form = UserLoginForm(request.POST)
 		print 'form', login_form
-		login_email = login_form.cleaned_data['login_email']		
+		login_email = login_form.cleaned_data['login_email']
 		print 'email form form', login_email
 		login_password = login_form.cleaned_data['login_password']
-		print 'Login_password', login_password	 
+		print 'Login_password', login_password
 		context = {}
-		if not Userprofile.objects.filter(email=login_email).exists():
+		if not User.objects.filter(email=login_email).exists():
 			print 'Userprofile.objects.filter(email=login_email)', Userprofile.objects.filter(email=login_email).exists()
 			error['email_exists'] = True
 			response = HttpResponse(json.dumps(error, ensure_ascii=False),mimetype='application/json')
 			return response
-		
+
 		if login_form.is_valid():
-			user = Userprofile.objects.get(email=login_email)
+			user = User.objects.get(email=login_email)
 			user.backend='django.contrib.auth.backends.ModelBackend'
 			if user:
-				print 'user', user			
+				print 'user', user
 				if user.check_password(login_password):
 					if user.is_active:
 						login(request, user)
-						response = HttpResponseRedirect(request.POST.get('next')) 
+						response = HttpResponseRedirect(request.POST.get('next'))
 				else:
 					error['password'] = True
 					print 'errorpass', error['password']
@@ -257,8 +257,8 @@ def user_login(request):
 	else:
 		print 'this else'
 		login_form = UserLoginForm()
-	return render_to_response('index_v2.html', {'login_form':login_form}, context_instance=RequestContext(request))				           
-	
+	return render_to_response('index_v2.html', {'login_form':login_form}, context_instance=RequestContext(request))
+
 @csrf_protect
 def register(request):
 	registered = False
@@ -272,7 +272,7 @@ def register(request):
 		username = registeration_form.data.get('username')
 		print 'username', username
 		email = registeration_form.cleaned_data['email']
-		print 'email form form', email 
+		print 'email form form', email
 		try:
 			error={}
 			if Userprofile.objects.filter(username=username).exists():
@@ -282,11 +282,11 @@ def register(request):
 			if Userprofile.objects.filter(email=email).exists():
 				print 'Userprofile.objects.filter(email=email).exists()', Userprofile.objects.filter(email=email).exists()
 				error['email_exists'] = ugettext('Email already exists')
-				raise ValidationError(error['email_exists'], 2) 
+				raise ValidationError(error['email_exists'], 2)
 
 		except ValidationError as e:
 			print 'except'
-			messages.add_message(request, messages.ERROR, e.messages[-1]) 
+			messages.add_message(request, messages.ERROR, e.messages[-1])
 			redirect_path = "/"
 			query_string = 'rst=%d' % e.code
 			redirect_url = format_redirect_url(redirect_path, query_string)
@@ -294,7 +294,7 @@ def register(request):
 
 		if registeration_form.is_valid():
 			print 'is_valid'
-			userprofile.is_active = True			
+			userprofile.is_active = True
 			userprofile = registeration_form.save()
 			send_templated_mail(
               template_name = 'welcome',
@@ -304,17 +304,17 @@ def register(request):
               context={
                        'userprofile': userprofile.username,
               },
-            )   
+            )
 			registered = True
 			registered_user = Userprofile.objects.get(email= email)
 			print 'user after reg', registered_user
 			registered_user.backend='django.contrib.auth.backends.ModelBackend'
-			login(request, registered_user)    
+			login(request, registered_user)
 			return HttpResponseRedirect('/start/?user_id=' + str(registered_user.id))
 		elif userprofile.id is None:
 			print 'userprofile is none'
 			return HttpResponseRedirect('/')
-	
+
 	else:
 		print "else"
 		registeration_form = 	UserCreationForm()
@@ -704,7 +704,7 @@ def feedback(request):
 				print "save"
 			else:
 				form = WebsiteFeedbackForm()
-			
+
 			msg = "The operation has been received correctly."
 	else:
 		msg = "Fail"
@@ -729,7 +729,7 @@ def getstate(request):
 
 	return HttpResponse(simplejson.dumps(results), mimetype='application/json')
 
-#admin side using
+#admin side using by muthu
 def getcollege(request):
 	from collections import OrderedDict
 	results = []
@@ -743,9 +743,10 @@ def getcollege(request):
 	sorted_dic = OrderedDict(sorted(unsort_dict.iteritems(), key=lambda v: v[0]))
 	for k, v in sorted_dic.iteritems():
 		results.append(v)
-
+	print results
 	return HttpResponse(simplejson.dumps(results), mimetype='application/json')
-#admin side using
+
+#admin side using by muthu
 def getdept(request):
 	from collections import OrderedDict
 	results = []
@@ -948,7 +949,7 @@ def privacy(request):
 	return render_to_response("user_profile.html", context_instance=RequestContext(request))
 
 def add_google_calendar(request, id=None):
-	print "add_google_calendar"   
+	print "add_google_calendar"
 	try:
 		import argparse
 		flags = argparse.ArgumentParser(parents=[tools.argparser]).parse_args()
@@ -1014,4 +1015,3 @@ def add_google_calendar(request, id=None):
 
 	if __name__ == '__main__':
 		main()
-
