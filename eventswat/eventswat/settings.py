@@ -210,3 +210,43 @@ TEMPLATE_LOADERS = (
 LATEST_INDEX=1
 
 SITE_ID = 1
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+        },
+    'handlers': {
+        'file':{
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'eventswatlog.log',
+            'formatter': 'verbose'
+        },
+        'db':{
+            'level': 'WARNING',
+            'class': 'logs.loggers.MyDbLogHandler',
+            'formatter': 'verbose'
+        }
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['db', 'file'],
+            'level': 'WARNING',
+            'propagate': False,
+            },
+        'myapplog': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': False,
+            }
+        }
+}
+
+DEFAULT_FROM_EMAIL = 'eventswat@gmail.com'

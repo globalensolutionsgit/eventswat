@@ -30,7 +30,7 @@
 					<input type='file' id="profile_poster" name="profile_poster" class="poster upload_image_act" value="../media{{requested_user_profile.profile_pic}}" />
 					<img id="uploaded_img" class="after_save_act" src="../media{{requested_user_profile.profile_pic}}">
 				{% else %}
-					<input type='file' id="profile_poster" name="profile_poster" class="poster upload_image_act"/>
+					<input type='file' id="profile_poster" name="profile_poster" class="poster upload_image_act" value=""/>
 				{% endif %} 					
 			</div><!--upload_image-->
 			<div class="col-md-3 personal_info">
@@ -50,22 +50,25 @@
 					</div><!--info-->	
 					<i class="fa fa-user person col-md-2"></i>	  
 					<div class="personal_form col-md-4">
-						<div class="form-group input_name">
-							<input type="text" maxlength="50" value="{{requested_user.username}}" name="name" readonly><br>
+						<div class="form-group">
+							<label class="label_name">Name</label>
+							<input type="text" maxlength="50" value="{{requested_user.username}}" class="input_name" name="name" readonly><br>
 							<span class="error"></span>
 						</div><!--form-group-->
 
-						<div class="form-group input_lastname">
+						<!-- <div class="form-group input_lastname">
 						    <input type="text"  id="last_name" maxlength="50" placeholder="last name"  value="{{requested_user_profile.lastname}}"  name="last_name"><br>
 						    <span class="error"></span>
-					    </div><!--form-group-->
+					    </div> --><!--form-group-->
 
-						<div class="form-group input_email">
-							<input type="text" maxlength="50" value="{{requested_user.email}}" name="email" readonly><br>
+						<div class="form-group">
+							<label class="label_email">Email</label>
+							<input type="text" maxlength="50" value="{{requested_user.email}}" class="input_email" name="email" readonly><br>
 							<span class="error"></span>
 						</div><!--form-group-->
-						<div class="form-group input_mobile">
-							<input type="text" id="mobile" cplaceholder="MOBILE" maxlength="50" value="{{requested_user_profile.mobile}}"  name="mobile"><br>
+						<div class="form-group">
+							<label class="label_mobile">Mobile</label>
+							<input type="text" id="mobile" cplaceholder="MOBILE" maxlength="50"  value="{{requested_user_profile.mobile}}" class="input_mobile" name="mobile" readonly><br>
 							<span class="error"></span>
 						</div><!--form-group-->
 						 <div class="form-group">
@@ -75,17 +78,51 @@
 								<option value="male">Male</option>
 								<option value="female">Female</option>
 							</select>
-						 <!-- <div class="form-group input_category"> -->
-							<!-- <input type="text" placeholder="CATEGORY" maxlength="50" value="" name="category"><br>
-							<span class="error"></span> -->
-						</div><!--form-group--> 
-						 <div class="form-group input_organization">
-							<input class="date_pick" id="dob" type="text" placeholder="YYYY-MM-DD" maxlength="50" value="{{requested_user_profile.date_of_birth|date:'Y-m-d'}}" name="dob"><br>
+						 </div><!--form-group--> 
+						 <div class="form-group">
+						 	<label class="label_dob">Date of birth</label>
+							<input class="date_pick input_dob" id="dob" type="text" placeholder="YYYY-MM-DD" maxlength="50" value="{{requested_user_profile.date_of_birth|date:'Y-m-d'}}" class="input_organization" name="dob"><br>
 							<span class="error"></span>
 						</div>
-						<div class="form-group input_addr">
-							<input type="text" id="address" placeholder="ADDRESS" maxlength="50" value="{{requested_user_profile.user_address}}" name="address"><br>						
+						<div class="form-group">
+							<label class="label_address">Address</label>
+							<input type="text" id="address" placeholder="ADDRESS" maxlength="50"  class="input_address" value="{{requested_user_profile.user_address}}" name="address"><br>						
 						</div><!--form-group-->
+
+						<div class="form-group">
+							<label class="label_interest">User_interest</label>
+							<select  id="selected_interest" name="user_interest" class="user_interest_option">
+							{% if requested_user_profile.user_interests %}
+								<option id="user_interest" value="{{requested_user_profile.user_interest}}">{{requested_user_profile.user_interest}}</option>
+							{% else %}	
+								{% for interest in event_interest %}
+                                    <option  value="{{interest.id}}">{{ interest.subcategory_name|capfirst }} </option>
+                                {% endfor%}
+                            {% endif %}     
+							</select>
+
+						 </div><!--form-group--> 
+
+						<div class="form-group">
+							<label class="label_user_type">User_type</label>
+							<select  id="selected_user" name="user_type" class="user_type_option">
+								<option id="user_type" value="{{requested_user_profile.user_type}}">{{requested_user_profile.user_type}}</option>
+								<option value="institution">Institution</option>
+								<option value="organization">Organization</option>
+								<option value="corporate">Corporate</option>
+							</select>
+
+						</div><!--form-group--> 
+						<div class="form-group">
+							<label class="label_twitter">Twitter</label>
+							<input type="text" id="twitter_url" placeholder="TWITTER" class="input_twitter" maxlength="50" value="{{requested_user_profile.twitter_url}}" name="twitter_url"><br>						
+						</div><!--form-group-->
+						<div class="form-group">
+							<label class="label_facebook">Facebook</label>							
+							<input type="text" id="facebook_url" placeholder="FACEBOOK" class="input_facebook" maxlength="50" value="{{requested_user_profile.facebook_url}}" name="facebook_url"><br>						
+						</div><!--form-group-->
+						
+						
 						<!-- <div class="form-group input_landmark">
 							<input type="text" placeholder="LANDMARK" maxlength="50" value="" name="landmark"><br>
 							<span class="error"></span>
@@ -115,19 +152,21 @@
 				</div><!--info-->
 				<i class="fa fa-lock lock col-md-2"></i>	 				
 					<div class="privacy_form col-md-5">
-					<form action="{% url "events.views.privacy" %}" method="POST">
+					<form  id="password_form" action="{% url "events.views.privacy" %}" method="POST" name="password_form">
 					{% csrf_token %}
 						<!-- <div class="form-group input_name">
 							<input type="text" placeholder="OLD PASSWORD" maxlength="50" value="" name="oldpwd"><br>
 							<span class="error"></span>
 						</div> --><!--form-group-->
-						<div class="form-group input_email">
-							<input type="password" id="newpassword" placeholder="NEW PASSWORD" maxlength="50" value="" name="newpassword"><br>
-							<span class="error"></span>
+						<div class="form-group input_password">
+							<input type="password" id="newpassword" placeholder="NEW PASSWORD" maxlength="50" value="" name="newpassword">
+							<span class="error">Please Enter Password</span>
+                            <span class="error strength"></span>
 						</div><!--form-group-->
-						<div class="form-group input_mobile">
-							<input type="password" id="confirmpassword" placeholder="CONFIRMATION PASSWORD" maxlength="50" value="" name="confirmpassword"><br>
-							<span class="error"></span>
+						<div class="form-group input_confirmpassword">
+							<input type="password" id="confirmpassword" placeholder="CONFIRMATION PASSWORD" maxlength="50" value="" name="confirmpassword">
+							<span class="error">Please Re-enter Password</span>
+                            <span class="error">Password does not match</span>
 						</div><!--form-group-->
 						<div class="form-group">        
 								<!--   <a class="save_privacy" href="#">SAVE</a> -->
@@ -143,7 +182,7 @@
 		{% if event_for_user.admin_status == True %}
 		    <div class="myevents_content col-sm-4 col-xs-6 ">
 		      <figure>
-		       <a href="http://{{request.META.HTTP_HOST}}/details/{{event_for_user.id}}"><img src="/media/{{event_for_user.poster}}" alt="symposium" class="image_size"></a>
+		       <a href="http://{{request.META.HTTP_HOST}}/details/{{event_for_user.id}}"><img src="/media/{{event_for_user.event_poster}}" alt="symposium" class="image_size"></a>
 		      </figure>
 		       <h4><a href="/details/{{event_for_user.id}}">{{event_for_user.event_title}}</a></h4>
 		       <h5><a href="/details/{{event_for_user.id}}">{{event_for_user.college}}</a></h5>
