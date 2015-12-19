@@ -111,13 +111,15 @@ urlpatterns = patterns('',
 	url(r'^admin_subcategory/','postevent.views.admin_subcategory',name='admin_subcategory'),
 	#url(r'^admin/postevnet',include('postevent.urls')),
    	url(r'^add_google_calendar/(?P<id>[0-9]+)/$', 'events.views.add_google_calendar', name='add_google_calendar'),
-   	# url(r'^comments/', include('django_comments.urls')),
-   	# url(r'^comments/post/$', 'core.views.comment_post', name='comment_posted'),
-   	# url(r'^comments/', 'reviews.views.home', name='home'),
-	url(r'^(?i)postevent/', include('postevent.urls')),
+
+   	# for socail_auth and tracking module by priya
    	url(r'^tracking/', include('tracking.urls')),
 	url(r'^^(?i)postbanner/', include('postbanner.urls')),
 	url(r'', include('payu.urls')),
-
+   	url(r'', include('social_auth.urls')),
+   	url(r'^complete/(?P<backend>[^/]+)/$', AuthComplete.as_view()),
+    url(r'^login-error/$', LoginError.as_view()),
+   	url(r'^(?i)postevent/', include('postevent.urls')),
+   	url(r'^^(?i)postbanner/', include('postbanner.urls')),
 
 )+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

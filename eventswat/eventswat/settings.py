@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 import smtplib
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # for img upload
 FOR_IMG=os.path.join(os.path.dirname(__file__), 'static/img/')
@@ -54,6 +55,8 @@ INSTALLED_APPS = (
     'logs',
     'core',
     'tracking',
+    'social_auth',
+
 )
 
 HAYSTACK_CONNECTIONS = {
@@ -129,37 +132,6 @@ print 'MEDIA_ROOT', MEDIA_ROOT
 
 MEDIA_URL = '/media/'
 
-TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.contrib.auth.context_processors.auth",
-    "django.core.context_processors.debug",
-    "django.core.context_processors.i18n",
-    "django.core.context_processors.media",
-    "django.core.context_processors.static",
-    "django.core.context_processors.request",
-    'events.context_processors.globalactivity',
-    "django.contrib.messages.context_processors.messages",
-    # 'social_auth.context_processors.social_auth_by_name_backends',
-    # 'social_auth.context_processors.social_auth_backends',
-    # 'social_auth.context_processors.social_auth_by_type_backends',
-    # 'social_auth.context_processors.social_auth_login_redirect',
-)
-
-AUTH_USER_EMAIL_UNIQUE = True
-
-# from django.contrib.auth.models import User
-# User._meta.get_field("username")._unique = False
-
-
-LOGIN_REDIRECT_URL = '/'
-SOCIAL_AUTH_FACEBOOK_KEY ='1659129517705839'
-SOCIAL_AUTH_FACEBOOK_SECRET ='8b2ebde6051b128b0f453b8384bc5989'
-URL_PATH = ''
-SOCIAL_AUTH_STRATEGY = 'social.strategies.django_strategy.DjangoStrategy'
-SOCIAL_AUTH_STORAGE = 'social.apps.django_app.default.models.DjangoStorage'
-
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY ='1080122031533-a8hiac9frtar20hc6clpduj53498o4hn.apps.googleusercontent.com '
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET ='AAUhtKjmWVDYSsBmAGmDDzwO'
-
 COMPRESS_ENABLED = True
 
 COMPRESS_JS_FILTERS = [
@@ -209,6 +181,75 @@ TEMPLATE_LOADERS = (
 )
 LATEST_INDEX=1
 
+
+# code by priya for login using socail_auth
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "django.contrib.auth.context_processors.auth",
+    "django.core.context_processors.debug",
+    "django.core.context_processors.i18n",
+    "django.core.context_processors.media",
+    "django.core.context_processors.static",
+    "django.core.context_processors.request",
+    'events.context_processors.globalactivity',
+    "django.contrib.messages.context_processors.messages",
+    'social_auth.context_processors.social_auth_by_name_backends',
+    'social_auth.context_processors.social_auth_backends',
+    'social_auth.context_processors.social_auth_by_type_backends',
+    'social_auth.context_processors.social_auth_login_redirect',
+)
+
+AUTH_USER_EMAIL_UNIQUE = True
+
+LOGIN_URL          = '/login/'
+LOGIN_REDIRECT_URL = '/'
+LOGIN_ERROR_URL    = '/login-error/'
+
+
+AUTHENTICATION_BACKENDS = (
+    'social_auth.backends.facebook.FacebookBackend',
+    'social_auth.backends.google.GoogleOAuthBackend',
+    'social_auth.backends.google.GoogleOAuth2Backend',
+    'social_auth.backends.google.GoogleBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+FACEBOOK_APP_ID='756365291174460'
+FACEBOOK_API_SECRET='aa6ec915216469c245452be12eb4371c'
+FACEBOOK_EXTENDED_PERMISSIONS = ['email']
+FACEBOOK_PROFILE_EXTRA_PARAMS = {
+  'locale': 'pl_PL',
+  'fields': 'id, name, email',
+}
+
+
+SOCIAL_AUTH_LOGIN_ERROR_URL = '/login/'
+SOCIAL_AUTH_BACKEND_ERROR_URL = '/login-error/'
+
+SOCIAL_AUTH_CREATE_USERS          = True
+SOCIAL_AUTH_FORCE_RANDOM_USERNAME = False
+SOCIAL_AUTH_DEFAULT_USERNAME      = 'socialauth_user'
+SOCIAL_AUTH_COMPLETE_URL_NAME     = 'socialauth_complete'
+SOCIAL_AUTH_ASSOCIATE_URL_NAME = 'socialauth_associate_complete'
+SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
+
+SOCIAL_AUTH_PIPELINE = (
+'social_auth.backends.pipeline.social.social_auth_user',
+'social_auth.backends.pipeline.associate.associate_by_email',
+'social_auth.backends.pipeline.user.get_username',
+'social_auth.backends.pipeline.user.create_user',
+'social_auth.backends.pipeline.social.associate_user',
+'social_auth.backends.pipeline.user.update_user_details',
+
+)
+
+SOCIAL_AUTH_ENABLED_BACKENDS = 'google'
+GOOGLE_OAUTH2_CLIENT_ID='68245467057-u35gr8trm5ofqq5b60dh2eea9a7uosdc.apps.googleusercontent.com'
+GOOGLE_OAUTH2_CLIENT_SECRET ='haUGRT9sLvZJmcZALyk1tVUX'
+GOOGLE_OAUTH2_USE_UNIQUE_USER_ID = True
+SOCIAL_AUTH_USER_MODEL = 'auth.User'
+GOOGLE_OAUTH2_USE_DEPRECATED_API = True
+
 SITE_ID = 1
 
 LOGGING = {
@@ -250,3 +291,4 @@ LOGGING = {
 }
 
 DEFAULT_FROM_EMAIL = 'eventswat@gmail.com'
+

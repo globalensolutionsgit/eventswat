@@ -37,10 +37,38 @@ import datetime
 import time
 import openpyxl
 
+import json
+#Import for google calendar
+# from __future__ import print_function
+# import httplib2
+# import os
+# from apiclient import discovery
+# import oauth2client
+# from oauth2client import client
+# from oauth2client import tools
+from datetime import datetime, timedelta
+from json import dumps
+
+
 class JSONResponse(HttpResponse):
 	def __init__(self, data):
 		super(JSONResponse, self).__init__(
 				simplejson.dumps(data), mimetype='application/json')
+
+
+def default(obj):
+    """Default JSON serializer."""
+    import calendar, datetime
+
+    if isinstance(obj, datetime.datetime):
+        if obj.utcoffset() is not None:
+            obj = obj - obj.utcoffset()
+        millis = int(
+            calendar.timegm(obj.timetuple()) * 1000 +
+            obj.microsecond / 1000
+        )
+        return millis
+    raise TypeError('Not sure how to serialize %s' % (obj,))
 
 @csrf_exempt
 def home(request):
@@ -107,10 +135,9 @@ def details(request,id=None):
 				id= temp.id
 				temp.path.append(id)
 
-			temp.postevent_id = request.POST.get('postent')
 			temp.save()
 	comment_tree=Comment.objects.filter(postevent_id=postevent.id).order_by('path')
-	related_events = Postevent.objects.filter(event_category = postevent.event_category, event_subcategory=postevent.event_subcategory, city=postevent.city)
+	# related_events = Postevent.objects.filter(event_category = postevent.event_category, event_subcategory=postevent.event_subcategory, city=postevent.city)
 	return render_to_response("company-profile.html",{'comment_tree':comment_tree,'events':postevent,'organizer':organizer,'photos':photos,'photo':photo, 'registeration_form':registeration_form, 'login_form':login_form, 'comment_form':comment_form}, context_instance=RequestContext(request))
 	# except:
 	#     return render_to_response("company-profile.html",{'message':'Sorry for inconvenience.Some thing went to wrong'}, context_instance=RequestContext(request))
@@ -195,17 +222,18 @@ def register(request):
 
 		if registeration_form.is_valid():
 			print 'is_valid'
-			userprofile.is_active = True
+			print email,'userprofile.email'
+			userprofile.is_active = True			
 			userprofile = registeration_form.save()
 			send_templated_mail(
-			  template_name = 'welcome',
-			  subject = 'Welcome Evewat',
-			  from_email = 'eventswat@gmail.com',
-			  recipient_list = [userprofile.email],
-			  context={
-					   'userprofile': userprofile.username,
-			  },
-			)
+              template_name = 'welcome',
+              subject = 'Welcome Evewat',
+              from_email = 'eventswat@gmail.com',
+              recipient_list = [email],
+              context={
+                       'userprofile': username,
+              },
+            )   
 			registered = True
 			registered_user = Userprofile.objects.get(email= email)
 			print 'user after reg', registered_user
@@ -872,3 +900,23 @@ def add_google_calendar(request, id=None):
 
 	if __name__ == '__main__':
 		main()
+
+# gmail login redirect view code by priya
+
+from django.core.urlresolvers import reverse
+from django.http import HttpResponse, HttpResponseRedirect
+from django.views.generic.base import View
+from social_auth.views import complete
+
+class AuthComplete(View):
+    def get(self, request, *args, **kwargs):
+        backend = kwargs.pop('backend')
+        try:
+            return complete(request, backend, *args, **kwargs)
+        except :
+            messages.error(request, "Your Google Apps domain isn't authorized for this app")
+            return HttpResponseRedirect(reverse('login'))
+
+class LoginError(View):
+    def get(self, request, *args, **kwargs):
+        return HttpResponse(status=401)

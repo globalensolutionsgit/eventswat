@@ -26,6 +26,12 @@
                 </div>
             </div> <!-- END .slider-content -->
         </div> <!-- END .SEARCH and slide-section -->
+
+        <!--code for login using social_auth-->
+            <a href="{% url 'socialauth_begin' 'facebook' %}">Login with Fb</a>
+            <a href="{% url 'socialauth_begin' 'google-oauth2' %}">Login with Google</a>
+        <!--end socail_auth-->
+
         <div class="container event_listing">
         <div class="event_calendar">
         <div class="action_calendar">
@@ -35,7 +41,7 @@
         <div id="cal"></div>
         </div></div>
     </header> <!-- end #header -->
-
+    <!--Feed back form for website implemented by priya-->
     <div id="mgs" style="display:none;"><h2>Thanks For Your Feedback</h2></div>
     <a class="btn btn-default feedback1">FEEDBACK</a>                 
     <div class="feedback_popup">
@@ -76,7 +82,7 @@
             </div>
         </form>
     </div>
-    
+    <!--end feedback form-->
                                                                      
     <div id="page-content" class="home-slider-content">
         <div class="container">

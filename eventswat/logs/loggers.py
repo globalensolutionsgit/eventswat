@@ -24,17 +24,19 @@ class MyDbLogHandler(logging.Handler): # Inherit from logging.Handler
             logEntry.save()
         except:            
             pass
-        
-        if record.levelname == 'ERROR':
-           send_templated_mail(
-                template_name='error',
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=['kalai@globalensolutions.com'],
-                context={
-                         'errorlevel': record.levelname,
-                         'error_msg': [record.getMessage(), record.exc_info],
-                         # 'error_ip': globals.ip,
-                         'error_user': record.request.user,
-                         'error_line' : [record.lineno, record.pathname],
-                },
-            )   
+        try:
+            if record.levelname == 'ERROR':
+               send_templated_mail(
+                    template_name='error',
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[],
+                    context={
+                             'errorlevel': record.levelname,
+                             'error_msg': [record.getMessage(), record.exc_info],
+                             # 'error_ip': globals.ip,
+                             'error_user': record.request.user,
+                             'error_line' : [record.lineno, record.pathname],
+                    },
+                ) 
+        except:
+            psss  
