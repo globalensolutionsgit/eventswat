@@ -1,47 +1,107 @@
-from django.db import models
-from uuid import uuid4
-from uuid import UUID
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 import uuid
-from django_extensions.db.fields import UUIDField
-from events.models import *
 import datetime
+from uuid import UUID
+from uuid import uuid4
+from django.db import models
 from django.contrib.auth.models import User
+from django_extensions.db.fields import UUIDField
 
 
 class PayuDetails(models.Model):
-    mihpayid = models.CharField(max_length=100, null=True, blank=True)
-    
-    # userprofile=models.ForeignKey(Userprofile)
-
-    # mode = models.CharField(max_length=10, null=True, blank=True)
-    status = models.CharField(max_length=20, null=True, blank=True)
-    # unmappedstatus =models.CharField(max_length=20, null=True, blank=True)
-    # key =models.CharField(max_length=50, null=True, blank=True)
-    txnid=models.CharField(max_length=50, null=True, blank=True)
-    amount =models.FloatField(default=0.0,null=True, blank=True)
-    # cardCategory=models.CharField(max_length=20, null=True, blank=True)
-    # discount =models.FloatField(default=0.0,null=True, blank=True)
-    # net_amount_debit=models.FloatField(default=0.0,null=True, blank=True)
-    # addedon=models.DateTimeField(default=datetime.datetime.now)
-    productinfo=models.CharField(max_length=500, null=True, blank=True)
-    # hash=models.CharField(max_length=250, null=True, blank=True)
-    # payment_source =models.CharField(max_length=20, null=True, blank=True)
-    # PG_TYPE=models.CharField(max_length=20, null=True, blank=True)
-    # bank_ref_num=models.CharField(max_length=50, null=True, blank=True)
-    # bankcode= models.CharField(max_length=20, null=True, blank=True)
-    # error=models.CharField(max_length=20, null=True, blank=True)
-    error_Message =models.CharField(max_length=100, null=True, blank=True)
-    # name_on_card =models.CharField(max_length=50, null=True, blank=True)
-    # cardnum=models.CharField(max_length=20, null=True, blank=True)
-    # issuing_bank=models.CharField(max_length=50, null=True, blank=True)
-    # card_type =models.CharField(max_length=20, null=True, blank=True)
+    """ PayU response needed fields for our requirement when payu success """
+    PAY_MODE = (('CC', 'Credit card'), ('DC', 'Debit Card'),
+                ('NB', 'NetBanking'), ('CASH', 'Cash Card'),
+                ('EMI', 'EMI'), ('IVR', 'IVR'), ('COD', 'Cash On Delivery'))
+    mihpayid = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        help_text='It is a unique reference number \
+        created for each transaction at PayU’s end',
+        verbose_name='PayU Id',)
+    mode = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        help_text='Payment category',
+        verbose_name='Payment mode',
+        choices=PAY_MODE,)
+    status = models.CharField(
+        max_length=20,
+        null=True,
+        blank=True,
+        help_text='Transction Status',
+        verbose_name='Transction Status',)
+    txnid = models.CharField(
+        max_length=50,
+        null=True,
+        blank=True,
+        help_text='transaction ID value posted by the merchant during \
+                   the transaction request.',
+        verbose_name='Transction ID',)
+    key = models.CharField(
+        max_length=50,
+        null=True,
+        blank=True,
+        help_text='merchant key for the merchant’s account at PayU',
+        verbose_name='Merchant key',)
+    amount = models.FloatField(
+        default=0.0,
+        null=True,
+        blank=True,
+        help_text='original amount which was sent in the transaction \
+                   request by the merchant',
+        verbose_name='Original amount',)
+    discount = models.FloatField(
+        default=0.0,
+        null=True,
+        blank=True,
+        help_text='Discount given to user',
+        verbose_name='Discount Amount',)
+    productinfo = models.CharField(
+        max_length=500,
+        null=True,
+        blank=True,
+        help_text='Product details',
+        verbose_name='Product details',)
+    hash_key = models.CharField(
+        max_length=500,
+        null=True,
+        blank=True,
+        help_text='This is account reference',
+        verbose_name='Hash Key',)
+    error_Message = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        help_text='Error message for failure transaction.\
+                   Code provide by Banks',
+        verbose_name='Error Message')
+    bank_code = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        help_text='code indicating the payment option used \
+                   for the transaction',
+        verbose_name='Bank Code')
+    pg_type = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        help_text='payment gateway used for the transaction',
+        verbose_name='Payment Gateway')
+    band_ref_number = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        help_text='bank reference number generated by the bank',
+        verbose_name='Reference number')
 
     def __unicode__(self):
         return self.mihpayid
 
-
-
-
-
-
-
+    class Meta:
+        verbose_name = "Payu Information"
+        verbose_name_plural = "Payu Informations"

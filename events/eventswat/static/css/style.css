@@ -1,0 +1,422 @@
+/* Home page */
+.navbar-nav {
+	float: right;
+}
+.navbar {
+    background: white none repeat scroll 0 0;
+    position: absolute;
+    top: 0%;
+    width: 100%;
+    position: fixed;
+    z-index: 9999;
+    font-family: Microsoft Yi Baiti;
+    font-size: 18px;
+}
+.navbar-nav li a {
+    color: #4d4d4d;
+}
+.active_color{
+    color: #fff !important;
+}
+.nav > li > a:hover {
+  	color: black !important;
+  	background-image: linear-gradient(-71deg, #f9c811, #f1a65f) !important;
+}
+
+.logo {
+    width:152px;
+    height:55px;
+    display:block;
+    background :url("../img/logo.png") 0px 0px no-repeat;
+    background-position: 0px 0px;
+}
+.white_logo {
+    background :url("../img/logo.png") 0px 0px no-repeat;
+    background-position: 0px -55px;
+}
+.navbar_active {
+    background-image: linear-gradient(68deg, #fd7843, #fb6262);
+    position: fixed;
+    top: 0%;
+    width: 100%;
+    font-family: Microsoft Yi Baiti;
+    font-size: 18px;
+
+}
+.down-arrow {
+    color: #f79525;
+    font-size: 62px;
+    left: 50%;
+    position: absolute;
+    top: 90%;
+    cursor: pointer;
+}
+.banner_introduction {
+    width: 100%;
+    height: 654px;
+    background :url("../img/banner.png") no-repeat center center fixed;
+    background-size: cover;
+}
+.item img {
+    width: 100% !important;
+    height: 500px !important;
+}
+.fa.fa-long-arrow-left {
+    border: 1px solid white;
+    color: white;
+    font-size: 30px;
+    font-weight: lighter;
+    height: 60px;
+    left: 20px;
+    padding: 15px 0;
+    position: absolute;
+    text-align: center;
+    top: 50%;
+    vertical-align: middle;
+    width: 60px;
+}
+.slider_content {
+    position: relative;
+    width: 100%;
+}
+.fa.fa-long-arrow-right {
+    right: 0;
+    border: 1px solid white;
+    color: white;
+    font-size: 30px;
+    font-weight: lighter;
+    height: 60px;
+    position: absolute;
+    top: 50%;
+    width: 60px;
+    padding: 15px 0;
+    vertical-align: middle;
+    text-align: center;
+    right: 20px;
+}
+.carousel-inner > .item {
+    height: 500px !important;
+}
+.search_bar {
+    background-color: rgba(0, 0, 0, 0.55);
+    height: 64px;
+    padding: 15px 0;
+    position: absolute;
+    top: 1090px;
+    width: 100%;
+}
+.search_box {
+    width: 693px;
+    display: inline;
+}
+.search-btn{
+    background-image: linear-gradient(68deg, #fd7843, #fb6262);
+    padding: 12px 135px 13px 0px;
+    position: relative;
+    right: 3px;
+    top: 0px;
+    cursor: pointer;
+}
+.search_font {
+    color: white;
+    font-size: 22px;
+    left: 60px;
+    position: relative;
+    cursor: pointer;
+}
+.advance_btn {
+    background-image: linear-gradient(68deg, #fd7843, #fb6262);
+    border: medium none;
+    color: white;
+    font-size: 15px;
+    height: 45px;
+    width: 156px;
+    font-family: Microsoft Yi Baiti;
+    padding: 0 30px 0 0;
+}
+.angle_search{
+    color: white;
+    cursor: pointer;
+    font-size: 32px;
+    left: -30px;
+    position: relative;
+    top: 5px;
+}
+.advance_search{
+    background-color: rgba(0, 0, 0, 0.55);
+    height: 64px;
+    padding: 6px 0;
+    position: absolute;
+    top: 1090px;
+    width: 100%;
+}
+.event_btn, .category_dropdown, .city_btn {
+    height: 52px;
+    width: 265px;
+    float: left;
+    padding: 0 14px 0 0;
+}
+#sel1 {
+    -moz-appearance: none;
+    cursor: pointer;
+}
+.advsearch-btn{
+    background-image: linear-gradient(68deg, #fd7843, #fb6262);
+    padding: 12px 135px 13px 0px;
+    position: relative;
+    right: 3px;
+    top: 10px;
+    cursor: pointer;
+}
+.sort_font {
+    cursor: pointer;
+    left: 50%;
+    position: absolute;
+    top: 15px;
+}
+.down_btn{
+    background-image: linear-gradient(68deg, #fd7843, #fb6262);
+    padding: 3px 0 23px 13px;
+    position: relative;
+    right: 3px;
+    top: 0px;
+    cursor: pointer;
+}
+.down_font{
+     color: white;
+    cursor: pointer;
+    font-size: 22px;
+    left: -6px;
+    position: relative;
+    top: 12px;
+}
+.advance_content {
+    width: 1030px;
+}
+.ui-priority-secondary,.ui-datepicker-buttonpane, .ui-widget-content {
+    display: none;
+}
+.calander{
+    padding-left: 82px;
+    width: 100%;
+}
+.calander_active{
+    margin-top: 0;
+}
+.ui-datepicker-inline,.ui-state-default,.ui-widget-header {
+    background-color: rgba(252, 110, 82, 0.65) !important;
+    border: medium none !important;
+    text-align: center !important;
+}
+.ui-datepicker-inline{
+    width: 1000px !important;
+}
+.ui-datepicker-group-first, .ui-datepicker-group-last {
+    width: 363px !important;
+}
+.ui-datepicker-group.ui-datepicker-group-last {
+    float: right !important;
+    position: relative;
+}
+.ui-datepicker-calendar th span {
+    color: white !important;
+}
+.ui-datepicker-title span {
+    color: white !important;
+}
+.ui-state-default, .ui-datepicker-header {
+    background: rgba(0, 0, 0, 0) none repeat scroll 0 0 !important;
+    border: medium none !important;
+}
+.ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight {
+    background: #7b1e0d none repeat scroll 0 0 !important;
+    border: 1px solid #7b1e0d !important;
+    color: white !important;
+}
+.ui-widget-header .ui-icon {
+    background-image: url("../img/ui-icons_444444_256x240.png") !important;
+}
+.events_calander {
+    left: 70%;
+    position: absolute;
+    top: 0;
+}
+.events_content {
+    width: 148%;
+}
+.event_date {
+    color: black;
+    font-family: Microsoft Yi Baiti;
+    font-size: 46px;
+}
+.event_name ul li {
+    color: white;
+    list-style-type: none;
+    padding: 7px;
+    position: relative;
+    font-family: Microsoft Yi Baiti;
+    font-size: 16px;
+}
+.event_name ul {
+    padding: 0;
+}
+.event_day {
+    font-size: 16px;
+    font-family: Microsoft Yi Baiti;
+    color: black;
+}
+.all_categories ul li {
+    list-style-type: none;
+}
+.categories_home {
+    color: #222222;
+    font-size: 23px;
+    text-align: center;
+    font-family: Microsoft Yi Baiti;
+}
+.category_images{
+    width: 100%;
+}
+/*list page*/
+.search_listpage {
+    background: #ececec none repeat scroll 0 0;
+    float: left;
+    height: 64px;
+    left: 9%;
+    padding: 15px 20px;
+    position: relative;
+    width: 58%;
+}
+.search_box_listpage {
+    display: inline;
+    height: 36px;
+    width: 511px;
+}
+.search_btn_listpage {
+    background-image: linear-gradient(68deg, #fd7843, #fb6262);
+    cursor: pointer;
+    padding: 8px 10px 8px 0;
+    position: relative;
+    right: 5px;
+    top: 0;
+}
+.search_font_listpage {
+    color: white;
+    cursor: pointer;
+    font-size: 15px;
+    left: 5px;
+    position: relative;
+}
+.list_search{
+     padding: 25px 0;
+}
+.view_list{
+    float: right;
+}
+.view_txt{
+    color: black;
+    font-family: Microsoft Yi Baiti;
+    font-size: 22px;
+}
+.grid_view, .list_view {
+    color: #c9c9c9;
+    font-size: 22px;
+    cursor: pointer;
+    padding: 0 5px;
+}
+.grid_view:hover {
+    color: #fd7745;
+}
+.list_view:hover {
+    color: #fd7745;
+}
+.listpage_result {
+    float: right;
+    width: 95%;
+}
+.breadcrumbs {
+    display: inline-flex;
+}
+.breadcrumbs ul li {
+    display: inline;
+    list-style-type: none;
+    font-family: Microsoft Yi Baiti;
+    color: #444444;
+    font-size: 20px;
+    padding: 0 8px;
+    cursor: pointer;
+}
+.events_result {
+    left: 26%;
+    position: relative;
+}
+.showing_list{
+    font-family: Microsoft Yi Baiti;
+    color: #444444;
+}
+.result_count{
+    font-family: Microsoft Yi Baiti;
+    color: #fd7745;
+}
+.list_leftpart {
+    width: 82%;
+}
+.part1 ul li {
+    list-style: outside none none;
+}
+.part1 > ul {
+    padding: 0;
+    line-height: 50px;
+}
+.part1{
+    background-image: linear-gradient(68deg, #fd7843, #fb6262);
+    height: 50px;
+    text-align: center;
+    width: 256px;
+}
+.sort_txt {
+    color: white;
+    font-size: 20px;
+    font-family: Microsoft Yi Baiti;
+    font-weight: bolder;
+}
+.subcategory_txt {
+    border: 1px solid #dbdbdb;
+    width: 256px;
+    height: 50px;
+}
+.bar_font {
+    border-right: 1px solid #dbdbdb;
+    color: #fc6958;
+    float: left;
+    font-size: 30px;
+    padding: 9px;
+}
+.icon_list > ul {
+    padding: 0;
+}
+.icon_list li {
+    padding: 8px 0;
+}
+.icon_list {
+    border: 1px solid #dbdbdb;
+    float: left;
+    margin: -12px -15px;
+    width: 46px;
+    cursor: pointer;
+}
+.category_hovericon {
+    left: 10px;
+    position: absolute;
+    display: none;
+}
+.icon_list li:hover {
+    background-image: linear-gradient(68deg, #fd7843, #fb6262);
+}
+.entertainment_list li,.campus_list li,.competition_list li,.exhibition_list li,.spiritual_list li,.business_list li,.sports_list li,.adventure_list li {
+    color: #555555;
+    font-family: Microsoft Yi Baiti;
+}
+.entertainment_list ul,.campus_list ul,.competition_list ul,.exhibition_list ul,.spiritual_list ul,.business_list ul,.sports_list ul,.adventure_list ul {
+    text-align: left;
+}

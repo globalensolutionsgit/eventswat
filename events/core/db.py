@@ -1,5 +1,4 @@
 import logging
-
 from core import helper
 
 def import_defaults(sender, **kwargs):
@@ -23,8 +22,7 @@ def import_defaults(sender, **kwargs):
     actor2.address = "moon, universe, milkyway - 23813"
     actor2.save()
 
-  """
-  
+  """  
   for name, model in helper.get_local_models().iteritems():
     init_function = getattr(model, 'default_data', None)    
     if init_function:

@@ -12,12 +12,15 @@ from haystack.query import SQ
 
 default_param_mappings = OrderedDict(
   #FieldName = Form Variable
-  # locality = 'locality__in', 
-  festtype = 'festtype',
-  city = 'city',  
-  festname = 'festname',
+  # locality = 'locality__in',
+  category = 'category',
+  eventtype = 'eventtype',
+  city = 'city',
+  payment='payment',  
+  # festname = 'festname',
   # subcategory = 'name',
   # category = 'category__id'
+  # today='event_startdate_time',
   )
 
 default_geo_params = {
@@ -25,18 +28,14 @@ default_geo_params = {
   'radius': 20
 }
 
-# default_orderby_mappings = {
-#   # 'createddate': '-created',
-#   # 'modifieddate': '-modified',
-#   'pricelow': 'price',
-#   'pricehigh': '-price',
-#   'ispremium': '-ispremium'
-# }
+default_orderby_mappings = {
+  'payment': '-payment'
+}
 
-default_event_filters = {
-  'active': 1,
-  'status': 'active',
-  }
+# default_event_filters = {
+#   'active': 1,
+#   'status': 'active',
+#   }
 
 replace_regex = r'[/:]'
 ignore_regex = r'[^\w^,]'
@@ -74,86 +73,82 @@ def prepare_search_query(query, search_field='searchtext'):
   return qs
 
 
-def searchresults(q=None, params=None, 
+def searchresults(q=None, params=None, orderby=None, groupby=None, 
   geo_location=None, geo_params=None, geo_orderby='distance', 
   model_cls=None, default_filters=None, param_mappings=None,
-  default_search_field='searchtext'):
+  default_search_field='searchtext', filter_by_calendar=None):
 
   """Perform search leads using haystack"""
-  print 'Eventsearch as Search'
+  print 'Leadsearch as Search'
+  print "filter_by_calendar", filter_by_calendar
+  print "params", params
   if not model_cls:
     model_cls = Postevent
 
   if params is None:
-    params = OrderedDict([('festtype', None), ('city', None), ('festname', None), ('category', None), ('subcategory', None)])   
-
+    params = OrderedDict([('category', None), ('eventtype', None), ('city', None), ('eventtitle', None),('payment', None)])   
+  #   params = OrderedDict([('locations', None), ('keywords', None), ('lang', ['en', 'sv', 'de']), ('category', None), ('budget_start', None), ('budget_end', None), ('deal_start', None), ('deal_end', None), ('price_start', None), ('price_end', None), ('created_start', None), ('created_end', None), ('ranking_start', None), ('ranking_end', None), ('rating_start', None), ('rating_end', None)]) 
  
   
-       
+  if orderby is None:
+     orderby = 'payment'
   
-  # if orderby is None:
-  #   # orderby = 'created'  
-  #    orderby = '-ispremium'
-
-  
-  # if geo_params is None:
-  #   geo_params = default_geo_params
-
-  # if default_filters is None:
-  #   default_filters = default_lead_filters
 
   mappings = param_mappings or default_param_mappings
 
   sqs = SearchQuerySet().all()
   if q:
-    print 'q1 in result', q
     qs = prepare_search_query(q, default_search_field)
+    print "qs", qs
     if qs:
-      print 'qs in result', qs
       sqs = SearchQuerySet().filter(qs)
-      print 'qs in resulted sqs', sqs
+      print "sqs outstide prepare_search_query", sqs
      
   sqs = sqs.models(model_cls)
+  print "sqs", sqs
+  # sqs = sqs.filter(**default_filters)
   
   if params:
+    print "if params"
     sq_params = OrderedDict()
+    print "sq_params", sq_params
     for given_param, search_param in mappings.iteritems():      
       if has(params, given_param):
         sq_params[search_param] =  params[given_param]
     
     
   if sq_params:
-    print 'sqs in result', sqs
     sqs = sqs.filter(**sq_params)
     print "sqs with params", sqs
 
-  # if orderby:
-  #   sqs = sqs.order_by(orderby)
+  if orderby:
+    sqs = sqs.order_by(orderby)
 
-  # if groupby:
-  #   sqs = sqs.facet(groupby)
+  if filter_by_calendar is None:
+    print "yes filter_by_calendar"
+    sqs = None
+  else:
+    sqs = filter_by_calendar
 
- 
+  # if geo_location:
 
-  if geo_location:
+  #   if isinstance(geo_location, (str, unicode)):
+  #     country = geo_location
+  #   elif isinstance(geo_location, (list, tuple)):
+  #     country = geo_location      
+  #   else:
+  #     location = geo_location
 
-    if isinstance(geo_location, (str, unicode)):
-      country = geo_location
-    elif isinstance(geo_location, (list, tuple)):
-      country = geo_location      
-    else:
-      location = geo_location
-
-    if geo_params['method'] == 'bydistance':
-      radius = D(km=geo_params['radius'])
+  #   if geo_params['method'] == 'bydistance':
+  #     radius = D(km=geo_params['radius'])
       
-      sqs = sqs.dwithin('geolocation', country, radius)\
-        .distance('geolocation', country)
+  #     sqs = sqs.dwithin('geolocation', country, radius)\
+  #       .distance('geolocation', country)
 
-    if geo_orderby:
-      sqs = sqs.order_by('dista           nce')
+  #   if geo_orderby:
+  #     sqs = sqs.order_by('distance')
 
-  print "Created query", unicode(sqs.query), geo_location, geo_params
+  print "Created query", unicode(sqs.query)
   print "Created query", sqs
   return sqs
 

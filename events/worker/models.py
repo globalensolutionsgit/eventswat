@@ -1,7 +1,9 @@
 from django.db import models
-from advertisement.models import *
-from adjod.models import *
+from events.models import *
+from eventswat.models import *
+from postbanner.models import *
 from core import helper
+from postevent.models import Postevent
 
 WorkerTaskStatus = (
   ('init', 'Initialized'),
@@ -29,8 +31,8 @@ class Worker(models.Model):
 
   @staticmethod
   def default_data():
-    workers = Worker(id='freealert_notice_email')
-    worker.name = 'Freealert Notice Email'
+    workers = Worker(id='postevent_notice_email')
+    worker.name = 'Postevent Notice Email'
     worker.cls_path = 'worker.workers.EmailNotificationWorker'
     worker.save()
 
@@ -50,7 +52,7 @@ class WorkerTask(models.Model):
 
 
 class UserTracking(models.Model):
-  track_alert = models.ForeignKey(FreeAlert)
+  track_alert = models.ForeignKey(Postevent)
   email_sent_count = models.PositiveIntegerField(default=0, help_text="Total number of email sent to this user")
   email_read_count = models.PositiveIntegerField(default=0, help_text="Number of times user have read an email")
   email_view_count = models.PositiveIntegerField(default=0, help_text="Number of times user have clicked the link")
@@ -60,10 +62,23 @@ class UserTracking(models.Model):
 class WorkerNoticeEmailTask(models.Model):
 
   task = models.ForeignKey(WorkerTask)
-  created_alert=models.ForeignKey(FreeAlert)
-  product = models.ManyToManyField(Product, null=True, blank=True)  
+  postevent=models.ForeignKey(Postevent)
   tracking_code = models.CharField(max_length=256, blank=True, null=True)
   iteration_count = models.PositiveIntegerField(default=0)
+
+class NoticeEmailConfig(models.Model):
+
+  id = models.CharField(max_length=128, unique=True, primary_key=True)
+  max_email_per_lead = models.PositiveIntegerField(default=0, help_text="Maximum number of email can be send per lead, If the value is zero, it will calculate based on number of sales and email_per_sale")
+  email_per_sale = models.PositiveIntegerField(default=5)
+  max_iterations = models.PositiveIntegerField(default=1, help_text="Number of iteration, notice email should run. At every iteration, it will email new users")
+
+  max_email_retry = models.PositiveIntegerField(default=3, help_text="Maximum retry for a single actor")
+  email_queue_limit = models.PositiveIntegerField(default=10, help_text="Notice email queue limit for a single actor")
+
+  @staticmethod
+  def default_data():
+      NoticeEmailConfig(id='default').save()
 
 
   # @classmethod
@@ -81,11 +96,12 @@ class WorkerNoticeEmailTask(models.Model):
   def __unicode__(self):
     return str(self.created_alert.id)
 
-
-class ProductExpiredAdTracking(models.Model):
-  product=models.ForeignKey(Product)
+class BannerExpiredAdTracking(models.Model):
+  banner=models.ForeignKey(PostBanner)
   email_sent_count=models.PositiveIntegerField(default=0, help_text="Total number of email sent")
   last_email_sent = models.DateTimeField(null=True)
+
+
 
 
 
