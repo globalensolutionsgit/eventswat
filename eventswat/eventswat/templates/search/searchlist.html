@@ -1,21 +1,18 @@
+{% load static from staticfiles %}
 <!DOCTYPE html>
 <html>
 <head>
-	<link rel="stylesheet" type="text/css" href="css/font-awesome.css">
-	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
-	<link rel="stylesheet" type="text/css" href="css/style.css">
-	<link rel="stylesheet" type="text/css" href="css/jquery-ui.css">
-	<link rel="stylesheet" type="text/css" href="css/jquery-ui.min.css">
-	<link rel="stylesheet" type="text/css" href="css/jquery-ui.structure.css">
-	<link rel="stylesheet" type="text/css" href="css/jquery-ui.structure.min.css">
-	<link rel="stylesheet" type="text/css" href="css/jquery-ui.theme.css">
-	<link rel="stylesheet" type="text/css" href="css/jquery-ui.theme.min.css">
-	<script type="text/javascript" src="js/jquery.js"></script>
-	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="{% static "css/font-awesome.css" %}">
+	<link rel="stylesheet" type="text/css" href="{% static "css/bootstrap.css" %}">
+	<link rel="stylesheet" type="text/css" href="{% static "css/style.css" %}">
+	<link rel="stylesheet" type="text/css" href="{% static "css/jquery-ui.css" %}">
+	<link rel="stylesheet" type="text/css" href="{% static "css/jquery-ui.structure.css" %}">
+	<link rel="stylesheet" type="text/css" href="{% static "css/jquery-ui.theme.css" %}">
 
-	<script type="text/javascript" src="js/jquery-ui.js"></script>
-	<script type="text/javascript" src="js/jquery-ui.min.js"></script>
-	<script type="text/javascript" src="js/homepage.js"></script>
+	<script type="text/javascript" src="{% static "js/jquery.js" %}"></script>
+	<script type="text/javascript" src="{% static "js/bootstrap.min.js" %}"></script>
+	<script type="text/javascript" src="{% static "js/jquery-ui.js" %}"></script>
+	<script type="text/javascript" src="{% static "js/eventswat.js" %}"></script>
 
 </head>
 <body>
@@ -46,16 +43,16 @@
 			<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
 				<div class="carousel-inner">
 				    <div class="item active">
-				    	<img src="img/header02_2.jpg">
+				    	<img src="{% static "img/header02_2.jpg" %}">
 				    </div>
 				    <div class="item">
-				    	<img src="img/slide22_1.jpg">
+				    	<img src="{% static "img/slide22_1.jpg" %}">
 				    </div>
 				    <div class="item">
-				    	<img src="img/Event-Management-Banner.jpg">
+				    	<img src="{% static "img/Event-Management-Banner.jpg" %}">
 					</div>
 				    <div class="item">
-				    	<img src="img/banner4_1.jpg">
+				    	<img src="{% static "img/banner4_1.jpg" %}">
 				    </div>
 				</div><!--carousel-inner-->
 				<a href="#carousel-example-generic" role="button" data-slide="prev">
@@ -103,16 +100,146 @@
    <div class="list_leftpart container">
 	   	<div class="row part1 col-md-3">
 	   		<ul>
-		   		<li class="sort_txt">YOU CAN SORT BY</li><br>
+		   		<li class="sort_txt">YOU CAN SORT BY</li>
 		 		<li class="row subcategory_txt">
 		 		<i class="fa fa-bars bar_font"></i>SUBCATEGORIES</li>
 			</ul>
+			<div class="category_icon">
+		    	<div class="icon_list">
+		    		<ul>
+		    			<li>
+			    			<img src="{% static "img/category_icon1.png" %}" class="category_img1">
+			    			<img src="{% static "img/category_hover1.png" %}" class="category_hovericon">
+		    			</li>
+		    			<li>
+			    			<img src="{% static "img/category_icon2.png" %}" class="category_img2">
+			    			<img src="{% static "img/category_hover2.png" %}" class="category_hovericon">
+		    			</li>
+		    			<li>
+			    			<img src="{% static "img/category_icon3.png" %}" class="category_img3">
+			    			<img src="{% static "img/category_hover3.png" %}" class="category_hovericon">
+		    			</li>
+		    			<li>
+			    			<img src="{% static "img/category_icon4.png" %}" class="category_img4">
+			    			<img src="{% static "img/category_hover4.png" %}" class="category_hovericon">
+		    			</li>
+		    			<li>
+			    			<img src="{% static "img/category_icon5.png" %}" class="category_img5">
+			    			<img src="{% static "img/category_hover5.png" %}" class="category_hovericon">
+		    			</li>
+		    			<li>
+			    			<img src="{% static "img/category_icon6.png" %}" class="category_img6">
+			    			<img src="{% static "img/category_hover6.png" %}" class="category_hovericon">
+		    			</li>
+		    			<li>
+			    			<img src="{% static "img/category_icon7.png" %}" class="category_img7">
+			    			<img src="{% static "img/category_hover7.png" %}" class="category_hovericon">
+		    			</li>
+		    			<li>
+			    			<img src="{% static "img/category_icon8.png" %}" class="category_img8">
+			    			<img src="{% static "img/category_hover8.png" %}" class="category_hovericon">
+		    			</li>
+		    		</ul>
+		    	</div><!--icon_list-->
+		    </div><!--category_icon-->
+	   
+		    <div class="subcategory_list">
+		    	<div class="entertainment_list">
+		    		<ul>
+		    			<li>MUSIC & DANCE</li>
+		    			<li>FASHION SHOW</li>
+		    			<li>MOVIE AND SCREENING</li>
+		    			<li>NIGHT LIFE AND PARTY</li>
+		    			<li>KIDS EVENT</li>
+		    			<li>NEW YEAR</li>
+		    			<li>DRAMA</li>
+					</ul>
+		    	</div><!--entertainment_list-->
+		   
+		    <div class="campus_list">
+		    	<ul>
+		    		<li>ALUMNI MEET</li>
+		    		<li>SEMINAR</li>
+		    		<li>WORKSHOP</li>
+		    		<li>CONFERENCE</li>
+		    		<li>ENTERPRENEURSHIP</li>
+		    		<li>ONLINE EVENTS</li>
+		    		<li>YOUTH SUBMIT</li>
+		    		<li>TECHNICAL</li>
+		    		<li>CULTURALS</li>
+		    		<li>LITERARY</li>
+		    		<li>SYMPOSIUM</li>
+		    	</ul>
+		    </div><!--campus_list-->
+	    	<div class="competition_list">
+	    		<ul>
+	    		<li>ART</li>
+	    		<li>MUSIC & DANCE</li>
+	    		<li>PHOTOGRAPHY</li>
+	    		<li>FOOD</li>
+	    		<li>MOVIES & FILMS</li>
+	    		<li>GAMES</li>
+	    		</ul>
+	    	</div><!--competition_list-->
+	    	<div class="exhibition_list">
+	    		<ul>
+	    			<li>LITERARY</li>
+	    			<li>ART</li>
+	    			<li>MAGICAL SHOWS</li>
+	    			<li>FILM FESTIVAL</li>
+	    			<li>FOOD FESTIVAL</li>
+	    			<li>GAMES</li>
+	    			<li>FASHION & CLOTHS</li>
+	    			<li>GROCERY</li>
+	    			<li>HOME APPLIANCES</li>
+	    		</ul>
+	    	</div><!--exhibition_list-->
+	    	<div class="spiritual_list">
+	    		<ul>
+	    			<li>HEALTH,FITNESS & WELNESS</li>
+	    			<li>SPIRITUALITY & MEDITATION</li>
+	    		</ul>
+	    	</div><!--spiritual_list-->
+	    	<div class="business_list">
+	    		<ul>
+	    			<li>CONFERENCE</li>
+	    			<li>CHARITY</li>
+	    			<li>ENTERPRENEURSHIP</li>
+	    			<li>PROFESSIONAL DEVELOPMENT</li>
+	    			<li>SALES & MARKETING</li>
+	    		</ul>
+	    	</div><!--business_list-->
+	    	<div class="sports_list">
+	    		<ul>
+	    			<li>CRICKET</li>
+	    			<li>CYCLING</li>
+	    			<li>MARATHAN</li>
+	    			<li>SOCCER</li>
+	    			<li>TENNIS</li>
+	    			<li>TABLE TENNIS</li>
+	    			<li>SWIMMING</li>
+	    		</ul>
+	    	</div><!--sports_list-->
+	    	<div class="adventure_list">
+	    		<ul>
+	    			<li>TREKKING</li>
+	    			<li>CAMPING</li>
+	    			<li>ROCK CLIMBING</li>
+	    			<li>SURFING</li>
+	    			<li>PARAGLIDING</li>
+	    			<li>SCUBA DIVING</li>
+	    			<li>KAYAKING</li>
+	    		</ul>
+	    	</div><!--adventure_list-->
+	    	 </div><!--subcategory_list-->
+
+
+
+
+
 	    </div><!--part1-->
 
-   </div><!--list_leftpart-->
-
-	
-
+</div><!--list_leftpart-->
 
 
 

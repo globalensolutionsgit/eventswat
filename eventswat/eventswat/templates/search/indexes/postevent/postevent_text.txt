@@ -1,0 +1,7 @@
+{{object.category}}
+{{object.eventtype}    
+{{object.city}}
+{{object.event_title}}
+{{object.event_startdate_time}}
+{{object.event_enddate_time}}
+

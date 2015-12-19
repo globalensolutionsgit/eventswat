@@ -94,7 +94,4 @@ $('.advance_search').hide();
         $(".entertainment_list ul,.competition_list ul,.exhibition_list ul,.spiritual_list ul,.business_list ul,.sports_list ul").hide();
     });
 
-
-        
-
 });

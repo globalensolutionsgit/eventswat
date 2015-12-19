@@ -13,6 +13,7 @@
 	<script type="text/javascript" src="{% static "js/bootstrap.min.js" %}"></script>
 	<script type="text/javascript" src="{% static "js/jquery-ui.js" %}"></script>
 	<script type="text/javascript" src="{% static "js/eventswat.js" %}"></script>
+	<script type="text/javascript" src="{% static "js/search.js" %}"></script>
 
 </head>
 <body>
@@ -80,9 +81,9 @@
 
 	<div class="advance_search">
 		<div class="container advance_content">
-			<form>
+			<form method="get" action="/search/?q=" id="f_search" name="f_search">
 				<div class="form-group event_btn">
-				   		<input type="text" class="form-control event_search" id="name" placeholder="SEARCH BY EVENT NAME">
+				   		<input type="text" class="form-control event_search" id="name" placeholder="SEARCH BY EVENT NAME" >
 				</div><!--form-group-->
 				<div class="form-group category_dropdown">
 					<i class="fa fa-sort-desc sort_font"></i>
@@ -98,6 +99,11 @@
 				</div><!--form-group-->
 				<a class="advsearch-btn"><i class="fa fa-search search_font"></i></a>
 				<a class="down_btn"><i class="fa fa-angle-down down_font"></i></a>
+				<input type="hidden" id="search_keyword"  value="" name="q"/>
+				<!-- <input type="hidden" id="page" value="{{page.number}}" name="page"/> -->
+				<input type="hidden" value="" name="eventtitle"/> 
+				<input type="hidden" value="" name="category"/> 
+				<input type="hidden" value="" name="city"/>  
 			</form>
 		</div><!--container-->
 	</div><!--advance_search-->
