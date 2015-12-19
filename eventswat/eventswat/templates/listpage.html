@@ -64,7 +64,12 @@
 			</div> <!-- Carousel -->
 		</div><!--carousel-outer-->
 	</div><!--slider_content-->
-
+	
+	<div class="listpage_adv col-md-2 container">
+		<img src="{% static "img/advertisement_1.png" %}"><br><br>
+		<img src="{% static "img/advertisement_2.png" %}">
+	</div><!--listpage_adv-->
+	
 	<div class="list_search">
 		<div class="container search_listpage">
 			<div class="listpage">
@@ -82,6 +87,7 @@
 			</div><!--listpage-->
 		</div><!--search_listpage --> 
 	</div><!--list_search-->
+
 	 
 	<div class="listpage_result">
 		<div class="breadcrumbs col-md-8">
@@ -244,7 +250,7 @@
 					<div class="event_details col-md-8">
 						<ul>
 							<li>PRAVEGA '16 BANGALORE (FREE)</li>
-							<li><img src="{% static "img/listview_icon1.png" %}" class="entertainment_icon">ENTERTAINMENTS</li>
+							<li><img src="{% static "img/listview_icon1.png" %}" class="list_smallicon">ENTERTAINMENTS</li>
 							<li><i class="fa fa-map-marker"></i>BANGLORE,INDIA</li>
 							<li>DEC 18-2015 <mark class="event_time">02:00PM</mark></li>
 						</ul>
@@ -258,7 +264,7 @@
 					<div class="event_details col-md-8">
 						<ul>
 							<li>PRAVEGA '16 BANGALORE (FREE)</li>
-							<li><img src="{% static "img/listview_icon1.png" %}"  class="entertainment_icon">ENTERTAINMENTS</li>
+							<li><img src="{% static "img/listview_icon1.png" %}"  class="list_smallicon">ENTERTAINMENTS</li>
 							<li><i class="fa fa-map-marker"></i>BANGLORE,INDIA</li>
 							<li>DEC 18-2015 <mark class="event_time">02:00PM</mark></li>
 						</ul>
@@ -272,7 +278,7 @@
 					<div class="event_details col-md-8">
 						<ul>
 							<li>PRAVEGA '16 BANGALORE (FREE)</li>
-							<li><img src="{% static "img/listview_icon1.png" %}"  class="entertainment_icon">ENTERTAINMENTS</li>
+							<li><img src="{% static "img/listview_icon1.png" %}"  class="list_smallicon">ENTERTAINMENTS</li>
 							<li><i class="fa fa-map-marker"></i>BANGLORE,INDIA</li>
 							<li>DEC 18-2015 <mark class="event_time">02:00PM</mark></li>
 						</ul>
@@ -286,7 +292,7 @@
 					<div class="event_details col-md-8">
 						<ul>
 							<li>PRAVEGA '16 BANGALORE (FREE)</li>
-							<li><img src="{% static "img/listview_icon1.png" %}"  class="entertainment_icon">ENTERTAINMENTS</li>
+							<li><img src="{% static "img/listview_icon1.png" %}"  class="list_smallicon">ENTERTAINMENTS</li>
 							<li><i class="fa fa-map-marker"></i>BANGLORE,INDIA</li>
 							<li>DEC 18-2015 <mark class="event_time">02:00PM</mark></li>
 						</ul>
@@ -300,7 +306,7 @@
 					<div class="event_details col-md-8">
 						<ul>
 							<li>PRAVEGA '16 BANGALORE (FREE)</li>
-							<li><img src="{% static "img/listview_icon1.png" %}"  class="entertainment_icon">ENTERTAINMENTS</li>
+							<li><img src="{% static "img/listview_icon1.png" %}"  class="list_smallicon">ENTERTAINMENTS</li>
 							<li><i class="fa fa-map-marker"></i>BANGLORE,INDIA</li>
 							<li>DEC 18-2015 <mark class="event_time">02:00PM</mark></li>
 						</ul>
@@ -314,7 +320,7 @@
 					<div class="event_details col-md-8">
 						<ul>
 							<li>PRAVEGA '16 BANGALORE (FREE)</li>
-							<li><img src="{% static "img/listview_icon1.png" %}"  class="entertainment_icon">ENTERTAINMENTS</li>
+							<li><img src="{% static "img/listview_icon1.png" %}"  class="list_smallicon">ENTERTAINMENTS</li>
 							<li><i class="fa fa-map-marker"></i>BANGLORE,INDIA</li>
 							<li>DEC 18-2015 <mark class="event_time">02:00PM</mark></li>
 						</ul>
@@ -322,12 +328,108 @@
 					<a href="#" class="view_details">VIEW DETAILS</a>
 			</div><!--event_image-->
 		</div><!--event_content-->
+		<div class="list_pagination">
+			<a href="#" class="previous">PREV</a>
+			<i class="fa fa-angle-left"></i>
+			<ul class="pagination">
+				<li><a href="#">1</a></li>
+			    <li><a href="#">2</a></li>
+			    <li><a href="#">3</a></li>
+			    <li><a href="#">4</a></li>
+			    <li><a href="#">5</a></li>
+			    <a href="#" class="next">NEXT</a>
+	 		</ul>
+		</div><!--list_pagination-->
 	</div><!--listview_events-->
 
 
 	<div class="listgrid_events container">
-		
+		<div class="gridview_content col-md-6">
+			<div class="gridview_image">
+				<img src="{% static "img/list_img1.png" %}">
+				<div class="gridview_details">
+					<ul>
+						<li>PRAVEGA '16 BANGALORE</li>
+						<li><img src="{% static "img/listview_icon5.png" %}"  class="list_smallicon">SPIRITURAL</li>
+						<li>DEC 18-2015 <mark class="event_time">02:00PM</mark></li>
+					</ul>
+				</div><!--gridview_details-->
+			</div><!--gridview_image-->
+		</div><!--gridview_content-->
+		<div class="gridview_content col-md-6">
+			<div class="gridview_image">
+				<img src="{% static "img/list_img2.png" %}">
+				<div class="gridview_details">
+					<ul>
+						<li>INBLOOM 2016 BENGALURE</li>
+						<li><img src="{% static "img/listview_icon1.png" %}"  class="list_smallicon">ENTERTAINMENT</li>
+						<li>DEC 18-2015 <mark class="event_time">02:00PM</mark></li>
+					</ul>
+				</div><!--gridview_details-->
+			</div><!--gridview_image-->
+		</div><!--gridview_content-->
+		<div class="gridview_content col-md-6">
+			<div class="gridview_image">
+				<img src="{% static "img/list_img3.png" %}">
+				<div class="gridview_details">
+					<ul>
+						<li>AATRAL 2K15 CHENNAI</li>
+						<li><img src="{% static "img/listview_icon2.png" %}"  class="list_smallicon">SPIRITURAL</li>
+						<li>DEC 18-2015 <mark class="event_time">02:00PM</mark></li>
+					</ul>
+				</div><!--gridview_details-->
+			</div><!--gridview_image-->
+		</div><!--gridview_content-->
+		<div class="gridview_content col-md-6">
+			<div class="gridview_image">
+				<img src="{% static "img/list_img4.png" %}">
+				<div class="gridview_details">
+					<ul>
+						<li>INFLORE '15</li>
+						<li><img src="{% static "img/listview_icon1.png" %}"  class="list_smallicon">ENTERTAINMENT</li>
+						<li>DEC 18-2015 <mark class="event_time">02:00PM</mark></li>
+					</ul>
+				</div><!--gridview_details-->
+			</div><!--gridview_image-->
+		</div><!--gridview_content-->
+		<div class="gridview_content col-md-6">
+			<div class="gridview_image">
+				<img src="{% static "img/list_img5.png" %}">
+				<div class="gridview_details">
+					<ul>
+						<li>AATRAL 2K15 CHENNAI</li>
+						<li><img src="{% static "img/listview_icon2.png" %}"  class="list_smallicon">SPIRITURAL</li>
+						<li>DEC 18-2015 <mark class="event_time">02:00PM</mark></li>
+					</ul>
+				</div><!--gridview_details-->
+			</div><!--gridview_image-->
+		</div><!--gridview_content-->
+		<div class="gridview_content col-md-6">
+			<div class="gridview_image">
+				<img src="{% static "img/list_img6.png" %}">
+				<div class="gridview_details">
+					<ul>
+						<li>INFLORE '15</li>
+						<li><img src="{% static "img/listview_icon1.png" %}"  class="list_smallicon">ENTERTAINMENT</li>
+						<li>DEC 18-2015 <mark class="event_time">02:00PM</mark></li>
+					</ul>
+				</div><!--gridview_details-->
+			</div><!--gridview_image-->
+		</div><!--gridview_content-->
+		<div class="list_pagination">
+			<a href="#" class="previous">PREV</a>
+			<i class="fa fa-angle-left"></i>
+			<ul class="pagination">
+				<li><a href="#">1</a></li>
+			    <li><a href="#">2</a></li>
+			    <li><a href="#">3</a></li>
+			    <li><a href="#">4</a></li>
+			    <li><a href="#">5</a></li>
+			    <a href="#" class="next">NEXT</a>
+	 		</ul>
+		</div><!--list_pagination-->
 	</div><!--listgrid_events-->
+
 
 
 

@@ -95,7 +95,7 @@ $('.advance_search').hide();
     });
 
 //Grid and list view in listpage
-        
+        $(".listgrid_events").hide();
         $(".grid_view").click(function(){
             $('.listgrid_events').show();
             $('.listview_events').hide();

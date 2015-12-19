@@ -396,9 +396,10 @@
 .icon_list > ul {
     padding: 0;
 }
-.icon_list {
-    border: 1px solid #dbdbdb;
-    width: 46px;
+
+.category_icon ul {
+    float: left;
+    padding: 0;
     cursor: pointer;
 }
 .category_img {
@@ -407,9 +408,9 @@
    padding: 8px 0px;
 }
 .category_hovericon {
-    left: 9px;
+    left: -30px;
     position: relative;
-    top: -31px;
+    top: 0;
 }
 .category_hovericon{
     display: none;
@@ -439,7 +440,7 @@
     position: relative;
     width: 255px;
 }
-.listview_events {
+.listview_events, .listgrid_events {
     width: 42%;
     height: 500px;
 }
@@ -479,9 +480,51 @@
 .view_details:hover {
     text-decoration: none;
 }
-.entertainment_icon{
+.list_smallicon{
      padding: 0 8px;
 }
 .fa.fa-map-marker {
     padding: 0 13px;
+}
+.list_pagination {
+    float: right;
+}
+.pagination li a {
+    color: black;
+    padding: 0 5px;
+}
+.previous, .previous:hover {
+    color: #f5765d;
+    text-decoration: none;
+    font-family: Microsoft Yi Baiti;
+}
+.next, .next:hover {
+    text-decoration: none;
+    color: black;
+    font-family: Microsoft Yi Baiti;
+}
+.fa.fa-angle-left {
+    background: #f5765d;
+    color: white;
+    padding: 3px 6px;
+}
+.gridview_content {
+    height: 320px;
+}
+.gridview_details > ul {
+    list-style: outside none none;
+    padding: 0;
+}
+.gridview_details li {
+    width: 266px;
+    font-family: Microsoft Yi Baiti;
+    color: black;
+    font-size: 15px;
+}
+.listpage_adv {
+    float: right;
+    height: 45px;
+    margin: 25px 0;
+    position: relative;
+    width: 395px;
 }
