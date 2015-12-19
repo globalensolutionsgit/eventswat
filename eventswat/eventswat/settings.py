@@ -56,11 +56,8 @@ INSTALLED_APPS = (
     'core',
     'tracking',
     'social_auth',
-    
+
 )
-
-
-
 
 HAYSTACK_CONNECTIONS = {
     'default': {
@@ -72,14 +69,12 @@ HAYSTACK_CONNECTIONS = {
 
 HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 
-
-
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'tracking.middleware.VisitorTrackingMiddleware',
+    #'tracking.middleware.VisitorTrackingMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -162,10 +157,9 @@ PAYU_INFO = {
              # for production environment use 'https://secure.payu.in/_payment'
              'payment_url': 'https://test.payu.in/_payment',
              #success url for hotel
-             'surl':'http://www.eventswat.com/upload_banner',
-             'surl1':'http://www.eventswat.com/success',
-             'curl':'http://www.eventswat.com/post_event',
-             'furl':'http://www.eventswat.com/post_event',
+             'surl':'postbanner/payment_success/',
+             'curl':'post_event',
+             'furl':'post_event',
             }
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -255,3 +249,46 @@ GOOGLE_OAUTH2_CLIENT_SECRET ='haUGRT9sLvZJmcZALyk1tVUX'
 GOOGLE_OAUTH2_USE_UNIQUE_USER_ID = True
 SOCIAL_AUTH_USER_MODEL = 'auth.User'
 GOOGLE_OAUTH2_USE_DEPRECATED_API = True
+
+SITE_ID = 1
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+        },
+    'handlers': {
+        'file':{
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'eventswatlog.log',
+            'formatter': 'verbose'
+        },
+        'db':{
+            'level': 'WARNING',
+            'class': 'logs.loggers.MyDbLogHandler',
+            'formatter': 'verbose'
+        }
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['db', 'file'],
+            'level': 'WARNING',
+            'propagate': False,
+            },
+        'myapplog': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': False,
+            }
+        }
+}
+
+DEFAULT_FROM_EMAIL = 'eventswat@gmail.com'
+

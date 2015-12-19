@@ -1,4 +1,5 @@
 $(document).ready(function(){
+    
     $('#id_event_category').change(function(){
         var id= $(this).val();
         $.get('/admin_subcategory/', { id: id }, function(data) {
@@ -9,6 +10,7 @@ $(document).ready(function(){
             });
         });
     });
+
 
     $('#id_subcategoryrelatedfieldvalue_set-0-subcategory_relatedfield').change(function(){
         var id = $(this).val();
@@ -102,29 +104,6 @@ $(document).ready(function(){
             $('#id_subcategoryrelatedfieldvalue_set-1-field_value').attr("disabled","disabled");
         }
 
-
     });
-
-
-
-
-
-
-
-
-
-
-
-
-    $(function() {
-        $("#filterkeywordtxt,#filter_bus,#filter_bus_des" ).autocomplete({
-
-        select : function(event, ui) {
-                // $('#filterkeywordtxt').val(ui.item.label);
-                $('#filterkeyword').val(ui.item.extra);
-        },
-        minLength: 2,
-        delay: 100
-        });
-    });
+    $('.field-subcategory_relatedfield .add-another').hide();
 });

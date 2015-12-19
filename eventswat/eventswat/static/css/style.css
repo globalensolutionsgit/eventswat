@@ -9756,7 +9756,7 @@ t
     position: relative;
     top: -70px;
 }
-.input_name  {
+/*.input_name  {
     -moz-border-bottom-colors: none;
     -moz-border-left-colors: none;
     -moz-border-right-colors: none;
@@ -9833,7 +9833,7 @@ t
     width: 268px;
     float: right;
     left: 85px;
-}
+}*/
 .input_category  {
     -moz-border-bottom-colors: none;
     -moz-border-left-colors: none;
@@ -9853,7 +9853,7 @@ t
     position: relative;
     top: -4px;
 }
-.input_organization{
+/*.input_organization{
   -moz-border-bottom-colors: none;
     -moz-border-left-colors: none;
     -moz-border-right-colors: none;
@@ -9874,8 +9874,8 @@ t
     float: right;
     left: 85px;
     top: -40px;
-}
-.input_addr  {
+}*/
+/*.input_addr  {
     -moz-border-bottom-colors: none;
     -moz-border-left-colors: none;
     -moz-border-right-colors: none;
@@ -9893,8 +9893,8 @@ t
     position: relative;
     top: 25px;
     width: 569px;
-}
-.input_landmark  {
+}*/
+/*.input_landmark  {
     -moz-border-bottom-colors: none;
     -moz-border-left-colors: none;
     -moz-border-right-colors: none;
@@ -9935,7 +9935,7 @@ t
     left: 64px;
     position: relative;
     top: -55px;
-}
+}*/
 .person {
     color: #2ab558;
     font-size: 110px;
@@ -10006,16 +10006,19 @@ t
     border-left-color: #0074bd;
     color: #0074bd;
 }
-.gender_option {
-    position: relative;
+.label_name,.label_email, .label_mobile, .label_gender, .label_dob, .label_interest, .label_address, .label_user_type, .label_twitter, .label_facebook{
+   color: black !important;
+    font-family: timesnewroman;
+    font-size: 20px;
+}
+.input_name, .input_email, .input_mobile, .gender_option, .user_type_option, .user_interest_option, .input_organization, .input_address, .input_dob, .input_twitter, .input_facebook{
+    font-family: timesnewroman;
+    left: 130px;
+    position: absolute;
     top: 25px;
-    width: 58%;
 }
-label_gender {
-    color: #939393;
-    position: relative;
-    top: 68px;
-}
+
+
 @media (min-width: 768px){
   .personal_nav li{
   list-style:none;
@@ -10054,7 +10057,7 @@ label_gender {
 .personal_form, .privacy_form {
     line-height: 4;
     position: relative;
-    right: 300px;
+    right: 415px;
     float: right;
 }
 .lock {
@@ -10069,23 +10072,23 @@ label_gender {
     left: 485px;
     position: relative;
 }
-.gender_option {
+/*.gender_option {
     position: relative;
     top: 24px;
     width: 58%;
     height: 35px;
-}
+}*/
 .dropdown{
   cursor: pointer;
   float: left;
   margin: 7px 30px -13px 0px;
   position: relative;
 }
-.label_gender {
+/*.label_gender {
     color: #939393;
     position: relative;
     top: 68px;
-}
+}*/
 .myevents_list{
   height: 200px;
 }

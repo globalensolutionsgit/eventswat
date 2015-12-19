@@ -651,12 +651,13 @@ $('.close').click(function(){
   });
 
   $(".login_act, .login_button, .signin").on('click', function (){
+        // alert('signin ');
         $('.popup_fade').show();
         $('#signin_popup').show();
         $('.header-search-bar').hide();       
   });
 
-  $(".register_btn, .signup").on('click', function (){
+  $(".register_btn, .signup").on('click', function (){ 
     $('.popup_fade, #signup_popup').show();
     $('.header-search-bar').hide();     
   });
@@ -912,158 +913,6 @@ $('.events').click(function(){
   autoControls: true
 });          
 
-// // validation by kalai//
-// //login form validation on button click
-//   var sign_in_required =["emailid_signin", "password_signin"];
-//   jQuery('#signin').click(function(){ 
-//     email_val = $('#emailid_signin').val();    
-//       for (i=0;i<sign_in_required.length;i++) {
-//       var input = jQuery('#'+sign_in_required[i]);
-//       if (input.val() == "")  {   
-//         input.addClass("error_input_field");
-//         input.next().next('.error_message').hide();         
-//         input.next('.error_message').show();         
-//       } else {    
-//         input.removeClass("error_input_field");
-//         input.next().next('.error_message').hide(); 
-//         input.next('.error_message').hide();        
-//       }
-//     }
-    
-//     //Validate the e-mail.
-   
-//     if (!/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/.test(email_val)) {
-//       $("#emailid_signin").addClass("error_input_field");
-//       $("#emailid_signin").next('.error_message').hide();
-//       $("#emailid_signin").next().next('.error_message').show();
-//     }
-//     else
-//     {
-//       $("#emailid_signin").removeClass("error_input_field");
-//       $("#emailid_signin").next().next('.error_message').hide();
-//     }
-  
-
-//     if ($("#login_val :input").hasClass("error_input_field")){
-//     return false;
-//     }
-//     else{
-//       $('form[name="sign_in"]').submit();      
-//       return true;
-//     }
-//   });
-
-//Registration form validation on button click
-//    jQuery('#create_user').click(function(){  
-//     var sign_up_required =["emailid_signup", "username_signup", "mobile_signup", "password_signup", "confirm_password_signup" ];  
-//     for (i=0;i<sign_up_required.length;i++) {
-//       var input = jQuery('#'+sign_up_required[i]);
-//       if (input.val() == "")  {   
-//         input.addClass("error_input_field");
-//         input.next().next('.error_message').hide();
-//         input.next('.error_message').show();         
-//       } else {    
-//         input.removeClass("error_input_field");
-
-//         input.next('.error_message').hide();        
-//       }
-//     }
-//     //password
-//     if($('#password_signup').val() == ''){   
-//         $('#password_signup').addClass("error_input_field");
-//         $('#password_signup').next('.error_message').show();         
-//       } else {    
-//         $('#password_signup').removeClass("error_input_field");
-//         $('#password_signup').next('.error_message').hide();       
-//       }
-//     // confirm password
-//     if($('#confirm_password_signup').val() == ''){   
-//         $('#confirm_password_signup').addClass("error_input_field");
-//         $('#confirm_password_signup').next().next('.error_message').hide(); 
-//         $('#confirm_password_signup').next('.error_message').show();             
-//       } 
-//       else if ($('#confirm_password_signup').val() != $('#password_signup').val()){
-//         $('#confirm_password_signup').addClass("error_input_field");
-//         $('#confirm_password_signup').next('.error_message').hide();  
-//         $('#confirm_password_signup').next().next('.error_message').show(); 
-//       }
-//       else {    
-//         $('#confirm_password_signup').removeClass("error_input_field");
-//         $('#confirm_password_signup').next('.error_message').hide();    
-//         $('#confirm_password_signup').next().next('.error_message').hide();    
-//       }
-//     //Validate the e-mail
-//     if($('#emailid_signup').val() != ''){
-//     if (!/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/.test($('#emailid_signup').val())) {
-//       $('#emailid_signup').addClass("error_input_field");
-//       $('#emailid_signup').next('.error_message').hide();
-//       $('#emailid_signup').next().next('.error_message').show();
-//     }
-//     else
-//     {
-//       $('#emailid_signup').removeClass("error_input_field");
-//       $('#emailid_signup').next().next('.error_message').hide();
-//     }
-//     }
-//     //Validate the mobile
-//     if($('#mobile_signup').val() != ''){
-//       mobile_validation('#mobile_signup');
-//     }
-
-//      if ($("#user_form :input").hasClass("error_input_field")){
-//     return false;
-//     }
-//     else{
-//       $('form[name="sign_in"]').submit();      
-//       return true;
-//     }
-// });
-
-// // validation on blur
-// $('.header-call-to-action input').blur(function(){
-//         if ($(this).val() == "")  {   
-//           $(this).addClass("error_input_field");
-//           $(this).next().next('.error_message').hide();
-//           $(this).next('.error_message').show();         
-//         } else {    
-//           $(this).removeClass("error_input_field");
-//           $(this).next().next('.error_message').hide();
-//           $(this).next('.error_message').hide();        
-//         }
-
-//         id = "#" + $(this).attr('id');
-//         if ((id=="#emailid_signup" && $(id).val() != '') || (id=="#emailid_signin")){
-//            if (!/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/.test($(id).val())) {
-//               $(id).addClass("error_input_field");
-//               $(id).next('.error_message').hide();
-//               $(id).next().next('.error_message').show();
-//             }
-//             else
-//             {
-//               $(id).removeClass("error_input_field");
-//               $(id).next('.error_message').hide();
-//               $(id).next().next('.error_message').hide();
-//             } 
-//         }
-
-//         if(id=="#mobile_signup")
-//           mobile_validation(id);
-
-
-//         if ((id=="#confirm_password_signup") && ($(id).val()!='')){
-//           if($(id).val()!=$('#password_signup').val()){
-//             $(id).addClass("error_input_field");
-//             $(id).next('.error_message').hide();  
-//             $(id).next().next('.error_message').show(); 
-//           }
-//           else {    
-//           $(id).removeClass("error_input_field");
-//           $(id).next('.error_message').hide();    
-//           $(id).next().next('.error_message').hide();    
-//           }
-//         }    
-//  });
-// //end validation//
 
   // New Registration form validation code for popup design
   jQuery('#create_user').click(function(){  
@@ -1177,23 +1026,7 @@ $('.events').click(function(){
           $(id).next().next('.error').hide();    
           }
         }    
-         // if(($('#emailid_signup').val() != '') && (/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/.test($('#emailid_signup').val()))){
-         //  $.post("/register/", $('#user_form').serialize(),
-         //      function (data) {
-         //          if (data.email_exists){
-         //            $('#emailid_signup').siblings('.error').hide();
-         //            $('#emailid_signup').siblings('.email_exists_error').show();
-         //          }
-         //          if (!data.email_exists && isHTML(data))
-         //            $('#emailid_signup').siblings('.email_exists_error').hide();
-
-         //          // if (isHTML(data))
-         //          //   top.location.href= $('input[name="next"]').val();             
-         //          })
-         //          .fail(function (err) {
-         //          // alert(err);
-         //    });
-         // }
+       
  });
 //end validation//
 
@@ -1845,18 +1678,65 @@ $("#page-content").on('click', function (){
    $('.select-clone').hide();     
   });
 
-// $('.save_personal').click(function(){
-//   alert('profile'+$('input[type="file"]#profile_poster').val());
-//   $.post("/user_profile/", $('#userprofile').serialize(),
-//       function (data) {
-//         alert("success");
-//   });
-//   return false;
-// });
+
+$('#userprofile').submit(function() {                 
+  $.ajax({ 
+      data: $(this).serialize(), 
+      type: $(this).attr('method'), 
+      url: $(this).attr('action'), 
+      success: function(response) { 
+      alert('success');
+
+      },
+      error: function(response){
+        alert('error');
+      }
+    
+  });
+  $("#userprofile")[0].reset();
+  return false;
+});
+
+
+
+
+
 
 $('.save_privacy').click(function(){
-  
- $.ajax({
+  //password
+    if($('#newpassword').val() == ''){
+    alert("password");   
+        $('#newpassword').addClass("error_input_field");
+        $('#newpassword').next('.error').show();         
+      } else {    
+        $('#newpassword').removeClass("error_input_field");
+        $('#newpassword').next('.error').hide();       
+      }
+    // confirm password
+    if($('#confirmpassword').val() == ''){   
+      alert('password1');
+        $('#confirmpassword').addClass("error_input_field");
+        $('#confirmpassword').next().next('.error').hide(); 
+        $('#confirmpassword').next('.error').show();             
+      } 
+      else if ($('#confirmpassword').val() != $('#newpassword').val()){
+         alert('password2');
+        $('#confirmpassword').addClass("error_input_field");
+        $('#confirmpassword').next('.error').hide();  
+        $('#confirmpassword').next().next('.error').show(); 
+      }
+      else {    
+         alert('password3');
+        $('#confirmpassword').removeClass("error_input_field");
+        $('#confirmpassword').next('.error').hide();    
+        $('#confirmpassword').next().next('.error').hide();    
+      } 
+
+    if ($("#password_form :input").hasClass("error_input_field")){
+    return false;
+    }
+    else{
+      $.ajax({
 
                type:"POST",
                url:"/privacy/",
@@ -1871,4 +1751,8 @@ $('.save_privacy').click(function(){
        $('#newpassword').val('');
        $('#confirmpassword').val('');
        return false;
-});
+    } 
+
+
+  });
+
