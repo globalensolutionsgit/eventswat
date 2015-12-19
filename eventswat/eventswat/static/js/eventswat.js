@@ -58,7 +58,6 @@ $('.advance_search').hide();
 
 	});
 
-
 //subcategory hover in listpage
 	$(".campus_list ul,.competition_list ul,.exhibition_list ul,.spiritual_list ul,.business_list ul,.sports_list ul,.adventure_list ul").hide();
  	$(".category_img1").hover(function () {

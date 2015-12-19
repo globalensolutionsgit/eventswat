@@ -418,6 +418,7 @@
 .icon_list li:hover .category_hovericon{
     display: block;
 } 
+
 .icon_list li:hover {
     background-image: linear-gradient(68deg, #fd7843, #fb6262);
 }
@@ -428,6 +429,7 @@
 .entertainment_list ul,.campus_list ul,.competition_list ul,.exhibition_list ul,.spiritual_list ul,.business_list ul,.sports_list ul,.adventure_list ul {
     text-align: left;
 }
+
 .subcategory_list {
     line-height: 30px;
     position: absolute;
