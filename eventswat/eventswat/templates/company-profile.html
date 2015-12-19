@@ -14,15 +14,15 @@
                             <img src="/media/{{banners.mainbanner}}"  alt="">
                             <div class="slide-content"></div>
                         </div>
-                    {% endif %}  
+                    {% endif %}
                 {% endfor %}
             </div>
             <div class="customNavigation">
                 <a class="btn prev"><i class="fa fa-angle-left"></i></a>
                 <a class="btn next"><i class="fa fa-angle-right"></i></a>
             </div>
-        </div> 
-        <div class="header-nav-bar">      
+        </div>
+        <div class="header-nav-bar">
     </div> <!-- end .header-nav-bar -->
 </header> <!-- end #header -->
 
@@ -31,7 +31,7 @@
            <!--  {% if message%}
                 <script type="text/javascript">
                     window.onload = function(){ window.location="http://{{request.META.HTTP_HOST}}/post_event"; }
-                </script> 
+                </script>
                 <h4 class="text-center">{{message}}</h4>
             {%endif%} -->
         <div class="row">
@@ -62,16 +62,16 @@
                      <img id="imagelightbox" src="" alt=""/>
 
                     <img src="/media/{{photo}}">
-                    
+
                     {%for photo in photos %}
-                       
+
                        <a class="btn btn_img" data-imagelightbox="a" href="/media/{{photo}}"></a>
                             <!-- <a href="#" title="The Cleaner"><img src="/media/{{photo}}" style="width:70%;"></a> -->
                        <a class="btn btn_img" data-imagelightbox="h" href="/media/{{photo}}"></a>
-                        
-                                                  
+
+
                     {%endfor%}
-               
+
                         <h2>Organizer Details</h2>
                         <ul class="list-unstyled">
                             {% for organizers in organizer %}
@@ -129,11 +129,52 @@
 <div class="comments-section">
 
 {% include 'index_comments.html' %}
- 
+
 </div>
 <!-- package ends -->
+<div class="text-center" id="fb-root">
+  <div class="btn btn-primary" onclick="fbshare()">Facebook Share</div>
+  <div class="btn btn-primary" onclick="send_message()">Invite Friends</div>
+</div>
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '756365291174460',
+      xfbml      : true,
+      version    : 'v2.5'
+    });
+  };
 
-
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "//connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+</script>
+<script>
+function fbshare(){
+FB.ui({
+ method: 'share',
+ href: '{{request.META.HTTP_HOST}}{{ request.get_full_path }}',
+ picture: '{{request.META.HTTP_HOST}}/media/{{photo}}',
+ caption: '{{events.event_title}}',
+ description: '{{events.eventdescription}}'
+}, function(response){
+    alert(response);
+});
+}
+function send_message() {
+    FB.ui({
+        method: 'send',
+        name: '{{events.event_title}}',
+        description: '{{events.eventdescription}}',
+        link: '{{request.META.HTTP_HOST}}{{ request.get_full_path }}',
+        picture: '{{request.META.HTTP_HOST}}/media/{{photo}}'
+    });
+}
+</script>
 
 {% if related_events %}
 <div class="featured-listing" id= "featured-list">
@@ -158,7 +199,7 @@
                             </div> <!-- end .single-product -->
                         </div>
                     {% endfor %}
-                </div>  <!-- end .row -->                 
+                </div>  <!-- end .row -->
             </div>
         </div><!-- END OUR PARTNER SLIDER -->
 </div>
@@ -248,7 +289,7 @@ $(function () {
 
                     if( $this.hasClass('imagelightbox-arrow-left')) {
                         instance.loadPreviousImage();
-                    } 
+                    }
                     else {
                         instance.loadNextImage(0);
                     }
@@ -286,7 +327,7 @@ $(function () {
                 onLoadStart:    function(){ activityIndicatorOn(); },
                 onLoadEnd:      function(){ $( '.imagelightbox-arrow' ).css( 'display', 'block' ); activityIndicatorOff(); }
             });
-        
+
         var selectorI = 'a[data-imagelightbox="i"]';
         var instanceI = $( selectorI ).imageLightbox(
         {
@@ -306,11 +347,11 @@ $(function () {
                 }
         });
 
-      
+
 
     });
 </script>
-           
+
 
 {% endif %}
 
