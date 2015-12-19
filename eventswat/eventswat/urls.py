@@ -112,6 +112,11 @@ urlpatterns = patterns('',
 	url(r'^test/','postevent.views.test',name='test'),
 	#url(r'^admin/postevnet',include('postevent.urls')),
    	url(r'^add_google_calendar/(?P<id>[0-9]+)/$', 'events.views.add_google_calendar', name='add_google_calendar'),
+   	
+   	# for socail_auth and tracking module by priya
    	url(r'^tracking/', include('tracking.urls')),
+   	url(r'', include('social_auth.urls')),
+   	url(r'^complete/(?P<backend>[^/]+)/$', AuthComplete.as_view()),
+    url(r'^login-error/$', LoginError.as_view()),
    	
 )+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
