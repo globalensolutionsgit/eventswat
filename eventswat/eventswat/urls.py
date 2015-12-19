@@ -117,6 +117,7 @@ urlpatterns = patterns('',
 	url(r'^(?i)postevent/', include('postevent.urls')),
    	url(r'^tracking/', include('tracking.urls')),
 	url(r'^^(?i)postbanner/', include('postbanner.urls')),
+	url(r'', include('payu.urls')),
 
 
 )+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
