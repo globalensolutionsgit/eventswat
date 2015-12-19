@@ -24,6 +24,7 @@ class MyDbLogHandler(logging.Handler): # Inherit from logging.Handler
             logEntry.save()
         except:            
             pass
+        
         try:
             if record.levelname == 'ERROR':
                send_templated_mail(
@@ -39,4 +40,4 @@ class MyDbLogHandler(logging.Handler): # Inherit from logging.Handler
                     },
                 ) 
         except:
-            psss  
+            pass  

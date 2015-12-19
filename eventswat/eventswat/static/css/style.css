@@ -56,7 +56,6 @@
     height: 654px;
     background :url("../img/banner.png") no-repeat center center fixed;
     background-size: cover;
-
 }
 .item img {
     width: 100% !important;
@@ -367,6 +366,7 @@
 }
 .part1 > ul {
     padding: 0;
+    line-height: 50px;
 }
 .part1{
     background-image: linear-gradient(68deg, #fd7843, #fb6262);
@@ -390,5 +390,33 @@
     color: #fc6958;
     float: left;
     font-size: 30px;
-    padding: 5px;
+    padding: 9px;
+}
+.icon_list > ul {
+    padding: 0;
+}
+.icon_list li {
+    padding: 8px 0;
+}
+.icon_list {
+    border: 1px solid #dbdbdb;
+    float: left;
+    margin: -12px -15px;
+    width: 46px;
+    cursor: pointer;
+}
+.category_hovericon {
+    left: 10px;
+    position: absolute;
+    display: none;
+}
+.icon_list li:hover {
+    background-image: linear-gradient(68deg, #fd7843, #fb6262);
+}
+.entertainment_list li,.campus_list li,.competition_list li,.exhibition_list li,.spiritual_list li,.business_list li,.sports_list li,.adventure_list li {
+    color: #555555;
+    font-family: Microsoft Yi Baiti;
+}
+.entertainment_list ul,.campus_list ul,.competition_list ul,.exhibition_list ul,.spiritual_list ul,.business_list ul,.sports_list ul,.adventure_list ul {
+    text-align: left;
 }

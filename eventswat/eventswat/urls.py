@@ -8,5 +8,8 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
 	url(r'^$', 'eventswat.views.home', name='home'),
+	url(r'^listpage/$', 'eventswat.views.listpage', name='listpage'),
+
+
 
 )+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

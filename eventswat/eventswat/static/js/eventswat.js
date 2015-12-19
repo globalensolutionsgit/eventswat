@@ -59,5 +59,42 @@ $('.advance_search').hide();
 	});
 
 
+//category hover in listpage
+	$(".campus_list ul,.competition_list ul,.exhibition_list ul,.spiritual_list ul,.business_list ul,.sports_list ul,.adventure_list ul").hide();
+ 	$(".category_img1").hover(function () {
+        $(".entertainment_list ul").toggle();
+        $(".campus_list ul,.competition_list ul,.exhibition_list ul,.spiritual_list ul,.business_list ul,.sports_list ul,.adventure_list ul").hide();
+    });
+    $(".category_img2").hover(function () {
+        $(".campus_list ul").toggle();
+        $(".entertainment_list ul,.competition_list ul,.exhibition_list ul,.spiritual_list ul,.business_list ul,.sports_list ul,.adventure_list ul").hide();
+    });
+    $(".category_img3").hover(function () {
+        $(".competition_list ul").toggle();
+        $(".entertainment_list ul,.exhibition_list ul,.spiritual_list ul,.business_list ul,.sports_list ul,.adventure_list ul").hide();
+    });
+     $(".category_img4").hover(function () {
+        $(".exhibition_list ul").toggle();
+        $(".entertainment_list ul,.competition_list ul,.spiritual_list ul,.business_list ul,.sports_list ul,.adventure_list ul").hide();
+    });
+      $(".category_img5").hover(function () {
+        $(".spiritual_list ul").toggle();
+        $(".entertainment_list ul,.competition_list ul,.exhibition_list ul,.business_list ul,.sports_list ul,.adventure_list ul").hide();
+    });
+       $(".category_img6").hover(function () {
+        $(".business_list ul").toggle();
+        $(".entertainment_list ul,.competition_list ul,.exhibition_list ul,.spiritual_list ul,.sports_list ul,.adventure_list ul").hide();
+    });
+        $(".category_img7").hover(function () {
+        $(".sports_list ul").toggle();
+        $(".entertainment_list ul,.competition_list ul,.exhibition_list ul,.spiritual_list ul,.business_list ul,.adventure_list ul").hide();
+    });
+         $(".category_img8").hover(function () {
+        $(".adventure_list ul").toggle();
+        $(".entertainment_list ul,.competition_list ul,.exhibition_list ul,.spiritual_list ul,.business_list ul,.sports_list ul").hide();
+    });
+
+
+        
 
 });
