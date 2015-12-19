@@ -35,6 +35,8 @@ class OrganizerAdmin(admin.ModelAdmin):
 	list_filter = ['organizer_name']
 	search_fields = ['organizer_name']
 
+
+
 class PostEventKeywordAdmin(admin.ModelAdmin):
 	fields = ['keyword']
 	list_display = ('id','keyword')
@@ -79,10 +81,27 @@ class PosteventAdmin(admin.ModelAdmin):
     list_filter = ['payment','admin_status','event_subcategory']
     inlines = [ SubCategoryRelatedFieldValueInLine, OraganizerInLine ]
     list_per_page = 50
+    actions = ['send_EMAIL']
 
     class Media:
         css = {'all': ('css/jquery-ui.css',)}
         js = ('js/jquery.js', 'js/admin.js', 'js/jquery-ui.js')
+
+    def send_EMAIL(self,request, queryset):
+        from templated_email import send_templated_mail
+        if self.admin_status.boolean == True :
+            print 'admin_status', admin_status
+            for i in queryset:
+                if i.email:
+                    send_templated_mail(
+                            template_name = 'premium_user',
+                            subject = 'Welcome Evewat',
+                            from_email = 'eventswat@gmail.com',
+                            recipient_list = [i.user_email],
+                            context={
+                                       'user': i.user_name,
+                                    },
+                        ) 
 
     # def formfield_for_foreignkey(self, db_field, request, **kwargs):
     # 	"""Alters the widget displayed for the base field."""
@@ -128,20 +147,22 @@ class OrganizerAdmin(admin.ModelAdmin):
 	list_filter = ['organizer_name']
 	search_fields = ['organizer_name']
 	list_per_page = 50
-	#actions = ['send_invitations']
+	actions = ['send_invitations']
 
-# 	def send_invitations(self, request, queryset):
-# 		from templated_email import send_templated_mail
-# 		for i in queryset:
-# 			if i.organizer_email:
-# 				send_templated_mail(
-# 						template_name = 'welcome',
-# 			            subject = "Invitation",
-# 			            from_email = 'eventswat@gmail.com',
-# 			            recipient_list = [i.organizer_email],
-# 			            context={
-# 			                       'user': i.organizer_name,
-# 			                    },
+	def send_invitations(self, request, queryset):
+		from templated_email import send_templated_mail
+		for i in queryset:
+			if i.organizer_email:
+				send_templated_mail(
+						template_name = 'welcome',
+			            subject = "Invitation",
+			            from_email = 'eventswat@gmail.com',
+			            recipient_list = [i.organizer_email],
+			            context={
+			                       'user': i.organizer_name,
+			                    },
+                                )
+
 admin.site.register(CampusCollege, CampusCollegeAdmin)
 admin.site.register(CampusDepartment, CampusDepartmentAdmin)
 admin.site.register(Postevent, PosteventAdmin)

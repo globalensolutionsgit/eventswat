@@ -84,7 +84,7 @@ class EmailNotificationWorker(WorkerBase):
 					postevent_id = str(postevents.id)
 					print "user",user
 					print "postevent_id", postevent_id
-					result= postevents.enddate
+					result= postevents.event_enddate_time
 					print "result", result
 					if result:       
 						subject="Your " + str(postevents.event_title) + " Your event will be removed from today onwards"

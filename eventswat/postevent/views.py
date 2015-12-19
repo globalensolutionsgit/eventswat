@@ -74,6 +74,17 @@ def postevent(request):
         organizer.organizer_mobile = request.POST.get('org_mobile')
         organizer.organizer_email = request.POST.get('org_email')
         organizer.save()
+        send_templated_mail(
+                  template_name = 'post_event',
+                  subject = 'Post Event',
+                  from_email = 'eventswat@gmail.com',
+                  recipient_list = [event.user_email],
+                  context={
+
+                           'user': event.user_name,
+
+                     },
+                   )
     else:
         category = EventsCategory.objects.all()
         country = City.objects.all()
