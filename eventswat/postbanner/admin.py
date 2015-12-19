@@ -24,10 +24,10 @@ class BannerPlanAdmin(admin.ModelAdmin):
 
 
 class PostBannerAdmin(admin.ModelAdmin):
-	fields=['banner','link', 'pageurl', 'position','startdate','enddate','admin_status','user']
-	list_display = ('id', 'banner','link', 'pageurl', 'position', 'bannerplan', 'admin_status')
-	list_filter = ['pageurl', 'position']
-	search_fields = ['id', 'pageurl','position','bannerplan']    
+	fields = ['user', 'bannerplan', 'banner','link','startdate','enddate','admin_status']
+	list_display = ('id', 'banner','link', 'admin_status')
+	list_filter = ['user','banner']
+	search_fields = ['id', 'banner']    
 	list_per_page = 50
 	
 	def admin_status(self, obj):
@@ -39,6 +39,12 @@ class PostBannerAdmin(admin.ModelAdmin):
 			return self.readonly_fields + ('startdate','enddate',)
 		return self.readonly_fields
 
+class TempBannerAdmin(admin.ModelAdmin):
+	fields = ['temp_user', 'temp_bannerplan', 'temp_banner','temp_link','temp_startdate','temp_enddate']
+	list_display = ('id', 'temp_banner','temp_link')
+	list_filter = ['temp_user','temp_banner']
+	search_fields = ['id', 'temp_banner']    
+	list_per_page = 50
 		
 # class MainbannerAdmin(admin.ModelAdmin):
 # 	fields=['mainbanner','price', 'admin_status']
@@ -50,3 +56,4 @@ class PostBannerAdmin(admin.ModelAdmin):
 # admin.site.register(Mainbanner, MainbannerAdmin)
 admin.site.register(PostBanner, PostBannerAdmin)
 admin.site.register(BannerPlan, BannerPlanAdmin)
+admin.site.register(TempBanner, TempBannerAdmin)

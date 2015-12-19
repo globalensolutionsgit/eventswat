@@ -54,3 +54,58 @@ def find_price(request):
 		return JSONResponse([{'id': o.id, 'name': smart_unicode(o.price)} for o in objs])
 	else:
 		return JSONResponse({'error': 'Not Ajax or no GET'})
+
+# @csrf_exempt
+# @login_required(login_url='/?lst=2')
+# def upload_banner(request):
+# 	if request.POST.get('price',False):
+# 		uploadbanner=PostBanner()
+# 		# uploadbanner.price=request.POST.get('price',request.COOKIES.get('price'))
+# 		uploadbanner.position=request.POST.get('position',request.COOKIES.get('position'))
+# 		uploadbanner.pageurl=request.POST.get('pageurl',request.COOKIES.get('pageurl'))
+# 		uploadbanner.banner=request.FILES.get('banner',request.COOKIES.get('banner'))
+# 		uploadbanner.link=request.POST['link']
+# 		uploadbanner.save()
+# 		send_templated_mail(
+# 			  template_name = 'banner',
+# 			  subject = 'Uplaod Banner',
+# 			  from_email = 'eventswat@gmail.com',
+# 			  recipient_list = [request.user.email ],
+# 			  context={
+# 					   'user': request.user,
+
+# 			  },
+# 		  )
+# 		response=HttpResponseRedirect("/payment/")
+# 		# response.set_cookie( 'price', uploadbanner.price )
+# 		response.set_cookie( 'position', uploadbanner.position )
+# 		response.set_cookie( 'banner', uploadbanner.banner )
+# 		response.set_cookie( 'pageurl', uploadbanner.pageurl )
+# 	#field9 is payu success variable
+# 	# this if condition for after success of payment
+# 	elif 'field9' in request.POST:
+# 		message="Your data succesfully uploaded"
+# 		response = render_to_response("uploadbanner.html",{'message':message},context_instance=RequestContext(request))
+# 	else:
+# 		message="Something went to wrong"
+# 		response = render_to_response("uploadbanner.html",{'message':message},context_instance=RequestContext(request))
+# 	return response
+
+# @csrf_exempt
+# def success(request):
+# 	#field9 is payu success variable
+# 	# this if condition for after success of payment
+# 	if 'field9' in request.POST:
+# 		response = render_to_response("success.html",context_instance=RequestContext(request))
+# 		response.delete_cookie('eventtitle')
+# 		response.delete_cookie('startdate')
+# 		response.delete_cookie('enddate')
+# 		response.delete_cookie('plan')
+# 		response.delete_cookie('category_name')
+# 		response.delete_cookie('eventtype_name')
+# 		response.delete_cookie('eventtype')
+# 		response.delete_cookie('category')
+# 		response.delete_cookie('eventdescription')
+# 	else:
+# 		response =HttpResponseRedirect('/')
+# 	return response

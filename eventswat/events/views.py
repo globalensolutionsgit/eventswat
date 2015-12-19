@@ -145,7 +145,7 @@ def user_login(request):
 		if login_form.is_valid():
 			user = User.objects.get(email=login_email)
 			user.backend='django.contrib.auth.backends.ModelBackend'
-			if user is not None:
+			if user:
 				print 'user', user			
 				if user.check_password(login_password):
 					if user.is_active:
@@ -356,11 +356,11 @@ def submit_event_v2(request):
 def upload_banner(request):
 	if request.POST.get('price',False):
 		uploadbanner=PostBanner()
-		# uploadbanner.price=request.POST.get('price',request.COOKIES.get('price'))
-		uploadbanner.position=request.POST.get('position',request.COOKIES.get('position'))
-		uploadbanner.pageurl=request.POST.get('pageurl',request.COOKIES.get('pageurl'))
+		uploadbanner.bannerplan=request.POST.get('bannerplan',request.COOKIES.get('bannerplan'))
 		uploadbanner.banner=request.FILES.get('banner',request.COOKIES.get('banner'))
 		uploadbanner.link=request.POST['link']
+		# uploadbanner.position=request.POST.get('position',request.COOKIES.get('position'))
+		# uploadbanner.pageurl=request.POST.get('pageurl',request.COOKIES.get('pageurl'))		
 		uploadbanner.save()
 		send_templated_mail(
 			  template_name = 'banner',
