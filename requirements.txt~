@@ -3,6 +3,10 @@ django-extensions==1.5.5
 django-haystack==2.1.0
 Pillow==2.9.0
 pyelasticsearch==0.5
+ipgetter==0.6
+django-templated-email==0.4.9
+geopy==0.98
+MySQL-python==1.2.3
 django-templated-email==0.4.9
 MySQL-python==1.2.3
 openpyxl==1.6.1

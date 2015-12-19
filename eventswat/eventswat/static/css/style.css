@@ -285,7 +285,7 @@
     left: 9%;
     padding: 15px 20px;
     position: relative;
-    width: 58%;
+    width: 61%;
 }
 .search_box_listpage {
     display: inline;
@@ -347,7 +347,7 @@
     cursor: pointer;
 }
 .events_result {
-    left: 26%;
+    left: 34%;
     position: relative;
 }
 .showing_list{
@@ -360,6 +360,7 @@
 }
 .list_leftpart {
     width: 82%;
+    margin: 0 auto;
 }
 .part1 ul li {
     list-style: outside none none;
@@ -395,21 +396,29 @@
 .icon_list > ul {
     padding: 0;
 }
-.icon_list li {
-    padding: 8px 0;
-}
-.icon_list {
-    border: 1px solid #dbdbdb;
+
+.category_icon ul {
     float: left;
-    margin: -12px -15px;
-    width: 46px;
+    padding: 0;
     cursor: pointer;
 }
+.category_img {
+    left: 0px;
+    position: relative;
+   padding: 8px 0px;
+}
 .category_hovericon {
-    left: 10px;
-    position: absolute;
+    left: -30px;
+    position: relative;
+    top: 0;
+}
+.category_hovericon{
     display: none;
 }
+.icon_list li:hover .category_hovericon{
+    display: block;
+} 
+
 .icon_list li:hover {
     background-image: linear-gradient(68deg, #fd7843, #fb6262);
 }
@@ -419,4 +428,105 @@
 }
 .entertainment_list ul,.campus_list ul,.competition_list ul,.exhibition_list ul,.spiritual_list ul,.business_list ul,.sports_list ul,.adventure_list ul {
     text-align: left;
+}
+
+.subcategory_list {
+    line-height: 30px;
+    position: absolute;
+    top: 197%;
+}
+.category_icon {
+    border: 1px solid #dbdbdb;
+    height: 344px;
+    margin: -11px -14px;
+    position: relative;
+    width: 255px;
+}
+.listview_events, .listgrid_events {
+    width: 42%;
+    height: 500px;
+}
+.event_content {
+    border-bottom: 1px solid #dbdbdb;
+    height: 128px;
+    margin: 6px 0;
+}
+.event_details {
+    float: right;
+    padding: 0;
+}
+.event_details > ul {
+    float: left;
+    list-style: outside none none;
+    padding: 0;
+}
+.event_details li {
+    color: black;
+    font-family: Microsoft Yi Baiti;
+    font-size: 17px;
+}
+.event_time{
+    background: transparent none repeat scroll 0 0;
+    color: #f88051;
+    font-size: 17px;
+}
+.view_details {
+    color: black;
+    float: right;
+    position: relative;
+    top: -30px;
+    background-image: linear-gradient(-21deg, #fea21f, #f9c216);
+    padding: 5px;
+    font-family: Microsoft Yi Baiti;
+}
+.view_details:hover {
+    text-decoration: none;
+}
+.list_smallicon{
+     padding: 0 8px;
+}
+.fa.fa-map-marker {
+    padding: 0 13px;
+}
+.list_pagination {
+    float: right;
+}
+.pagination li a {
+    color: black;
+    padding: 0 5px;
+}
+.previous, .previous:hover {
+    color: #f5765d;
+    text-decoration: none;
+    font-family: Microsoft Yi Baiti;
+}
+.next, .next:hover {
+    text-decoration: none;
+    color: black;
+    font-family: Microsoft Yi Baiti;
+}
+.fa.fa-angle-left {
+    background: #f5765d;
+    color: white;
+    padding: 3px 6px;
+}
+.gridview_content {
+    height: 320px;
+}
+.gridview_details > ul {
+    list-style: outside none none;
+    padding: 0;
+}
+.gridview_details li {
+    width: 266px;
+    font-family: Microsoft Yi Baiti;
+    color: black;
+    font-size: 15px;
+}
+.listpage_adv {
+    float: right;
+    height: 45px;
+    margin: 25px 0;
+    position: relative;
+    width: 395px;
 }

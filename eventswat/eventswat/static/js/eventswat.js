@@ -58,8 +58,7 @@ $('.advance_search').hide();
 
 	});
 
-
-//category hover in listpage
+//subcategory hover in listpage
 	$(".campus_list ul,.competition_list ul,.exhibition_list ul,.spiritual_list ul,.business_list ul,.sports_list ul,.adventure_list ul").hide();
  	$(".category_img1").hover(function () {
         $(".entertainment_list ul").toggle();
@@ -94,4 +93,15 @@ $('.advance_search').hide();
         $(".entertainment_list ul,.competition_list ul,.exhibition_list ul,.spiritual_list ul,.business_list ul,.sports_list ul").hide();
     });
 
+//Grid and list view in listpage
+        $(".listgrid_events").hide();
+        $(".grid_view").click(function(){
+            $('.listgrid_events').show();
+            $('.listview_events').hide();
+        });
+        
+        $(".list_view").click(function(){
+            $('.listview_events').show();
+            $(".listgrid_events").hide();
+        });
 });
