@@ -106,6 +106,8 @@ def logout_view(request):
 def details(request,id=None):
 	# try:
 	postevent=Postevent.objects.get(pk=id)
+	userprofile = Userprofile()
+	print userprofile.profile_pic,"profile_pic"
 	img=str(postevent.event_poster).split(',')
 	photo=img[0]
 	photos=[n for n in str(postevent.event_poster).split(',')]
@@ -138,7 +140,7 @@ def details(request,id=None):
 			temp.save()
 	comment_tree=Comment.objects.filter(postevent_id=postevent.id).order_by('path')
 	# related_events = Postevent.objects.filter(event_category = postevent.event_category, event_subcategory=postevent.event_subcategory, city=postevent.city)
-	return render_to_response("company-profile.html",{'comment_tree':comment_tree,'events':postevent,'organizer':organizer,'photos':photos,'photo':photo, 'registeration_form':registeration_form, 'login_form':login_form, 'comment_form':comment_form}, context_instance=RequestContext(request))
+	return render_to_response("company-profile.html",{'comment_tree':comment_tree,'events':postevent,'organizer':organizer,'photos':photos,'photo':photo, 'registeration_form':registeration_form, 'login_form':login_form, 'comment_form':comment_form, 'userprofile':userprofile}, context_instance=RequestContext(request))
 	# except:
 	#     return render_to_response("company-profile.html",{'message':'Sorry for inconvenience.Some thing went to wrong'}, context_instance=RequestContext(request))
 

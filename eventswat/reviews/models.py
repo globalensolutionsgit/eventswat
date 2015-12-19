@@ -21,7 +21,7 @@ class Comment(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     path = models.CharField(blank=True, max_length=500, editable=False)
     depth = models.PositiveSmallIntegerField(default=0)
-    
+    rating=models.IntegerField()
     postevent = models.ForeignKey(Postevent)
 
     def __unicode__(self):
@@ -34,5 +34,5 @@ class CommentForm(forms.ModelForm):
     
     class Meta:
         model = Comment
-        fields = ('content',)
+        fields = ('content','rating',)
 

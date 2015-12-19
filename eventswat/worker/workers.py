@@ -119,37 +119,64 @@ class EmailNotification_ExpiredAds(WorkerBase):
 
 
   def create_tasks(self):    
-    print "create_tasks"
-    now  = helper.get_now()
-    user=User()
-    sitebanner=PostBanner.objects.all()
+	print "create_tasks"
+	now  = helper.get_now()
+	user=User()
+	sitebanner=PostBanner.objects.all()
 
-    for sitebanners in sitebanner:
-      user_id=sitebanners.user_id
-      print user_id
-      user=User.objects.get(id=user_id)
-      print user
-      email=user.email
-      print email
-      name=user.username
-      print name
-      result=sitebanners.enddate
-      print "result", result
-      if result:       
-        subject="Your " +  " Your banner will be removed from today onwards"
+	for sitebanners in sitebanner:
+	  user_id=sitebanners.user_id
+	  print user_id
+	  user=User.objects.get(id=user_id)
+	  print user
+	  email=user.email
+	  print email
+	  name=user.username
+	  print name
+	  result=sitebanners.enddate
+	  print "result", result
+	  if result:       
+		subject="Your " +  " Your banner will be removed from today onwards"
 				
-      sitebanners.admin_status = False 
-      send_templated_mail(
+	  sitebanners.admin_status = False 
+	  send_templated_mail(
 						template_name = 'welcome',
 						subject = "subject",
 						from_email = 'info@eventswat.com',
 						recipient_list = [email],
 						context = {'name':name},
 							)
-      print "mail send" 
-      sitebanners.save()
+	  print "mail send" 
+	  sitebanners.save()
 
   def runtasks(self, tasks):
-    print "runtasks"
+	print "runtasks"
 
- 
+class EmailNotification_intrestAds(WorkerBase):
+	def create_tasks(self): 
+		print "create_tasks"
+		now  = helper.get_now()
+		user=User()
+		userprofile = Userprofile.objects.all()
+		postevent=Postevent.objects.all()
+		for  userprofiles in userprofile:
+			user_id=userprofiles.user_ptr_id
+			print user_id
+			user=User.objects.get(id=user_id)
+			print user
+			email=user.email
+			print email,"email"
+			name=user.username
+			print name,"name"
+			print userprofile.user_interest,"user_interest"
+		send_templated_mail(
+						template_name = 'welcome',
+						subject = "subject",
+						from_email = 'info@eventswat.com',
+						recipient_list = [email],
+						context = {'name':name},
+							)
+		print "mail send"  	
+
+	def runtasks(self, tasks):
+		print "runtasks"
