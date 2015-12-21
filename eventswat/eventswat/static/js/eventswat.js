@@ -42,6 +42,7 @@ $('.advance_search').hide();
 	$('#datepicker ,.events_calander').hide();
 	$(function() {
 	    $( "#datepicker" ).datepicker({
+          dateFormat: 'yy-mm-dd',
 	      numberOfMonths: 2,
 	      showButtonPanel: true,
 	       dayNamesMin: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]

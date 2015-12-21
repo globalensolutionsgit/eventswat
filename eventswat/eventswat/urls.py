@@ -5,6 +5,7 @@ from django.contrib import admin
 from django.views.generic import RedirectView
 from search.eventsearch import EventSearchView
 from search.searchform import EventSearchFilter
+from postevent.views import *
 
 admin.autodiscover()
 
@@ -17,7 +18,7 @@ urlpatterns = patterns('',
 	url(r'^(?i)search/', EventSearchView(
 	  template='search/searchlist.html', 
 	  form_class=EventSearchFilter, 
-	  #results_per_page=settings.SEARCH_PAGE_NUMBER_OF_LEADS
 	), name='newsearchPageV2'), 
+	url(r'^postevent/getevents_by_date/$', 'postevent.views.getevents_by_date', name='getevents_by_date'),
 
 )+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

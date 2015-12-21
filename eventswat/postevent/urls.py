@@ -1,7 +1,6 @@
 from django.conf.urls import patterns, url
 
 urlpatterns = patterns('',
-    url(r'^load_state/$', 'postevent.views.load_state'),
-    url(r'^load_city/$', 'postevent.views.load_city'),
-    url(r'^$', 'postevent.views.postevent'),
+    # Newly added by kalai for getting events by specific date 
+    # url(r'^getevents_by_date/$', 'postevent.views.getevents_by_date', name='getevents_by_date'),
 )
