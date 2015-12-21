@@ -42,9 +42,7 @@ urlpatterns = patterns('',
 	url(r'^(?i)user/password/done/$',
 		'django.contrib.auth.views.password_reset_complete'),
 
-	# url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$',
- #    'django.contrib.auth.views.password_reset_confirm',
- #    name='password_reset_confirm'),
+	
 
 	 # getting tarted
 	url(r'^start/$', 'events.views.start',name='start'),
@@ -120,6 +118,6 @@ urlpatterns = patterns('',
    	url(r'^complete/(?P<backend>[^/]+)/$', AuthComplete.as_view()),
     url(r'^login-error/$', LoginError.as_view()),
    	url(r'^(?i)postevent/', include('postevent.urls')),
-   	url(r'^^(?i)postbanner/', include('postbanner.urls')),
+   	# url(r'^^(?i)postbanner/', include('postbanner.urls')),
 
 )+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

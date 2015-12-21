@@ -7,6 +7,7 @@ from models import *
 from django.conf import settings
 from django.contrib.sites.models import Site
 from postevent.models import Postevent
+from usermanagement.models import Userprofile
 from django.contrib.auth.models import User
 from templated_email import send_templated_mail
 from core import  helper
@@ -35,7 +36,7 @@ class EmailNotificationWorker(WorkerBase):
 
 	def create_tasks(self):    
 		print "create_tasks1"
-		print self.worker
+		print self.worker,"worker"
 		workertask=WorkerTask.objects.get(worker=self.worker)
 
 		workertask.status='init'
@@ -153,30 +154,41 @@ class EmailNotification_ExpiredAds(WorkerBase):
 	print "runtasks"
 
 class EmailNotification_intrestAds(WorkerBase):
-	def create_tasks(self): 
+	def create_tasks(self,id=None): 
 		print "create_tasks"
 		now  = helper.get_now()
 		user=User()
 		userprofile = Userprofile.objects.all()
+		eventssubcategory = EventsSubCategory.objects.all()
+		
 		postevent=Postevent.objects.all()
+		
 		for  userprofiles in userprofile:
 			user_id=userprofiles.user_ptr_id
 			print user_id
+			choice_1 = userprofiles.user_interest.all()[0]
+			print choice_1.id,'choice_1',choice_1
+			subcategory = choice_1.id
+			print subcategory
+			postevent=Postevent.objects.filter(event_subcategory_id = subcategory)
+			print postevent,"postevent"
+			user_interest= postevent
 			user=User.objects.get(id=user_id)
 			print user
 			email=user.email
 			print email,"email"
 			name=user.username
 			print name,"name"
-			print userprofile.user_interest,"user_interest"
-		send_templated_mail(
-						template_name = 'welcome',
-						subject = "subject",
-						from_email = 'info@eventswat.com',
-						recipient_list = [email],
-						context = {'name':name},
-							)
-		print "mail send"  	
+			# print userprofile__eventssubcategory_id,"user_interest"
+			send_templated_mail(
+							template_name = 'matching_event',
+							subject = "subject",
+							from_email = 'info@eventswat.com',
+							recipient_list = [email],
+							context = {'name':name,
+										'user_interest': user_interest},
+								)
+			print "mail send"  	
 
 	def runtasks(self, tasks):
 		print "runtasks"
