@@ -19,6 +19,7 @@ $(document).ready(function(){
 	}
 	 
 	 $('.advsearch-btn').on('click', function() {
+	 		$('[name=q]').val($('#event_title').val());
 	 		$('[name=city]').val($('#city').val());
 			validateSearch();
 	 });

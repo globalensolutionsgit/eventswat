@@ -26,13 +26,13 @@ class EventsCategory(models.Model):
         max_length=100,
         default='',
         help_text='Upload icon image as .jpg or .png',
-        verbose_name="Icon")
+        verbose_name="Icon", blank=True)
     category_hover_icon = models.ImageField(
         upload_to='category/icon/',
         max_length=100, default='',
         help_text='Upload hover icon imageas as .jpg or .png \
         (This icon show when mouse over icon)',
-        verbose_name="Hover Icon")
+        verbose_name="Hover Icon", blank=True)
 
     class Meta:
         verbose_name = "Category"

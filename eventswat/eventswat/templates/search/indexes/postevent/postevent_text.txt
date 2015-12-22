@@ -1,5 +1,5 @@
-{{object.category}}
-{{object.eventtype}    
+{{object.event_category}}
+{{object.event_subcategory}    
 {{object.city}}
 {{object.event_title}}
 {{object.event_startdate_time}}

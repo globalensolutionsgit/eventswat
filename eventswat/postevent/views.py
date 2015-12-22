@@ -1,13 +1,21 @@
 from django.shortcuts import render_to_response, redirect, render
 from django.http import HttpResponseRedirect, HttpResponse
-from django.utils.encoding import smart_unicode, force_unicode
 from django.utils import simplejson
 from haystack.query import SearchQuerySet
 from django.db.models import Q
+from datetime import datetime, timedelta
+
 
 def getevents_by_date(request):
-	results = SearchQuerySet().filter(Q(event_startdate_time=request.GET.get('date'))|
-								   Q(event_enddate_time=request.GET.get('date'))
-								   ) 
-	print "results", results
-	return HttpResponse(simplejson.dumps(smart_unicode(results)), mimetype='application/json')
+	results = []
+	if request.GET.get('date'):
+		filter_data = SearchQuerySet().filter(Q(event_startdate_time=request.GET.get('date'))|
+								   Q(event_enddate_time=request.GET.get('date')))								    
+	else:
+		filter_data = SearchQuerySet().filter(Q(event_startdate_time=datetime.now().date())|
+								   Q(event_enddate_time=datetime.now().date())) 								  
+	for filter_datas in filter_data:
+		data = {'id':filter_datas.id.split('.')[-1],'title':filter_datas.eventtitle}
+		results.append(data)
+		
+	return HttpResponse(simplejson.dumps(results), mimetype='application/json')
