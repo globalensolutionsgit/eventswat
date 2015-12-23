@@ -26,8 +26,8 @@ class PosteventIndex(SearchIndex, Indexable):
         text = []
         if obj.event_title:
             text.append(obj.event_title)
-        if obj.city:
-            text.append(obj.city)
+        # if obj.city:
+        #     text.append(obj.city)
 
         search = []
         for t in text:

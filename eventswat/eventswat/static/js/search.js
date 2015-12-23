@@ -9,18 +9,17 @@ $(document).ready(function(){
 	   else
 	   {
 	       	if($('#q').val() == ''){
-
 		         $('#q').val('');
 	    	}	
-	    	// var q = $('#f_search').serialize();
-	    	// alert(q);
 	    	$("#f_search").submit();
 	   }	   			 
 	}
-	 
-	 $('.advsearch-btn').on('click', function() {
+
+	 $('.search-btn, .advsearch-btn').on('click', function() {
 	 		$('[name=q]').val($('#event_title').val());
-	 		$('[name=city]').val($('#city').val());
+	 		$('[name=city]').val($('#city').val());	 		
+	 		if ($("[name='city']").val() == '' )
+	 			$('[name=city]').attr("disabled",true);
 			validateSearch();
 	 });
 });

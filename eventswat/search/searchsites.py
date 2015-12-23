@@ -20,7 +20,7 @@ from django.template import RequestContext
 from haystack.forms import ModelSearchForm, FacetedSearchForm
 from haystack.query import EmptySearchQuerySet
 
-RESULTS_PER_PAGE = getattr(settings, 'HAYSTACK_SEARCH_RESULTS_PER_PAGE', 5)
+RESULTS_PER_PAGE = getattr(settings, 'HAYSTACK_SEARCH_RESULTS_PER_PAGE', 10)
 print 'RESULTS_PER_PAGE', RESULTS_PER_PAGE
 
 class Highlighter(object):

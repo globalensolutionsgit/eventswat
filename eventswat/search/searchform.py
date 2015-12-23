@@ -143,6 +143,6 @@ class EventSearchFilter(FacetedSearchForm):
 
 	  return eventsearch(q, params, orderby, groupby, model_cls=self.get_model_class(), 
 		default_filters=self.get_default_filters(), 
-		default_search_field=self.get_default_search_field(), filter_by_calendar=self.filter_by_calendar())
+		default_search_field=self.get_default_search_field())
 
 
