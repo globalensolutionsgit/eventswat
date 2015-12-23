@@ -74,6 +74,7 @@
     top: 50%;
     vertical-align: middle;
     width: 60px;
+    background-color: rgba(0, 0, 0, 0.55);
 }
 .slider_content {
     position: relative;
@@ -93,6 +94,7 @@
     vertical-align: middle;
     text-align: center;
     right: 20px;
+    background-color: rgba(0, 0, 0, 0.55);
 }
 .carousel-inner > .item {
     height: 500px !important;
@@ -266,7 +268,9 @@
     color: black;
 }
 .all_categories ul li {
+    height: 385px;
     list-style-type: none;
+    padding: 0;
 }
 .categories_home {
     color: #222222;
@@ -274,9 +278,27 @@
     text-align: center;
     font-family: Microsoft Yi Baiti;
 }
-.category_images{
+.all_categories {
+    height: 482px;
+    padding: 0;
+    position: relative;
     width: 100%;
 }
+.image_block {
+    display: -moz-inline-box;
+    padding: 0;
+}
+.img-responsive {
+    padding: 0;
+    position: relative;
+}
+
+
+.grid-sizer,
+.grid-item { width: 10%; }
+.grid img { width:100%; }
+
+
 /*list page*/
 .search_listpage {
     background: #ececec none repeat scroll 0 0;
@@ -408,9 +430,9 @@
    padding: 8px 0px;
 }
 .category_hovericon {
-    left: -30px;
+    left: 0px;
     position: relative;
-    top: 0;
+    top: -31px;
 }
 .category_hovericon{
     display: none;
@@ -490,6 +512,7 @@
 }
 .list_pagination {
     float: right;
+    width: 45%;
 }
 .pagination li a {
     color: black;
@@ -509,6 +532,7 @@
     background: #f5765d;
     color: white;
     padding: 3px 6px;
+    cursor: pointer;
 }
 .gridview_content {
     height: 320px;
@@ -529,4 +553,37 @@
     margin: 25px 0;
     position: relative;
     width: 395px;
+}
+.city_selectbox {
+    float: right;
+    height: 23px;
+    padding: 0;
+    width: 185px;
+    background: #f0f0f0 none repeat scroll 0 0;
+    border: medium none #f0f0f0;
+}
+.city_categories {
+    border: 1px solid  #dbdbdb;
+    height: 94px;
+    margin: 11px -14px;
+    position: relative;
+    width: 255px;
+}
+.city_select {
+    font-family: Microsoft Yi Baiti;
+    padding: 14px 8px;
+}
+.sort_city {
+    cursor: pointer;
+    left: 90%;
+    position: absolute;
+}
+.check_list > ul {
+    display: -moz-inline-box;
+    padding: 0;
+}
+.check_list li {
+    font-size: 20px;
+    padding: 0 30px;
+    font-family: Microsoft Yi Baiti;
 }

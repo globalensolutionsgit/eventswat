@@ -13,7 +13,6 @@ urlpatterns = patterns('',
 
 	url(r'^admin/', include(admin.site.urls)),
 	url(r'^$', 'eventswat.views.home', name='home'),
-	url(r'^listpage/$', 'eventswat.views.listpage', name='listpage'),
 	# Search & Advance Search     
 	url(r'^(?i)search/', EventSearchView(
 	  template='search/searchlist.html', 

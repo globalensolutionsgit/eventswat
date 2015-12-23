@@ -4,6 +4,3 @@ from django.template import RequestContext
 
 def home(request):
 	return render_to_response('index.html', context_instance=RequestContext(request)) 
-
-def listpage(request):
-	return render_to_response('listpage.html', context_instance=RequestContext(request)) 
