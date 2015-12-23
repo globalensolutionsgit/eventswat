@@ -39,7 +39,6 @@ def load_country(request):
             sorted(unsort_dict.iteritems(), key=lambda v: v[0]))
         for k, v in sorted_dic.iteritems():
             results.append(v)
-        print 'dsfsadfasfsadf', results
         return HttpResponse(json.dumps(results), mimetype='application/json')
 
 
@@ -96,7 +95,6 @@ def load_college(request):
 	sorted_dic = OrderedDict(sorted(unsort_dict.iteritems(), key=lambda v: v[0]))
 	for k, v in sorted_dic.iteritems():
 		results.append(v)
-	print results
 	return HttpResponse(simplejson.dumps(results), mimetype='application/json')
 
 @csrf_exempt

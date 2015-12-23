@@ -98,7 +98,6 @@ class PosteventAdmin(admin.ModelAdmin):
 
     def send_EMAIL(self, request, queryset):
         if self.admin_status.boolean:
-            print 'admin_status', admin_status
             for i in queryset:
                 if i.email:
                     send_templated_mail(

@@ -16,15 +16,12 @@ add_to_builtins('events.templatetags.app_filters')
 admin.autodiscover()
 
 urlpatterns = patterns('',
-	# Examples:
 	url(r'^$', 'events.views.home', name='home'),
 	 # User login verfication
 	url(r'^login/$', 'events.views.user_login', name='user_login'),
 	url(r'^logout/$', 'events.views.logout_view', name='logout_view'),
 	#registeration
 	url(r'^register/$', 'events.views.register', name='register'),
-	# for registeration confirm
-	# url(r'^confirm/$', 'events.views.confirm', name='confirm'),
 
 	# forget password
 	url(r'^(?i)password_reset/$', 'django.contrib.auth.views.password_reset', {
@@ -51,11 +48,6 @@ urlpatterns = patterns('',
 	url(r'^faqs$', 'events.views.faqs', name='faqs'),
 	# url(r'^(?i)event/(?P<pname>.*)/$', 'events.views.event',name='event'),
 	url(r'^details/(?P<id>[0-9]+)/$','events.views.details',name='details'),
-	#url(r'^payment/', 'payu.views.buy_order', name='payment'),
-	#url(r'^payment_event/', 'payu.views.paid_user', name='payment'),
-	#getting subcategory
-
-
 	# Search & Advance Search
 	url(r'^(?i)search/', EventSearchView(
 	  template='search-result.html',
@@ -69,10 +61,7 @@ urlpatterns = patterns('',
 	  #results_per_page=settings.SEARCH_PAGE_NUMBER_OF_LEADS
 	), name='newsearchPageV2'),
 
-	# url(r'^blog/', include('blog.urls')),
-
 	url(r'^admin/', include(admin.site.urls)),
-	# url('', include('social.apps.django_app.urls', namespace='social')),
    	url('', include('django.contrib.auth.urls', namespace='auth')),
    	url(r'^comment/',  'reviews.views.comment', name='comment'),
    	# url(r'^post/$', 'reviews.views.post_review', name='reviews-post-review'),

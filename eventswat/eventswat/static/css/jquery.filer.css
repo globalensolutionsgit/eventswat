@@ -3,7 +3,7 @@
  * Copyright (c) 2015 CreativeDream
  * Version: 1.0.5 (19-Nov-2015)
 */
-@import url('../assets/fonts/jquery.filer-icons/jquery-filer.css');
+@import url('../css/themes/jquery-filer.css');
 
 /*-------------------------
 	Basic configurations
@@ -259,7 +259,7 @@ span.jFiler-icon-file.f-audio:after {
 	Thumbnails
 -------------------------*/
 .jFiler-items-default .jFiler-items {
-    
+
 }
 
 .jFiler-items-default .jFiler-item {
@@ -274,7 +274,7 @@ span.jFiler-icon-file.f-audio:after {
 .jFiler-items-default .jFiler-item .jFiler-item-icon {
     font-size: 32px;
     color: #f5871f;
-    
+
     margin-right: 15px;
     margin-top: -3px;
 }

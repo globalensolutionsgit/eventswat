@@ -19,10 +19,9 @@ class JSONResponse(HttpResponse):
 def banner(request):
     banner_list = BannerPlan.objects.all()
     banner_plans = list(set(banner_list))
-    posted_banner = PostBanner.objects.filter(admin_status='true')    
-    print 'posted_banner', posted_banner
+    posted_banner = PostBanner.objects.filter(admin_status='true')
     return render_to_response("uploadbanner.html",
-                              {'banner_plans': banner_plans, 
+                              {'banner_plans': banner_plans,
                               'posted_banner':posted_banner},
                               context_instance=RequestContext(request))
 
@@ -32,18 +31,18 @@ def banner(request):
 def upload_banner(request):
     if request.method == 'POST':
         tempbanner = TempBanner()
-        tempbanner.temp_user_id = request.user.id        
+        tempbanner.temp_user_id = request.user.id
         tempbanner.temp_bannerplan = BannerPlan.objects.get(
-            id=request.POST.get('hidden_bannerplan'))        
-        tempbanner.temp_banner = request.FILES.get('banner')        
-        tempbanner.temp_link = request.POST['link']        
+            id=request.POST.get('hidden_bannerplan'))
+        tempbanner.temp_banner = request.FILES.get('banner')
+        tempbanner.temp_link = request.POST['link']
         tempbanner.save()
         tempbanner_save = transaction.savepoint()
-        firstname = request.user.username        
-        email = request.user.email        
-        mobile = Userprofile.objects.get(email=email)        
-        productinfo = tempbanner.temp_bannerplan.id        
-        amount = request.POST.get('banner_price')        
+        firstname = request.user.username
+        email = request.user.email
+        mobile = Userprofile.objects.get(email=email)
+        productinfo = tempbanner.temp_bannerplan.id
+        amount = request.POST.get('banner_price')
         response = HttpResponse(
             payu_transaction(firstname, email,
                              mobile, productinfo, amount))
