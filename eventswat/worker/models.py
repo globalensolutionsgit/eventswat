@@ -1,6 +1,5 @@
 from django.db import models
 from events.models import *
-from eventswat.models import *
 from postbanner.models import *
 from core import helper
 from postevent.models import Postevent
@@ -56,7 +55,7 @@ class UserTracking(models.Model):
   email_sent_count = models.PositiveIntegerField(default=0, help_text="Total number of email sent to this user")
   email_read_count = models.PositiveIntegerField(default=0, help_text="Number of times user have read an email")
   email_view_count = models.PositiveIntegerField(default=0, help_text="Number of times user have clicked the link")
-  recent_email_fail_count = models.PositiveIntegerField(default=0)  
+  recent_email_fail_count = models.PositiveIntegerField(default=0)
   last_email_sent = models.DateTimeField(null=True)
 
 class WorkerNoticeEmailTask(models.Model):
@@ -89,10 +88,10 @@ class NoticeEmailConfig(models.Model):
   #     wtask = WorkerTask(worker=worker)
   #     wtask.save()
 
-  #     task = WorkerNoticeEmailTask(task=wtask, created_alert=created_alert, 
+  #     task = WorkerNoticeEmailTask(task=wtask, created_alert=created_alert,
   #       tracking_code=helper.randomkey(26))
   #     task.save()
-   
+
   def __unicode__(self):
     return str(self.created_alert.id)
 
@@ -100,9 +99,3 @@ class BannerExpiredAdTracking(models.Model):
   banner=models.ForeignKey(PostBanner)
   email_sent_count=models.PositiveIntegerField(default=0, help_text="Total number of email sent")
   last_email_sent = models.DateTimeField(null=True)
-
-
-
-
-
-

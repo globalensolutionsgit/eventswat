@@ -1,6 +1,5 @@
 from django.contrib.auth.models import User
 from django.db import models
-from eventswat.models import *
 from events.models import *
 from postevent.models import *
 
@@ -21,7 +20,7 @@ USER_TYPE_CHOICES = (
 
 class Userprofile(User):
     """
-    This is model is used for maintaining Userprofile for each 
+    This is model is used for maintaining Userprofile for each
     authenticated user
     """
     date_of_birth = models.DateField(null=True, blank=True)

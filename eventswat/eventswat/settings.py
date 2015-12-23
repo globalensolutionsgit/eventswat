@@ -49,11 +49,10 @@ INSTALLED_APPS = (
     'postbanner',
     'reviews',
     'worker',
-    #'south',
+    #'core',
     'postevent',
     'usermanagement',
     'logs',
-    'core',
     'tracking',
     'social_auth',
 
@@ -121,7 +120,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATIC_ROOT = 'static'
-print 'STATIC_ROOT', STATIC_ROOT
 
 
 STATICFILES_DIRS = (

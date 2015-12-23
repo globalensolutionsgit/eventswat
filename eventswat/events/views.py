@@ -8,8 +8,6 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login,logout
 from django.template import Context, RequestContext
 from django.utils.translation import ugettext, ugettext_lazy as _
-from eventswat.models import *
-from eventswat.forms import *
 from events.models import *
 from usermanagement	.models import Userprofile
 from usermanagement.forms import UserCreationForm, UserLoginForm
@@ -24,11 +22,15 @@ from templated_email import send_templated_mail
 from forms import UploadFileForm
 from django.utils.timezone import utc
 from datetime import datetime, timedelta
+from django.core.urlresolvers import reverse
+from django.http import HttpResponse, HttpResponseRedirect
+from django.views.generic.base import View
+from social_auth.views import complete
+
 try:
     import json
 except ImportError:
     from django.utils import simplejson as json
-
 
 
 @csrf_exempt
@@ -68,8 +70,6 @@ def logout_view(request):
     return response
 
 # comments implemented by priya
-
-
 @csrf_exempt
 
 def details(request,id=None):
@@ -173,3 +173,20 @@ def register(request):
 		user_id = userprofile.id
 	return render_to_response('index_v2.html', {'user_id':user_id, 'registeration_form':registeration_form } ,context_instance=RequestContext(request))
 
+
+class AuthComplete(View):
+
+    def get(self, request, *args, **kwargs):
+        backend = kwargs.pop('backend')
+        try:
+            return complete(request, backend, *args, **kwargs)
+        except:
+            messages.error(
+                request, "Your Google Apps domain isn't authorized for this app")
+            return HttpResponseRedirect(reverse('login'))
+
+
+class LoginError(View):
+
+    def get(self, request, *args, **kwargs):
+        return HttpResponse(status=401)
