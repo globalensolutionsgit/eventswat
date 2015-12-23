@@ -41,7 +41,7 @@
     <div id="mgs" style="display:none;"><h2>Thanks For Your Feedback</h2></div>
     <a class="btn btn-default feedback1">FEEDBACK</a>                 
     <div class="feedback_popup">
-        <form action="{%url 'events.views.feedback' %}" id="form" method="post" name="form" class="feedback_form">
+        <form action="{%url 'reviews.views.feedback' %}" id="form" method="post" name="form" class="feedback_form">
         {% csrf_token %}
 
             <a class="close"> <i class="fa fa-times"></i></a>
