@@ -43,7 +43,8 @@ def upload_banner(request):
         mobile = Userprofile.objects.get(email=email)
         productinfo = tempbanner.temp_bannerplan.id
         amount = request.POST.get('banner_price')
-        response = HttpResponse(
-            payu_transaction(firstname, email,
+        response  = HttpResponse(payu_transaction(firstname, email,
                              mobile, productinfo, amount))
         return response
+    else:
+        return HttpResponseRedirect("/banner/")

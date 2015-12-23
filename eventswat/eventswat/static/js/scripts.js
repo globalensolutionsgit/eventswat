@@ -689,7 +689,7 @@ $('.close').click(function(){
     $('input[name="next"]').val('/post_event');
   });
     $('.upload_banner_btn_act').click(function(){
-    $('input[name="next"]').val('/upload_banner');
+    $('input[name="next"]').val('/banner');
   });
   // home slider section
   //-------------------------------------------
