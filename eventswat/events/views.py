@@ -28,46 +28,46 @@ from django.views.generic.base import View
 from social_auth.views import complete
 
 try:
-    import json
+	import json
 except ImportError:
-    from django.utils import simplejson as json
+	from django.utils import simplejson as json
 
 
 @csrf_exempt
 def home(request):
-    registeration_form = UserCreationForm()
-    login_form = UserLoginForm()
-    feedback_form = WebsiteFeedbackForm()
-    if request.user.is_superuser:
-        logout(request)
-        return HttpResponseRedirect('/')
-    return render_to_response("index_v2.html", {'registeration_form': registeration_form, 'login_form': login_form, 'feedback_form': feedback_form}, context_instance=RequestContext(request))
+	registeration_form = UserCreationForm()
+	login_form = UserLoginForm()
+	feedback_form = WebsiteFeedbackForm()
+	if request.user.is_superuser:
+		logout(request)
+		return HttpResponseRedirect('/')
+	return render_to_response("index_v2.html", {'registeration_form': registeration_form, 'login_form': login_form, 'feedback_form': feedback_form}, context_instance=RequestContext(request))
 
 
 def about(request):
-    return render_to_response("about-us.html", context_instance=RequestContext(request))
+	return render_to_response("about-us.html", context_instance=RequestContext(request))
 
 
 def privacy_and_policy(request):
-    return render_to_response("privacy.html", context_instance=RequestContext(request))
+	return render_to_response("privacy.html", context_instance=RequestContext(request))
 
 
 def terms_and_conditions(request):
-    return render_to_response("terms_and_conditions.html", context_instance=RequestContext(request))
+	return render_to_response("terms_and_conditions.html", context_instance=RequestContext(request))
 
 
 def faqs(request):
-    return render_to_response("faqs.html", context_instance=RequestContext(request))
+	return render_to_response("faqs.html", context_instance=RequestContext(request))
 
 
 def start(request):
-    return render_to_response('index_v2.html', context_instance=RequestContext(request))
+	return render_to_response('index_v2.html', context_instance=RequestContext(request))
 
 
 def logout_view(request):
-    logout(request)
-    response = HttpResponseRedirect("/")
-    return response
+	logout(request)
+	response = HttpResponseRedirect("/")
+	return response
 
 # comments implemented by priya
 @csrf_exempt
@@ -97,21 +97,19 @@ def user_login(request):
 		return HttpResponseRedirect('/')
 	logout(request)
 	error = {}
-	if request.method == 'POST':
-		login_form = UserLoginForm(request.POST)
-		login_email = login_form.cleaned_data['login_email']
-		login_password = login_form.cleaned_data['login_password']
+	login_form = UserLoginForm(request.POST)
+	if request.method == 'POST' and login_form.is_valid():		
 		context = {}
-		if not User.objects.filter(email=login_email).exists():
+		if not User.objects.filter(email=login_form.cleaned_data['login_email']).exists():
 			error['email_exists'] = True
 			response = HttpResponse(json.dumps(error, ensure_ascii=False),mimetype='application/json')
 			return response
 
-		if login_form.is_valid():
-			user = User.objects.get(email=login_email)
+		else:
+			user = User.objects.get(email=login_form.cleaned_data['login_email'])
 			user.backend='django.contrib.auth.backends.ModelBackend'
-			if user is not None:
-				if user.check_password(login_password):
+			if user is not None:			
+				if user.check_password(login_form.cleaned_data['login_password']):
 					if user.is_active:
 						login(request, user)
 						response = HttpResponseRedirect(request.POST.get('next'))
@@ -151,14 +149,14 @@ def register(request):
 			userprofile.is_active = True
 			userprofile = registeration_form.save()
 			send_templated_mail(
-              template_name = 'welcome',
-              subject = 'Welcome Evewat',
-              from_email = 'eventswat@gmail.com',
-              recipient_list = [email],
-              context={
-                       'userprofile': username,
-              },
-            )
+			  template_name = 'welcome',
+			  subject = 'Welcome Evewat',
+			  from_email = 'eventswat@gmail.com',
+			  recipient_list = [email],
+			  context={
+					   'userprofile': username,
+			  },
+			)
 			registered = True
 			registered_user = Userprofile.objects.get(email= email)
 			registered_user.backend='django.contrib.auth.backends.ModelBackend'
@@ -176,17 +174,17 @@ def register(request):
 
 class AuthComplete(View):
 
-    def get(self, request, *args, **kwargs):
-        backend = kwargs.pop('backend')
-        try:
-            return complete(request, backend, *args, **kwargs)
-        except:
-            messages.error(
-                request, "Your Google Apps domain isn't authorized for this app")
-            return HttpResponseRedirect(reverse('login'))
+	def get(self, request, *args, **kwargs):
+		backend = kwargs.pop('backend')
+		try:
+			return complete(request, backend, *args, **kwargs)
+		except:
+			messages.error(
+				request, "Your Google Apps domain isn't authorized for this app")
+			return HttpResponseRedirect(reverse('login'))
 
 
 class LoginError(View):
 
-    def get(self, request, *args, **kwargs):
-        return HttpResponse(status=401)
+	def get(self, request, *args, **kwargs):
+		return HttpResponse(status=401)
