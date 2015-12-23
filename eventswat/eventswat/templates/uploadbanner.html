@@ -18,37 +18,58 @@
     </script>
     <h4 class="text-center">{{message}}</h4>
 {%endif%}
-<div class="banner_form">
-    <form action="{%url "events.views.upload_banner" %}" name="upload_banner" enctype="multipart/form-data" method="POST" id="banner_post">
-       {% csrf_token %}
+<div>
+    {% for banner_plan in banner_plans %}
+    {% if not posted_banner in  banner_plan %} 
+        <div class="c_banner_plans">
+            <ul class="display_plan">
+                <li id="id_page" class="plan_page">{{banner_plan.page}}</li>
+                <li id="id_position" calss="plan_position">{{banner_plan.position}}</li>
+                <li id="id_price" class="plan_price">{{banner_plan.price}}</li>
+                <li id="id_choose" class="plan_choose_act" value="{{banner_plan.id}}">Choose</li>
+               <input type="hidden" name="hidden_plan" class="hidden_plan" value="{{banner_plan.id}}">  
+                <input type="hidden" name="hidden_page" class="hidden_page" value="{{banner_plan.page}}">
+                <input type="hidden" name="hidden_position" class="hidden_position" value="{{banner_plan.position}}">
+                <input type="hidden" name="hidden_price" class="hidden_price" value="{{banner_plan.price}}">
+            </ul> 
+         </div> 
+      {% endif %}      
+     {% endfor %}
+</div>
+<div class="banner_form"> 
+    <form action="/upload_banner/" name="upload_banner" enctype="multipart/form-data" method="POST" id="banner_post">
+       {% csrf_token %}            
         <div class="row">
             <div class="col-md-12">
                 <input type='file' id='banner' class="banner" name='banner' value="" />
                 <label for="image_required" class="imageError" style="display:none;color:red;">Please select image</label>
             </div>
         </div>
+
         <div class="row">
             <div class="col-md-6">
-                <select  name="pageurl" class="pageurl_required" id="pageurl_required">
+                <input id="pageurl_required" class="pageurl_required" name="banner_page" value="{{banner_plan.page}}" readonly>
+                <!-- <select  name="pageurl" class="pageurl_required" id="pageurl_required">
                     <option selected="selected" value="Select Page URL">Select Page URL</option>
                     <option value="/">Home</option>
                     <option value="event/">Listing page</option>
                     <option value="details/">Detail page</option>
-                </select>
+                </select> -->
                 <label for="pageurl_required" id="pageurl_required1" class="pageurl_labelError" style="display:none;color:red;">Please select Page URL</label>
             </div>
             <div class="col-md-6">
-
-                <select  name="position" class="position_required" id="position_required">
+            <input id="position_required" name="banner_position" class="position_required" value="{{banner_plan.position}}" readonly>
+             <!--    <select  name="position" class="position_required" id="position_required">
                     <option selected="selected" value="Select Position">Select Position</option>
-                </select>
+                </select> -->
                 <label for="position_required" id="position_required1" class="position_labelError" style="display:none;color:red;">Please select Position</label>
             </div>
         </div>
         <div class="row">
             <div class="col-md-6">
-                <span class="banner_price_act">Amount: 0.0</span>
-                <input type="hidden" placeholder="Price" name="price" id="price_required" class="price_required">
+          <!--   <input id="id_bannerprice" value="{{banner_plans.price}}"> -->
+               <!--  <span class="banner_price_act">Amount: 0.0</span> -->
+                <input name="banner_price" id="price_required" class="price_required" value="">
                 <label for="price_required" id="price_required1" class="price_labelError" style="display:none;color:red;">Please select Price</label>
             </div>
             <div class="col-md-6">
@@ -56,15 +77,17 @@
                 <label for="link_required" id="link_required1" class="link_labelError" style="display:none;color:red;">Please enter Link</label>
             </div>
         </div>
+        <input type="hidden" name="hidden_bannerplan" id="hidden_bannerplan" value="">
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
                 <input class="btn btn-default" type="submit" value="Upload" id="banner_upload" />
             </div>
         </div>
+    
     </form>
 </div>
 <div class="payment">
-	<form method="post" action="{% url "payu.views.buy_order" %}" name="payment_form">{% csrf_token %}
+	<form method="post" action="/payment_success/" name="payment_form">{% csrf_token %}
         <div class="row">
             <div class="col-md-12">
                 <h5><strong>PayU Money</strong></h5>

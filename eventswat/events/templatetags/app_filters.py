@@ -4,14 +4,10 @@ from postbanner.models import *
 from events.views import *
 from events.models import *
 from postevent.models import Postevent
+from postbanner.models import PostBanner, BannerPlan
 from eventswat.util import *
 from django.template.defaultfilters import stringfilter
 register = template.Library()
-
-@register.filter
-def get_main_banner(banner):
-	banner=PostBanner.objects.all()
-	return banner
 
 @register.filter
 def get_banner(banner):

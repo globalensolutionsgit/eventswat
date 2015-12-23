@@ -665,7 +665,7 @@ $('.close').click(function(){
 
   // $('#forgotpassword_popup').hide();
   $(".forget_password").on('click', function (){
-    alert("enter");
+    // alert("enter");
 
      $('#signup_popup, #signin_popup').hide();
      $('.popup_fade, #forgotpassword_popup').show();
@@ -997,6 +997,7 @@ $('.events').click(function(){
         id = "#" + $(this).attr('id');
         if ((id=="#id_email" && $(id).val() != '') || (id=="#id_login_email")){
            if (!/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/.test($(id).val())) {
+              // alert("id_email"+id_email);
               $(id).addClass("error_input_field");
               $(id).siblings('.email_exists_error').hide();
               $(id).next('.error').hide();
@@ -1652,7 +1653,7 @@ $(".confirm").click(function(){
 //     $(".email").hide();
 // });
 
-// $(".upload_image").find('.simpleFilePreview_inputButtonText').text("UPLOAD A IMAGE");
+$(".upload_image").find('.simpleFilePreview_inputButtonText').text("UPLOAD A IMAGE");
 
 $('.privacy_content').hide();
 $(".privacy").click(function(){
@@ -1678,34 +1679,29 @@ $("#page-content").on('click', function (){
    $('.select-clone').hide();     
   });
 
-
+// **code implemented by ramya for userprofile
 $('#userprofile').submit(function() {                 
   $.ajax({ 
       data: $(this).serialize(), 
       type: $(this).attr('method'), 
       url: $(this).attr('action'), 
       success: function(response) { 
-      alert('success');
+      // alert('success');
 
       },
       error: function(response){
-        alert('error');
+        // alert('error');
       }
     
   });
-  $("#userprofile")[0].reset();
-  return false;
+     // $("#userprofile")[0].reset();
+    return data;
 });
-
-
-
-
-
 
 $('.save_privacy').click(function(){
   //password
     if($('#newpassword').val() == ''){
-    alert("password");   
+    // alert("password");   
         $('#newpassword').addClass("error_input_field");
         $('#newpassword').next('.error').show();         
       } else {    
@@ -1714,19 +1710,19 @@ $('.save_privacy').click(function(){
       }
     // confirm password
     if($('#confirmpassword').val() == ''){   
-      alert('password1');
+      // alert('password1');
         $('#confirmpassword').addClass("error_input_field");
         $('#confirmpassword').next().next('.error').hide(); 
         $('#confirmpassword').next('.error').show();             
       } 
       else if ($('#confirmpassword').val() != $('#newpassword').val()){
-         alert('password2');
+         // alert('password2');
         $('#confirmpassword').addClass("error_input_field");
         $('#confirmpassword').next('.error').hide();  
         $('#confirmpassword').next().next('.error').show(); 
       }
       else {    
-         alert('password3');
+         // alert('password3');
         $('#confirmpassword').removeClass("error_input_field");
         $('#confirmpassword').next('.error').hide();    
         $('#confirmpassword').next().next('.error').hide();    
@@ -1744,9 +1740,12 @@ $('.save_privacy').click(function(){
                       'newpassword': $('#newpassword').val(),
                       'confirmpassword': $('#confirmpassword').val(),
                     },
-               success: function(){
-                  alert('password changed successfully');
-                  }
+              success: function(){
+                alert('password changed successfully');
+                },
+              error: function(){
+                alert('Enter valid password');
+                }   
           });
        $('#newpassword').val('');
        $('#confirmpassword').val('');
@@ -1755,4 +1754,24 @@ $('.save_privacy').click(function(){
 
 
   });
+
+
+$("ul li.plan_choose_act").on('click', function(){
+  var plan = $(this).val();
+  // alert('plan'+plan);  
+  var hidden_plan = $(this).siblings('.hidden_plan').val(); 
+  $('input[name="hidden_bannerplan"]').val(hidden_plan);
+  
+  var page = $(this).siblings('.hidden_page').val();
+  // alert($(this).siblings('.hidden_page').val()); 
+  $('input[name="banner_page"]').val(page);
+ 
+  var position = $(this).siblings('.hidden_position').val();
+  // alert($(this).siblings('.hidden_position').val());  
+  $('input[name="banner_position"]').val(position);
+
+  var price = $(this).siblings('.hidden_price').val();
+  // alert($(this).siblings('.hidden_price').val());  
+  $('input[name="banner_price"]').val(price);
+});
 

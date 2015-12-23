@@ -10229,7 +10229,7 @@ color: #fff;
   position: relative;
   width: 145px;
   height: 145px;
-  margin-top: -25px;
+  margin-top: -32px;
   float: left;
   border-radius: 4px;
   overflow: hidden;
@@ -10238,10 +10238,10 @@ color: #fff;
 .myevents_content {
     border-bottom: 1px solid #dddddd;
     height: auto;
-    left: 100px;
+   /* left: 100px;*/
     position: relative;
-    padding-bottom: 15px;
-    padding-top: 20px;
+    padding-bottom: 25px;
+    padding-top: 25px;
 }
 .myevents_content figure {
     float: left;
@@ -10316,3 +10316,9 @@ color: #fff;
             padding: 10px;
             margin-bottom: 10px;
         }
+.display_plan{
+  list-style-type: none;
+}
+.c_banner_plans{
+  width: 300px;
+}

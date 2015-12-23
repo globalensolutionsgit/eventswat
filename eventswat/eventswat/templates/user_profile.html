@@ -19,16 +19,12 @@
 
 		</div><!--header_call_events-->
 		<!-- <form id="user_form" method="post" action="/new_user/" name="sign_up" enctype="multipart/form-data"> -->
-		<form id="userprofile" method="POST" action="{% url "events.views.user_profile" %}" enctype="multipart/form-data">
+		<form id="userprofile" method="POST" action="{% url "usermanagement.views.user_profile" %}" enctype="multipart/form-data">
 			{% csrf_token %}
-			<div class="upload_image">
-				<!-- <input type='file' id="profile_poster" name="profile_poster" class="poster upload_image_act"/>	 -->
-				<!-- {% if requested_user_profile.profile_pic %}
-					<img id="uploaded_img" class="after_save_act" src="../media/{{requested_user_profile.profile_pic}}">
-				{% endif %} 	 -->	
+			<div class="upload_image">	
 				{% if requested_user_profile.profile_pic %}
-					<input type='file' id="profile_poster" name="profile_poster" class="poster upload_image_act" value="../media{{requested_user_profile.profile_pic}}" />
-					<img id="uploaded_img" class="after_save_act" src="../media{{requested_user_profile.profile_pic}}">
+					<input type='file' id="profile_poster" name="profile_poster" class="poster upload_image_act" value="../media/{{requested_user_profile.profile_pic}}" />
+					<img id="uploaded_img" class="after_save_act" src="../media/{{requested_user_profile.profile_pic}}">
 				{% else %}
 					<input type='file' id="profile_poster" name="profile_poster" class="poster upload_image_act" value=""/>
 				{% endif %} 					
@@ -68,7 +64,11 @@
 						</div><!--form-group-->
 						<div class="form-group">
 							<label class="label_mobile">Mobile</label>
-							<input type="text" id="mobile" cplaceholder="MOBILE" maxlength="50"  value="{{requested_user_profile.mobile}}" class="input_mobile" name="mobile" readonly><br>
+							{% if requested_user_profile.mobile %}
+								<input type="text" id="mobile" cplaceholder="MOBILE" maxlength="50"  value="{{requested_user_profile.mobile}}" class="input_mobile" name="mobile" readonly><br>
+							{% else %}
+								<input type="text" id="mobile" cplaceholder="MOBILE" maxlength="50"  value="" class="input_mobile" name="mobile"><br>
+							{% endif %}
 							<span class="error"></span>
 						</div><!--form-group-->
 						 <div class="form-group">
@@ -152,7 +152,7 @@
 				</div><!--info-->
 				<i class="fa fa-lock lock col-md-2"></i>	 				
 					<div class="privacy_form col-md-5">
-					<form  id="password_form" action="{% url "events.views.privacy" %}" method="POST" name="password_form">
+					<form  id="password_form" action="{% url "usermanagement.views.privacy" %}" method="POST" name="password_form">
 					{% csrf_token %}
 						<!-- <div class="form-group input_name">
 							<input type="text" placeholder="OLD PASSWORD" maxlength="50" value="" name="oldpwd"><br>

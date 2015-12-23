@@ -88,12 +88,12 @@ $.fn.uouCustomSelect = function () {
 
     });
     // Hide
-    $container.on('clickoutside touchendoutside mouseoveroutside', function () {
-        if (!dragging) {
-            $container.removeClass('active');
-            $list.slideUp(250);
-        }
-    });
+    // $container.on('clickoutside touchendoutside mouseoveroutside', function () {
+    //     if (!dragging) {
+    //         $container.removeClass('active');
+    //         $list.slideUp(250);
+    //     }
+    // });
     // Links
     if ($select.hasClass('links')) {
         $select.on('change', function () {

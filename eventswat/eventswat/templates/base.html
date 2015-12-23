@@ -46,6 +46,7 @@
         <![endif]-->
     </head>
     <body {% if request.path == '/post_event' %} class="post_event1" {% endif %}>
+      
         <div id="main-wrapper">
             <header id="header">
             <div class="header-top-bar">
@@ -111,9 +112,9 @@
                                 <i class="fa fa-caret-down dropdown"></i>
                                         <div class=" user_menu col-md-2">
                                             <ul class="menulist">
-                                              <li><a href="{% url "events.views.user_profile" %}">Personal Info</a></li>
-                                              <li><a  class="privacy" href="{% url "events.views.user_profile" %}">Privacy</a></li>
-                                              <li><a href="{% url "events.views.user_profile" %}">My events</a></li>
+                                              <li><a href="{% url "usermanagement.views.user_profile" %}">Personal Info</a></li>
+                                              <li><a  class="privacy" href="{% url "usermanagement.views.user_profile" %}">Privacy</a></li>
+                                              <li><a href="{% url "usermanagement.views.user_profile" %}">My events</a></li>
                                             </ul>
                                             <!-- <input type="hidden" name="choose_settings" id="choose_settings"> -->
                                         </div><!--user_menu-->
@@ -227,7 +228,7 @@
                                         <h3>eventswat.com</h3>
                                         <ul>
                                             <li><a href="{% url 'events.views.about' %}"><i class="fa fa-info-circle"></i>About us</a></li>
-                                            <li><a href="{% url 'events.views.privacy' %}"><i class="fa fa-tasks"></i>Privacy policy</a></li>
+                                            <li><a href="{% url 'events.views.privacy_and_policy' %}"><i class="fa fa-tasks"></i>Privacy policy</a></li>
                                             <li><a href="{% url 'events.views.terms_and_conditions' %}"><i class="fa fa-exclamation-triangle"></i>Terms and Conditions</a></li>
                                             <li><a href="{% url 'events.views.faqs' %}"><i class="fa fa-question-circle"></i>FAQs</a></li>
                                         </ul>

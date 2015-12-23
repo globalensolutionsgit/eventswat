@@ -1,6 +1,79 @@
-<form action="." method="post">
-    {{ postevent_form }}
-    {{ subcategory_form }}
-    {{ organizer_form }}
-    <input type="submit" value="Register">
+{% load static from staticfiles %}
+<link rel="stylesheet" href="{% static "css/jquery-ui.css" %}">
+<script type="text/javascript" src="{% static "js/jquery.js" %}"></script>
+<script type="text/javascript" src="{% static "js/jquery-ui.js" %}"></script>
+<script type="text/javascript" src="{% static "js/muthu.js" %}"></script>
+<style>
+.custom-combobox {
+  position: relative;
+  display: inline-block;
+}
+.custom-combobox-toggle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin-left: -1px;
+  padding: 0;
+}
+.custom-combobox-input {
+  margin: 0;
+  padding: 5px 10px;
+}
+</style>
+<form action="{%url "postevent.views.postevent"  %}" method="post" name="postevent"  role="form">
+    {% csrf_token %}
+    <input type="radio" name="event_type" value="free" />Free
+    <input type="radio" name="event_type" value="paid"/>Paid
+    <input type="radio" name="event_type" value="nil"/>No Registration<br/>
+    <label>Events category</label>
+    <select name="event_category" id='id_event_category' >
+        {% for categorys in category %}
+        <option value="{{categorys.id}}">{{categorys.category_name}}</option>
+        {%endfor %}
+    </select><br/>
+    <label>Events subcategory</label>
+    <select name="event_subcategory" id="id_event_subcategory" data-validation="required" data-validation-error-msg="Please select event subcategory">
+        <option>----------------</option>
+    </select><br/>
+    <label>Events Title</label>
+    <input type="text" name="event_title" value="" data-validation="length required alphanumeric" data-validation-length="3-25" data-validation-error-msg="Event title has to be an alphanumeric value (3-25 chars)"/><br/>
+    <label>Events start date</label>
+    <input type="text" name="start_date" value=""/>
+    <label>Events end date</label>
+    <input type="text" name="end_date" value=""/><br/>
+    <label>Events poster</label>
+    <input type="file" name="poster" /><br/>
+    <label>Events Description</label>
+    <textarea name="event_desc"></textarea><br/>
+    <input type="checkbox" name="terms_and_condition">Terms and conditions
+    <textarea name="term_and_cond"></textarea><br/>
+    <label>Keywords</label>
+    <input type="text" name="keywords" value=""/><br/>
+    <label>Events website</label>
+    <input type="text" name="url" value=""/><br/>
+    <input type="checkbox" name="is_webniar"> Is webnair ?
+    <label>Events Vanue</label>
+    <textarea name="venue"></textarea><br/>
+    <label>Country</label>
+    <select name="country" id="id_country" class="id_country">
+        <option>Select country</option>
+        {% for countries in country_list %}
+        <option value="{{countries}}">{{countries|capfirst}}</option>
+        {% endfor %}
+    </select><br/>
+    <label>State</label>
+    <select name="state" id="id_state">
+        <option value=""></option>
+    </select><br/>
+    <label>City</label>
+    <select name="city" id="id_city">
+        <option value=""></option>
+    </select><br/>
+    <label>Organizer name</label>
+    <input type="text" name="org_name" value=""/><br/>
+    <label>Organizer email</label>
+    <input type="text" name="org_email" value=""/><br/>
+    <label>Organizer mobile</label>
+    <input type="text" name="org_mobile" value=""/><br/>
+    <input type="submit" value="Submit" id="postevent_submit">
 </form>
