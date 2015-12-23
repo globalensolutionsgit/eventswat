@@ -76,11 +76,11 @@ def prepare_search_query(query, search_field='searchtext'):
 def searchresults(q=None, params=None, orderby=None, groupby=None, 
   geo_location=None, geo_params=None, geo_orderby='distance', 
   model_cls=None, default_filters=None, param_mappings=None,
-  default_search_field='searchtext', filter_by_calendar=None):
+  default_search_field='searchtext'):
 
   """Perform search leads using haystack"""
   print 'Leadsearch as Search'
-  print "filter_by_calendar", filter_by_calendar
+  # print "filter_by_calendar", filter_by_calendar
   print "params", params
   if not model_cls:
     model_cls = Postevent
@@ -124,11 +124,8 @@ def searchresults(q=None, params=None, orderby=None, groupby=None,
   if orderby:
     sqs = sqs.order_by(orderby)
 
-  if filter_by_calendar is None:
-    print "yes filter_by_calendar"
-    sqs = None
-  else:
-    sqs = filter_by_calendar
+  # if filter_by_calendar is not None:
+  #   sqs = filter_by_calendar
 
   # if geo_location:
 
