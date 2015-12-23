@@ -49,7 +49,7 @@ INSTALLED_APPS = (
     'postbanner',
     'reviews',
     'worker',
-    'south',
+    #'south',
     'postevent',
     'usermanagement',
     'logs',
@@ -78,6 +78,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'social_auth.middleware.SocialAuthExceptionMiddleware'
 )
 
 ROOT_URLCONF = 'eventswat.urls'
@@ -129,7 +130,6 @@ STATICFILES_DIRS = (
 TEMPLATE_DIRS = os.path.join((os.path.dirname(__file__)), 'templates')
 
 MEDIA_ROOT = os.path.join((os.path.dirname(__file__)), 'media')
-print 'MEDIA_ROOT', MEDIA_ROOT
 
 MEDIA_URL = '/media/'
 
@@ -204,7 +204,7 @@ AUTH_USER_EMAIL_UNIQUE = True
 
 LOGIN_URL          = '/login/'
 LOGIN_REDIRECT_URL = '/'
-LOGIN_ERROR_URL    = '/login-error/'
+LOGIN_ERROR_URL    = '/'
 
 
 AUTHENTICATION_BACKENDS = (
@@ -225,7 +225,7 @@ FACEBOOK_PROFILE_EXTRA_PARAMS = {
 
 
 SOCIAL_AUTH_LOGIN_ERROR_URL = '/login/'
-SOCIAL_AUTH_BACKEND_ERROR_URL = '/login-error/'
+SOCIAL_AUTH_BACKEND_ERROR_URL = '/'
 
 SOCIAL_AUTH_CREATE_USERS          = True
 SOCIAL_AUTH_FORCE_RANDOM_USERNAME = False
@@ -292,4 +292,3 @@ LOGGING = {
 }
 
 DEFAULT_FROM_EMAIL = 'eventswat@gmail.com'
-

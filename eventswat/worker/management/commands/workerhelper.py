@@ -24,3 +24,8 @@ class Command(BaseCommand):
     worker.name = 'Banner Notice Email'
     worker.cls_path = 'worker.workers.EmailNotification_ExpiredAds'
     worker.save()
+
+    workers = Worker(id='user_intrest_notice_email')
+    worker.name = 'User Intrest Notice Email'
+    worker.cls_path = 'worker.workers.EmailNotification_intrestAds'
+    worker.save()

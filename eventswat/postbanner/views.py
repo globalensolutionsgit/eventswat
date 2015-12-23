@@ -19,10 +19,11 @@ class JSONResponse(HttpResponse):
 def banner(request):
     banner_list = BannerPlan.objects.all()
     banner_plans = list(set(banner_list))
-    posted_banner = PostBanner.objects.all()
+    posted_banner = PostBanner.objects.filter(admin_status='true')    
     print 'posted_banner', posted_banner
     return render_to_response("uploadbanner.html",
-                              {'banner_plans': banner_plans},
+                              {'banner_plans': banner_plans, 
+                              'posted_banner':posted_banner},
                               context_instance=RequestContext(request))
 
 
@@ -31,27 +32,18 @@ def banner(request):
 def upload_banner(request):
     if request.method == 'POST':
         tempbanner = TempBanner()
-        tempbanner.temp_user_id = request.user.id
-        print 'tempbanner.temp_user_id', tempbanner.temp_user_id
+        tempbanner.temp_user_id = request.user.id        
         tempbanner.temp_bannerplan = BannerPlan.objects.get(
-            id=request.POST.get('hidden_bannerplan'))
-        print 'tempbanner.temp_bannerplan', tempbanner.temp_bannerplan
-        tempbanner.temp_banner = request.FILES.get('banner')
-        print 'tempbanner.temp_banner', tempbanner.temp_banner
-        tempbanner.temp_link = request.POST['link']
-        print 'tempbanner.temp_link', tempbanner.temp_link
+            id=request.POST.get('hidden_bannerplan'))        
+        tempbanner.temp_banner = request.FILES.get('banner')        
+        tempbanner.temp_link = request.POST['link']        
         tempbanner.save()
         tempbanner_save = transaction.savepoint()
-        firstname = request.user.username
-        print 'firstname', firstname
-        email = request.user.email
-        print email
-        mobile = Userprofile.objects.get(email=email)
-        print mobile
-        productinfo = tempbanner.temp_bannerplan.id
-        print productinfo
-        amount = request.POST.get('banner_price')
-        print 'amount', amount
+        firstname = request.user.username        
+        email = request.user.email        
+        mobile = Userprofile.objects.get(email=email)        
+        productinfo = tempbanner.temp_bannerplan.id        
+        amount = request.POST.get('banner_price')        
         response = HttpResponse(
             payu_transaction(firstname, email,
                              mobile, productinfo, amount))

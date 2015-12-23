@@ -106,95 +106,71 @@ def logout_view(request):
 
 
 @csrf_exempt
-def details(request, id=None):
-    # try:
-    postevent = Postevent.objects.get(pk=id)
-    img = str(postevent.event_poster).split(',')
-    photo = img[0]
-    photos = [n for n in str(postevent.event_poster).split(',')]
-    organizer = Organizer.objects.filter(postevent__id=postevent.id)
-    registeration_form = UserCreationForm()
-    login_form = UserLoginForm()
-    comment_form = CommentForm(request.POST or None)
-    if request.method == "POST":
-        if comment_form.is_valid():
-            print "comment"
-            temp = comment_form.save(commit=False)
-            temp.postevent_id = request.POST.get('postent')
-            parent = comment_form['parent'].value()
-            if parent == "":
-                temp.path = []
-                temp.save()
-                id = temp.id
-                print "id", id
-                temp.path = [id]
-            else:
 
-                node = Comment.objects.get(id=parent)
-                temp.depth = node.depth + 1
-                s = str(node.path)
-                temp.path = eval(s)
-                temp.save()
-                id = temp.id
-                temp.path.append(id)
+def details(request,id=None):
+	# try:
+	postevent=Postevent.objects.get(pk=id)
+	userprofile = Userprofile()
+	img=str(postevent.event_poster).split(',')
+	photo=img[0]
+	photos=[n for n in str(postevent.event_poster).split(',')]
+	organizer=Organizer.objects.filter(postevent__id=postevent.id)
+	registeration_form = UserCreationForm()
+	login_form = UserLoginForm()
+	comment_form = CommentForm()
+	comment_tree=Comment.objects.filter(postevent_id=postevent.id).order_by('-path')
+	# related_events = Postevent.objects.filter(event_category = postevent.event_category, event_subcategory=postevent.event_subcategory, city=postevent.city)
+	return render_to_response("company-profile.html",{'comment_tree':comment_tree,'events':postevent,'organizer':organizer,'photos':photos,'photo':photo, 'registeration_form':registeration_form, 'login_form':login_form, 'comment_form':comment_form, 'userprofile':userprofile}, context_instance=RequestContext(request))
+	# response.set_cookie( 'content', temp.content )
+	# response.set_cookie( 'rating', temp.rating )
+	
+	# except:
+	#     return render_to_response("company-profile.html",{'message':'Sorry for inconvenience.Some thing went to wrong'}, context_instance=RequestContext(request))
 
-            temp.save()
-    comment_tree = Comment.objects.filter(
-        postevent_id=postevent.id).order_by('path')
-    # related_events = Postevent.objects.filter(event_category = postevent.event_category, event_subcategory=postevent.event_subcategory, city=postevent.city)
-    return render_to_response("company-profile.html", {'comment_tree': comment_tree, 'events': postevent, 'organizer': organizer, 'photos': photos, 'photo': photo, 'registeration_form': registeration_form, 'login_form': login_form, 'comment_form': comment_form}, context_instance=RequestContext(request))
-    # except:
-    # return render_to_response("company-profile.html",{'message':'Sorry for
-    # inconvenience.Some thing went to wrong'},
-    # context_instance=RequestContext(request))
+def banner(request):
+	return render_to_response("uploadbanner.html",context_instance=RequestContext(request))
 
-# def banner(request):
-# return
-# render_to_response("uploadbanner.html",context_instance=RequestContext(request))
-
-# login and registration implemented by ramya
-
+# login and registration implemanted by ramya
 @csrf_exempt
-def user_login(request):    
-    import json 
-    if request.user.is_superuser:
-        logout(request)
-        return HttpResponseRedirect('/')        
-    logout(request)
-    error = {}
-    if request.method == 'POST':        
-        login_form = UserLoginForm(request.POST)
-        print 'form', login_form
-        login_email = login_form.cleaned_data['login_email']        
-        print 'email form form', login_email
-        login_password = login_form.cleaned_data['login_password']
-        print 'Login_password', login_password   
-        context = {}
-        if not User.objects.filter(email=login_email).exists():
-            print 'Userprofile.objects.filter(email=login_email)', User.objects.filter(email=login_email).exists()
-            error['email_exists'] = True
-            response = HttpResponse(json.dumps(error, ensure_ascii=False),mimetype='application/json')
-            return response
-        
-        if login_form.is_valid():
-            user = User.objects.get(email=login_email)
-            user.backend='django.contrib.auth.backends.ModelBackend'
-            if user:
-                print 'user', user          
-                if user.check_password(login_password):
-                    if user.is_active:
-                        login(request, user)
-                        response = HttpResponseRedirect(request.POST.get('next')) 
-                else:
-                    error['password'] = True
-                    print 'errorpass', error['password']
-                    response = HttpResponse(json.dumps(error, ensure_ascii=False),mimetype='application/json')
-                    return response
-    else:
-        print 'this else'
-        login_form = UserLoginForm()
-    return render_to_response('index_v2.html', {'login_form':login_form}, context_instance=RequestContext(request))                        
-    
+def user_login(request):
+	import json
+	if request.user.is_superuser:
+		logout(request)
+		return HttpResponseRedirect('/')
+	logout(request)
+	error = {}
+	if request.method == 'POST':
+		print "post1"
+		login_form = UserLoginForm(request.POST)
+		
+		login_email = login_form.cleaned_data['login_email']
+		print 'email form form', login_email
+		login_password = login_form.cleaned_data['login_password']
+		print 'Login_password', login_password
+		context = {}
+		if not User.objects.filter(email=login_email).exists():
+			
+			error['email_exists'] = True
+			response = HttpResponse(json.dumps(error, ensure_ascii=False),mimetype='application/json')
+			return response
+
+		if login_form.is_valid():
+			user = User.objects.get(email=login_email)
+			user.backend='django.contrib.auth.backends.ModelBackend'
+			if user is not None:
+				if user.check_password(login_password):
+					if user.is_active:
+						login(request, user)
+						response = HttpResponseRedirect(request.POST.get('next'))
+				else:
+					error['password'] = True
+					
+					response = HttpResponse(json.dumps(error, ensure_ascii=False),mimetype='application/json')
+					return response
+	else:
+		print 'this else'
+		login_form = UserLoginForm()
+	return render_to_response('index_v2.html', {'login_form':login_form}, context_instance=RequestContext(request))
 
 @csrf_protect
 def register(request):
@@ -593,8 +569,6 @@ def getstate(request):
     return HttpResponse(simplejson.dumps(results), mimetype='application/json')
 
 # admin side using by muthu
-
-
 def getcollege(request):
     from collections import OrderedDict
     results = []
@@ -614,6 +588,22 @@ def getcollege(request):
     return HttpResponse(simplejson.dumps(results), mimetype='application/json')
 
 # admin side using by muthu
+def getstate(request):
+	from collections import OrderedDict
+	results = []
+	unsort_dict = {}
+	key_loc = request.GET.get('term')
+	state_lists = City.objects.filter(state__icontains=key_loc)
+
+	for state_list in state_lists:
+		statename = state_list.state.strip()
+		stateid = state_list.id
+		unsort_dict[statename] = {'stateid':stateid, 'label':statename, 'value':statename}
+
+	sorted_dic = OrderedDict(sorted(unsort_dict.iteritems(), key=lambda v: v[0]))
+	for k, v in sorted_dic.iteritems():
+		results.append(v)
+
 
 
 def getdept(request):

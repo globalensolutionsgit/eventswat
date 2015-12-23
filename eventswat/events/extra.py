@@ -3,8 +3,11 @@ from django.forms import forms
 from django.http import HttpResponse
 from django.template.defaultfilters import filesizeformat
 from django.utils.translation import ugettext_lazy as _
-from django.utils import simplejson
-import simplejson as json
+try:
+    import json
+except ImportError:
+    from django.utils import simplejson as json
+
 
 class ContentTypeRestrictedFileField(FileField):
     """
@@ -45,4 +48,4 @@ class ContentTypeRestrictedFileField(FileField):
 
 class JSONResponse(HttpResponse):
     def __init__(self, data):
-        super(JSONResponse, self).__init__(simplejson.dumps(data), mimetype='application/json')
+        super(JSONResponse, self).__init__(json.dumps(data), mimetype='application/json')

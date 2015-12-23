@@ -2,7 +2,29 @@ from django.contrib import admin
 from postevent.models import *
 from events.models import SubcategoryRelatedField
 from django import forms
-# from flexselect import FlexSelectWidget
+from django.forms.widgets import Select
+from django.core.exceptions import ValidationError
+from django.forms.models import BaseInlineFormSet
+from templated_email import send_templated_mail
+
+
+class RequiredInlineFormSet(BaseInlineFormSet):
+    """
+    Generates an inline formset that is required
+    http://stackoverflow.com/questions/1206903\
+    /how-do-i-require-an-inline-in-the-django-admin
+    http://stackoverflow.com/questions/16543398/\
+    how-do-i-make-a-tabularinline-required-in-django-admin
+    """
+
+    def clean(self):
+        super(RequiredInlineFormSet, self).clean()
+        non_empty_forms = 0
+        for form in self:
+            if form.cleaned_data:
+                non_empty_forms += 1
+        if non_empty_forms - len(self.deleted_forms) < 1:
+            raise ValidationError("Please fill at least one oraganizer.")
 
 
 class CampusCollegeAdmin(admin.ModelAdmin):
@@ -21,65 +43,52 @@ class CampusDepartmentAdmin(admin.ModelAdmin):
 
 
 class OraganizerInLine(admin.TabularInline):
+    """Must add one Organizer using RequiredInlineFormSet"""
     model = Organizer
-    extra = 0
+    extra = 1
+    formset = RequiredInlineFormSet
+
 
 class SubCategoryRelatedFieldValueInLine(admin.TabularInline):
     model = SubCategoryRelatedFieldValue
     extra = 2
     max_num = 2
 
-class OrganizerAdmin(admin.ModelAdmin):
-	fields = ['postevent','organizer_name','organizer_mobile','organizer_email']
-	list_display = ('postevent','organizer_name','organizer_mobile','organizer_email')
-	list_filter = ['organizer_name']
-	search_fields = ['organizer_name']
 
+class PosteventPosterInline(admin.TabularInline):
+    model = PosteventPoster
+    extra = 0
+    max_num = 4
+    exclude = ['event_poster_thumbnil', 'event_poster_medium']
+
+
+class OrganizerAdmin(admin.ModelAdmin):
+    fields = ['postevent', 'organizer_name',
+              'organizer_mobile', 'organizer_email']
+    list_display = ('postevent', 'organizer_name',
+                    'organizer_mobile', 'organizer_email')
+    list_filter = ['organizer_name']
+    search_fields = ['organizer_name']
 
 
 class PostEventKeywordAdmin(admin.ModelAdmin):
-	fields = ['keyword']
-	list_display = ('id','keyword')
-	search_fields = ['organizer_name']
-# class SubCategorywidget(FlexSelectWidget):
-#     """
-#     The widget must extend FlexSelectWidget and implement trigger_fields,
-#     details(), queryset() and empty_choices_text().
-#     """
-#
-#     trigger_fields = ['event_category']
-#     """Fields which on change will update the base field."""
-#
-#     def queryset(self, instance):
-#         """
-#         Returns the QuerySet populating the base field. If either of the
-#         trigger_fields is None, this function will not be called.
-#
-#         - instance: A partial instance of the parent model loaded from the
-#                     request.
-#         """
-#         print 'install',instance
-#         company = instance.eventscategory.category_name
-#         return EventsSubCategory.objects.filter(category=company)
-#
-#     def empty_choices_text(self, instance):
-#         """
-#         If either of the trigger_fields is None this function will be called
-#         to get the text for the empty choice in the select box of the base
-#         field.
-#
-#         - instance: A partial instance of the parent model loaded from the
-#                     request.
-#         """
-#         return "  ----------             "
+    fields = ['keyword', 'postevent']
+    list_display = ('id', 'keyword')
+    search_fields = ['postevent__event_title']
 
 
 class PosteventAdmin(admin.ModelAdmin):
-
-    filelds = ['event_type', 'event_category', 'event_subcategory']
-    list_display = ('id', 'event_type', 'event_category', 'event_subcategory','event_title','city','payment','admin_status',)
-    list_filter = ['payment','admin_status','event_subcategory']
-    inlines = [ SubCategoryRelatedFieldValueInLine, OraganizerInLine ]
+    fields = ['event_type', 'event_category', 'event_subcategory', 'user_name',
+              'user_email', 'user_mobile', 'event_title', 'event_description',
+              'event_startdate_time', 'event_enddate_time',
+              'terms_and_condition', 'event_website', 'is_webinar', 'venue',
+              'country', 'state', 'city', 'is_active', 'admin_status',
+              'payment']
+    list_display = ('id', 'event_type', 'event_category', 'event_subcategory',
+                    'event_title', 'city', 'payment', 'admin_status',)
+    list_filter = ['payment', 'admin_status', 'event_subcategory']
+    inlines = [PosteventPosterInline,
+               SubCategoryRelatedFieldValueInLine, OraganizerInLine]
     list_per_page = 50
     actions = ['send_EMAIL']
 
@@ -87,84 +96,47 @@ class PosteventAdmin(admin.ModelAdmin):
         css = {'all': ('css/jquery-ui.css',)}
         js = ('js/jquery.js', 'js/admin.js', 'js/jquery-ui.js')
 
-    def send_EMAIL(self,request, queryset):
-        from templated_email import send_templated_mail
-        if self.admin_status.boolean == True :
+    def send_EMAIL(self, request, queryset):
+        if self.admin_status.boolean:
             print 'admin_status', admin_status
             for i in queryset:
                 if i.email:
                     send_templated_mail(
-                            template_name = 'premium_user',
-                            subject = 'Welcome Evewat',
-                            from_email = 'eventswat@gmail.com',
-                            recipient_list = [i.user_email],
-                            context={
-                                       'user': i.user_name,
-                                    },
-                        ) 
+                        template_name='premium_user',
+                        subject='Welcome Evewat',
+                        from_email='eventswat@gmail.com',
+                        recipient_list=[i.user_email],
+                        context={
+                            'user': i.user_name,
+                        },
+                    )
 
-    # def formfield_for_foreignkey(self, db_field, request, **kwargs):
-    # 	"""Alters the widget displayed for the base field."""
-    #     if db_field.name == "event_subcategory":
-	#         kwargs['widget'] = SubCategorywidget(
-	#             base_field=db_field,
-	#             modeladmin=self,
-	#             request=request,
-	#         )
-	#         kwargs['label'] = 'Event subcategory'
-    #     return super(PosteventAdmin, self).formfield_for_foreignkey(db_field,request, **kwargs)
-    # actions = ['send_EMAIL']
-    # inlines = [ OraganizerInLine ]
-
-    # def admin_status(self, obj):
-    # 	return obj.admin_status
-    # admin_status.boolean = False
-
-# 	def send_EMAIL(self,request, queryset):
-# 		from templated_email import send_templated_mail
-# 		if self.admin_status.boolean == True :
-# 			print 'admin_status', admin_status
-# 			for i in queryset:
-# 				if i.email:
-# 					send_templated_mail(
-# 							template_name = 'premium_user',
-# 				            subject = 'Welcome Evewat',
-# 				            from_email = 'eventswat@gmail.com',
-# 				            recipient_list = [i.email],
-# 				            context={
-# 				                       'user': i.name,
-# 				                    },
-# 				        )
-
-# 	def get_readonly_fields(self, request, obj=None):
-# 		if obj: # editing an existing object
-# 			return self.readonly_fields + ('payment',)
-# 		return self.readonly_fields
 
 class OrganizerAdmin(admin.ModelAdmin):
-	fields = ['postevent','organizer_name','organizer_mobile','organizer_email']
-	list_display = ('postevent','organizer_name','organizer_mobile','organizer_email')
-	list_filter = ['organizer_name']
-	search_fields = ['organizer_name']
-	list_per_page = 50
-	actions = ['send_invitations']
+    fields = ['postevent', 'organizer_name',
+              'organizer_mobile', 'organizer_email']
+    list_display = ('postevent', 'organizer_name',
+                    'organizer_mobile', 'organizer_email')
+    list_filter = ['organizer_name']
+    search_fields = ['organizer_name']
+    list_per_page = 50
+    actions = ['send_invitations']
 
-	def send_invitations(self, request, queryset):
-		from templated_email import send_templated_mail
-		for i in queryset:
-			if i.organizer_email:
-				send_templated_mail(
-						template_name = 'welcome',
-			            subject = "Invitation",
-			            from_email = 'eventswat@gmail.com',
-			            recipient_list = [i.organizer_email],
-			            context={
-			                       'user': i.organizer_name,
-			                    },
-                                )
+    def send_invitations(self, request, queryset):
+        for i in queryset:
+            if i.organizer_email:
+                send_templated_mail(
+                    template_name='welcome',
+                    subject="Invitation",
+                    from_email='eventswat@gmail.com',
+                    recipient_list=[i.organizer_email],
+                    context={
+                        'user': i.organizer_name,
+                    },
+                )
 
 admin.site.register(CampusCollege, CampusCollegeAdmin)
 admin.site.register(CampusDepartment, CampusDepartmentAdmin)
 admin.site.register(Postevent, PosteventAdmin)
-admin.site.register(Organizer,OrganizerAdmin)
-admin.site.register(PostEventKeyword,PostEventKeywordAdmin)
+admin.site.register(Organizer, OrganizerAdmin)
+admin.site.register(PostEventKeyword, PostEventKeywordAdmin)

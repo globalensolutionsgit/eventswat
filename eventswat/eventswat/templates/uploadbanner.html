@@ -19,8 +19,8 @@
     <h4 class="text-center">{{message}}</h4>
 {%endif%}
 <div>
+    
     {% for banner_plan in banner_plans %}
-    {% if not posted_banner in  banner_plan %} 
         <div class="c_banner_plans">
             <ul class="display_plan">
                 <li id="id_page" class="plan_page">{{banner_plan.page}}</li>
@@ -32,9 +32,10 @@
                 <input type="hidden" name="hidden_position" class="hidden_position" value="{{banner_plan.position}}">
                 <input type="hidden" name="hidden_price" class="hidden_price" value="{{banner_plan.price}}">
             </ul> 
-         </div> 
-      {% endif %}      
-     {% endfor %}
+         </div>
+     
+      {% endfor %}
+     
 </div>
 <div class="banner_form"> 
     <form action="/upload_banner/" name="upload_banner" enctype="multipart/form-data" method="POST" id="banner_post">
