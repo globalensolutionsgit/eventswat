@@ -1,7 +1,12 @@
 {% extends request.is_ajax|yesno:"base_ajax.html,base.html" %}
 {% load static from staticfiles %}
-{%if not request.is_ajax%}
 {% block content %}
+{% if not request.is_ajax %}
+	<form id="form_search_filter" class="form_search_filter">
+	    <input id="search_form" type="hidden" name="{{form.q.html_name}}"  value="{{form.q.value|default:''}}"/>
+	    <input type="hidden" name="page" id="page" value="{{page.number}}"/>    
+	</form>
+
 	<div class="listpage_adv col-md-2 container">
 		<img src="{% static "img/advertisement_1.png" %}"><br><br>
 		<img src="{% static "img/advertisement_2.png" %}">
@@ -198,133 +203,84 @@
 
 	    </div><!--part1-->
 </div><!--list_leftpart-->
-{% endblock %}
 {% endif %} 
-{% block search_results %}
-<div class="listview_events container">
-{% if page and page.object_list%}
-	{% for events in page.object_list %}
-		{% if events.object.admin_status == True %}
-				<div class="event_content col-md-12">
-					<div class="event_image">
-						<img src="{% static "img/listview_img1.png" %}">
-							<div class="event_details col-md-8">
-								<ul>
-									<li>{{events.object.event_title}}</li>
-									<li><img src="{% static "img/listview_icon1.png" %}" class="list_smallicon">{{events.object.event_category}}</li>
-									<li><i class="fa fa-map-marker"></i>{{events.object.city}},{{events.object.country}}</li>
-									<li>DEC 18-2015 <mark class="event_time">02:00PM</mark></li>
-								</ul>
-							</div><!--event_details-->
-							<a href="#" class="view_details">VIEW DETAILS</a>
-					</div><!--event_image-->
-				</div><!--event_content-->
-		{% endif %}
-	{% endfor %}
-{% else %}
-    <div class="right_align"><span>No Results Found</span></div>
-{% endif %}
-</div><!--listview_events-->
-
-	<div class="listgrid_events container">
-		<div class="gridview_content col-md-6">
-			<div class="gridview_image">
-				<img src="{% static "img/list_img1.png" %}">
-				<div class="gridview_details">
-					<ul>
-						<li>PRAVEGA '16 BANGALORE</li>
-						<li><img src="{% static "img/listview_icon5.png" %}"  class="list_smallicon">SPIRITURAL</li>
-						<li>DEC 18-2015 <mark class="event_time">02:00PM</mark></li>
-					</ul>
-				</div><!--gridview_details-->
-			</div><!--gridview_image-->
-		</div><!--gridview_content-->
-		<div class="gridview_content col-md-6">
-			<div class="gridview_image">
-				<img src="{% static "img/list_img2.png" %}">
-				<div class="gridview_details">
-					<ul>
-						<li>INBLOOM 2016 BENGALURE</li>
-						<li><img src="{% static "img/listview_icon1.png" %}"  class="list_smallicon">ENTERTAINMENT</li>
-						<li>DEC 18-2015 <mark class="event_time">02:00PM</mark></li>
-					</ul>
-				</div><!--gridview_details-->
-			</div><!--gridview_image-->
-		</div><!--gridview_content-->
-		<div class="gridview_content col-md-6">
-			<div class="gridview_image">
-				<img src="{% static "img/list_img3.png" %}">
-				<div class="gridview_details">
-					<ul>
-						<li>AATRAL 2K15 CHENNAI</li>
-						<li><img src="{% static "img/listview_icon2.png" %}"  class="list_smallicon">SPIRITURAL</li>
-						<li>DEC 18-2015 <mark class="event_time">02:00PM</mark></li>
-					</ul>
-				</div><!--gridview_details-->
-			</div><!--gridview_image-->
-		</div><!--gridview_content-->
-		<div class="gridview_content col-md-6">
-			<div class="gridview_image">
-				<img src="{% static "img/list_img4.png" %}">
-				<div class="gridview_details">
-					<ul>
-						<li>INFLORE '15</li>
-						<li><img src="{% static "img/listview_icon1.png" %}"  class="list_smallicon">ENTERTAINMENT</li>
-						<li>DEC 18-2015 <mark class="event_time">02:00PM</mark></li>
-					</ul>
-				</div><!--gridview_details-->
-			</div><!--gridview_image-->
-		</div><!--gridview_content-->
-		<div class="gridview_content col-md-6">
-			<div class="gridview_image">
-				<img src="{% static "img/list_img5.png" %}">
-				<div class="gridview_details">
-					<ul>
-						<li>AATRAL 2K15 CHENNAI</li>
-						<li><img src="{% static "img/listview_icon2.png" %}"  class="list_smallicon">SPIRITURAL</li>
-						<li>DEC 18-2015 <mark class="event_time">02:00PM</mark></li>
-					</ul>
-				</div><!--gridview_details-->
-			</div><!--gridview_image-->
-		</div><!--gridview_content-->
-		<div class="gridview_content col-md-6">
-			<div class="gridview_image">
-				<img src="{% static "img/list_img6.png" %}">
-				<div class="gridview_details">
-					<ul>
-						<li>INFLORE '15</li>
-						<li><img src="{% static "img/listview_icon1.png" %}"  class="list_smallicon">ENTERTAINMENT</li>
-						<li>DEC 18-2015 <mark class="event_time">02:00PM</mark></li>
-					</ul>
-				</div><!--gridview_details-->
-			</div><!--gridview_image-->
-		</div><!--gridview_content-->		
-	</div><!--listgrid_events-->
-
-	<div class="list_pagination container">
-		<ul class="pagination">
-			<li>
-				 {% if page.has_previous %} 
-	                <a data-ajaxlink="true" data-ajaxpage="{{ page.previous_page_number }}" href="?q={{request.REQUEST.q}}&page={{ page.previous_page_number }}" class="previous">
-	                <i class="fa  fa-angle-left"></i></a> 
-                 {% endif %}
-			</li>
-			{% for p in page.paginator.page_range %}
-                {% if p|add:3 >= page.number and p|add:-3 <= page.number %}
-                    <li {% if p == page.number %} class="active"{% endif %}>
-                        <a data-ajaxlink="true" data-ajaxpage="{{ p }}" href="?q={{request.REQUEST.q}}&page={{ p }}">
-                            {{ p }}
-                        </a>
-                    </li> 
-                {% endif %}
-            {% endfor %}
-		    <li>
-                {% if page.has_next %} 
-                    <a data-ajaxlink="true" data-ajaxpage="{{ page.next_page_number }}" href="?q={{request.REQUEST.q}}&page={{ page.next_page_number }}" class="next">
-                        <i class="fa angle-right"></i>
-                    </a>
-                {% endif %}
-             </li> 
-		</ul>
-	</div><!--list_pagination-->
 {% endblock %} 
+
+{% block search_results %}
+{% if not request.is_ajax %}
+<div id="search_result" class="list_active">
+{% endif %}
+	{% if page and page.object_list%}
+		<div class="listview_events container">
+				{% for events in page.object_list %}
+					{% if events.object.admin_status == True %}
+							<div class="event_content col-md-12">
+								<div class="event_image">
+									<img src="{% static "img/listview_img1.png" %}">
+										<div class="event_details col-md-8">
+											<ul>
+												<li>{{events.object.event_title}}</li>
+												<li><img src="{% static "img/listview_icon1.png" %}" class="list_smallicon">{{events.object.event_category}}</li>
+												<li><i class="fa fa-map-marker"></i>{{events.object.city}},{{events.object.country}}</li>
+												<li>DEC 18-2015 <mark class="event_time">02:00PM</mark></li>
+											</ul>
+										</div><!--event_details-->
+										<a href="#" class="view_details">VIEW DETAILS</a>
+								</div><!--event_image-->
+							</div><!--event_content-->
+					{% endif %}
+				{% endfor %}
+		</div><!--listview_events-->
+
+		<div class="listgrid_events container">
+						{% for events in page.object_list %}
+							{% if events.object.admin_status == True %}
+								<div class="gridview_content col-md-6">
+									<div class="gridview_image">
+										<img src="{% static "img/list_img1.png" %}">
+										<div class="gridview_details">
+											<ul>
+												<li>{{events.object.event_title}}</li>
+												<li><img src="{% static "img/listview_icon5.png" %}"  class="list_smallicon">{{events.object.event_category}}</li>
+												<li>DEC 18-2015 <mark class="event_time">02:00PM</mark></li>
+											</ul>
+										</div><!--gridview_details-->
+									</div><!--gridview_image-->
+								</div><!--gridview_content-->	
+							{% endif %}
+						{% endfor %}
+		</div><!--listgrid_events-->
+
+		<div class="list_pagination container">
+			<ul class="pagination">
+				<li>
+					 {% if page.has_previous %} 
+		                <a data-ajaxlink="true" data-ajaxpage="{{ page.previous_page_number }}" href="?q={{request.REQUEST.q}}&page={{ page.previous_page_number }}" class="previous">PREV
+		                <i class="fa fa-angle-left"></i></a> 
+		             {% endif %}
+				</li>
+				{% for p in page.paginator.page_range %}
+		            {% if p|add:3 >= page.number and p|add:-3 <= page.number %}
+		                <li {% if p == page.number %} class="active"{% endif %}>
+		                    <a data-ajaxlink="true" data-ajaxpage="{{ p }}" href="?q={{request.REQUEST.q}}&page={{ p }}">
+		                        {{ p }}
+		                    </a>
+		                </li> 
+		            {% endif %}
+		        {% endfor %}
+			    <li>
+		            {% if page.has_next %} 
+		                <a data-ajaxlink="true" data-ajaxpage="{{ page.next_page_number }}" href="?q={{request.REQUEST.q}}&page={{ page.next_page_number }}" class="next">NEXT
+		                    <i class="fa fa-angle-right"></i>
+		                </a>
+		            {% endif %}
+		         </li> 
+			</ul>
+	    </div><!--list_pagination-->
+	{% else %}
+	    <div class="right_align"><span>No Results Found</span></div>
+	{% endif %}	
+{% if not request.is_ajax %}	
+</div><!--search_result-->	
+{% endif %}	
+{% endblock %}

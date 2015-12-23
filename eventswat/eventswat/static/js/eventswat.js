@@ -95,11 +95,15 @@ $('.advance_search, #datepicker').hide();
 //Grid and list view in listpage
         $(".listgrid_events").hide();
         $(".grid_view").click(function(){
+            $('#search_result').removeClass('list_active');
+            $('#search_result').addClass('grid_active');
             $('.listgrid_events').show();
             $('.listview_events').hide();
         });
         
         $(".list_view").click(function(){
+            $('#search_result').removeClass('grid_active');
+            $('#search_result').addClass('list_active');
             $('.listview_events').show();
             $(".listgrid_events").hide();
         });
