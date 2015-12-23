@@ -154,43 +154,6 @@ def details(request, id=None):
 
 # login and registration implemented by ramya
 
-
-# @csrf_exempt
-# def user_login(request):
-#     import json
-#     if request.user.is_superuser:
-#         logout(request)
-#         return HttpResponseRedirect('/')
-#     logout(request)
-#     error = {}
-#     if request.method == 'POST':       
-#         login_form = UserLoginForm(request.POST)        
-#         login_email = login_form.cleaned_data['login_email']        
-#         login_password = login_form.cleaned_data['login_password']        
-#         context = {}
-#         if not User.objects.filter(email=login_email).exists():           
-#             error['email_exists'] = True
-#             response = HttpResponse(json.dumps(
-#                 error, ensure_ascii=False), mimetype='application/json')
-#             return response
-
-#         if login_form.is_valid():
-#             user = User.objects.get(email=login_email)
-#             user.backend = 'django.contrib.auth.backends.ModelBackend'
-#             if user is not None:
-#                 if user.check_password(login_password):
-#                     if user.is_active:
-#                         login(request, user)
-#                         response = HttpResponseRedirect(
-#                             request.POST.get('next'))
-#                 else:
-#                     error['password'] = True                    
-#                     response = HttpResponse(json.dumps(
-#                         error, ensure_ascii=False), mimetype='application/json')
-#                     return response
-#     else:
-#         login_form = UserLoginForm()
-#     return render_to_response('index_v2.html', {'login_form': login_form}, context_instance=RequestContext(request))
 @csrf_exempt
 def user_login(request):    
     import json 
