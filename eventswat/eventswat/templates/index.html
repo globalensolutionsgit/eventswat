@@ -69,12 +69,13 @@
 
 	 <div class="search_bar">
 		<div class="container">
-			<form>
+			<form method="get" action="/search/?q=" id="f_search" name="f_search">
 			    <div class="form-group">
-			   		<input type="text" class="form-control search_box" id="usr">
+			   		<input type="text" class="form-control search_box" id="usr" name="q">
 			   		<a class="search-btn"><i class="fa fa-search search_font"></i></a>
 			   		<button type="button" class="advance_btn">ADVANCE SEARCH</button>
 			   		<i class="fa fa-angle-right angle_search"></i>
+			   		<input type="hidden" value="" name="city"/>
 			    </div><!--form-group-->
 			 </form> 
 		</div><!--container-->
@@ -82,7 +83,7 @@
 
 	<div class="advance_search">
 		<div class="container advance_content">
-			<form method="get" action="/search/?q=" id="f_search" name="f_search">
+			<form id="form_search_filter" class="form_search_filter">
 				<div class="form-group event_btn">
 				   		<input type="text" class="form-control event_search" id="event_title" placeholder="SEARCH BY EVENT NAME" name="event_title">
 				</div><!--form-group-->
@@ -96,15 +97,15 @@
 			      	</select>
 		      	</div> --><!--form-group-->
 				<div class="form-group city_btn">
-				   		<input type="text" class="form-control city_search" id="city" placeholder="SELECT CITY">
+				   		<input type="text" class="form-control city_search" id="city" placeholder="SELECT CITY" name="city">
 				</div><!--form-group-->
 				<a class="advsearch-btn"><i class="fa fa-search search_font"></i></a>
 				<a class="down_btn"><i class="fa fa-angle-down down_font"></i></a>
-				<input type="hidden" id="search_keyword"  value="" name="q"/>
+				<!-- <input type="hidden" id="search_keyword"  value="" name="q"/> -->
 				<!-- <input type="hidden" id="page" value="{{page.number}}" name="page"/> -->
 				<!-- <input type="hidden" value="" name="eventtitle"/>  -->
 				<!-- <input type="hidden" value="" name="category"/>  -->
-				<input type="hidden" value="" name="city"/>  
+				<!-- <input type="hidden" value="" name="city"/>   -->
 			</form>
 		</div><!--container-->
 	</div><!--advance_search-->
