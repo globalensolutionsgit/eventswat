@@ -1,5 +1,6 @@
 from django.contrib import admin
-from events.models import *
+from events.models import (EventsCategory, EventsSubCategory,
+                           SubcategoryRelatedField, City)
 
 
 class EventsCategoryAdmin(admin.ModelAdmin):

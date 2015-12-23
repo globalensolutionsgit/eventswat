@@ -1,12 +1,5 @@
-import datetime
 from django.db import models
-from django.contrib.contenttypes import generic
-from django.contrib.contenttypes.models import ContentType
-from django.contrib.auth.models import User
-from django.utils.translation import ugettext as _
-from events.models import *
 from datetime import datetime
-from django import forms
 from postevent.models import Postevent
 from django.core.validators import MinValueValidator, MaxValueValidator
 
