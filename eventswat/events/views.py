@@ -106,39 +106,55 @@ def logout_view(request):
 def details(request,id=None):
 	# try:
 	postevent=Postevent.objects.get(pk=id)
+	userprofile = Userprofile()
 	img=str(postevent.event_poster).split(',')
 	photo=img[0]
 	photos=[n for n in str(postevent.event_poster).split(',')]
 	organizer=Organizer.objects.filter(postevent__id=postevent.id)
 	registeration_form = UserCreationForm()
 	login_form = UserLoginForm()
-	comment_form = CommentForm(request.POST or None)
-	if request.method == "POST":
-		if comment_form.is_valid():
-			print "comment"
-			temp = comment_form.save(commit=False)
-			temp.postevent_id = request.POST.get('postent')
-			parent = comment_form['parent'].value()
-			if parent == "":
-				temp.path = []
-				temp.save()
-				id = temp.id
-				print "id",id
-				temp.path = [id]
-			else:
+	comment_form = CommentForm()
+	# comment_form = CommentForm(request.POST or None)
+	# if request.method == "POST":
+	# 	if request.user.is_authenticated():
+	# 		if comment_form.is_valid():
+	# 			print "comment"
+	# 			temp = comment_form.save(commit=False)
+	# 			temp.postevent_id = request.POST.get('postent')
+	# 			temp.content = request.POST.get('content',request.COOKIES.get('content'))
+	# 			print temp.content,"content"
+	# 			temp.rating = request.POST.get('rating',request.COOKIES.get('rating'))
+	# 			print temp.rating,"rating"
+	# 			parent = comment_form['parent'].value()
+	# 			if parent == "":
+	# 				temp.path = []
+	# 				temp.save()
+	# 				id = temp.id
+	# 				print "id",id
+	# 				temp.path = [id]
+	# 			else:
 
-				node = Comment.objects.get(id = parent)
-				temp.depth = node.depth + 1
-				s = str(node.path)
-				temp.path = eval(s)
-				temp.save()
-				id= temp.id
-				temp.path.append(id)
+	# 				node = Comment.objects.get(id = parent)
+	# 				temp.depth = node.depth + 1
+	# 				s = str(node.path)
+	# 				temp.path = eval(s)
+	# 				temp.save()
+	# 				id= temp.id
+	# 				temp.path.append(id)
 
-			temp.save()
-	comment_tree=Comment.objects.filter(postevent_id=postevent.id).order_by('path')
+	# 			temp.save()
+	# 			# response.set_cookie( 'content', temp.content )
+	# 			# response.set_cookie( 'rating', temp.rating )
+		
+			
+			
+
+	comment_tree=Comment.objects.filter(postevent_id=postevent.id).order_by('-path')
 	# related_events = Postevent.objects.filter(event_category = postevent.event_category, event_subcategory=postevent.event_subcategory, city=postevent.city)
-	return render_to_response("company-profile.html",{'comment_tree':comment_tree,'events':postevent,'organizer':organizer,'photos':photos,'photo':photo, 'registeration_form':registeration_form, 'login_form':login_form, 'comment_form':comment_form}, context_instance=RequestContext(request))
+	return render_to_response("company-profile.html",{'comment_tree':comment_tree,'events':postevent,'organizer':organizer,'photos':photos,'photo':photo, 'registeration_form':registeration_form, 'login_form':login_form, 'comment_form':comment_form, 'userprofile':userprofile}, context_instance=RequestContext(request))
+	# response.set_cookie( 'content', temp.content )
+	# response.set_cookie( 'rating', temp.rating )
+	
 	# except:
 	#     return render_to_response("company-profile.html",{'message':'Sorry for inconvenience.Some thing went to wrong'}, context_instance=RequestContext(request))
 
@@ -157,14 +173,14 @@ def user_login(request):
 	if request.method == 'POST':
 		print "post1"
 		login_form = UserLoginForm(request.POST)
-		print 'form', login_form
+		
 		login_email = login_form.cleaned_data['login_email']
 		print 'email form form', login_email
 		login_password = login_form.cleaned_data['login_password']
 		print 'Login_password', login_password
 		context = {}
 		if not User.objects.filter(email=login_email).exists():
-			print 'Userprofile.objects.filter(email=login_email)', User.objects.filter(email=login_email).exists()
+			
 			error['email_exists'] = True
 			response = HttpResponse(json.dumps(error, ensure_ascii=False),mimetype='application/json')
 			return response
@@ -179,7 +195,7 @@ def user_login(request):
 						response = HttpResponseRedirect(request.POST.get('next'))
 				else:
 					error['password'] = True
-					print 'errorpass', error['password']
+					
 					response = HttpResponse(json.dumps(error, ensure_ascii=False),mimetype='application/json')
 					return response
 	else:
@@ -570,25 +586,6 @@ def importcollegedata(request):
   return render_to_response('import.html', {'form': form, 'saved':saved, 'saved_leads': saved_leads},
 	context_instance=RequestContext(request))
 
-@csrf_exempt
-def feedback(request):
-	if request.is_ajax():
-		if request.method == 'POST':
-			print "enter"
-			form = WebsiteFeedbackForm(request.POST)
-			if form.is_valid():
-				print "form is valid"
-				# print "form",form
-				form.save()
-				print "save"
-			else:
-				form = WebsiteFeedbackForm()
-
-			msg = "The operation has been received correctly."
-	else:
-		msg = "Fail"
-
-	return HttpResponse(msg)
 
 def getstate(request):
 	from collections import OrderedDict

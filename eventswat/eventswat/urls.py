@@ -42,9 +42,7 @@ urlpatterns = patterns('',
 	url(r'^(?i)user/password/done/$',
 		'django.contrib.auth.views.password_reset_complete'),
 
-	# url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$',
- #    'django.contrib.auth.views.password_reset_confirm',
- #    name='password_reset_confirm'),
+	
 
 	 # getting tarted
 	url(r'^start/$', 'events.views.start',name='start'),
@@ -54,7 +52,7 @@ urlpatterns = patterns('',
 	url(r'^upload_banner$', 'events.views.upload_banner', name='upload_banner'),
 	url(r'^success$', 'events.views.success', name='success'),
 	url(r'^about$', 'events.views.about', name='about'),
-	url(r'^feed/$', 'events.views.feedback', name='feedback'),
+	url(r'^feed/$', 'reviews.views.feedback', name='feedback'),
 	url(r'^privacy_and_policy$', 'events.views.privacy_and_policy', name='privacy_and_policy'),
 	url(r'^terms_and_conditions$', 'events.views.terms_and_conditions', name='terms_and_conditions'),
 	url(r'^faqs$', 'events.views.faqs', name='faqs'),
@@ -101,7 +99,7 @@ urlpatterns = patterns('',
 	# url('', include('social.apps.django_app.urls', namespace='social')),
    	url('', include('django.contrib.auth.urls', namespace='auth')),
    	url(r'^home_v2/$', 'events.views.home_v2', name='home_v2'),
-   	# url(r'^review/',  'reviews.views.post', name='post'),
+   	url(r'^comment/',  'reviews.views.comment', name='comment'),
    	# url(r'^post/$', 'reviews.views.post_review', name='reviews-post-review'),
 
    	url(r'^get_events_for_calendar/',  'events.views.get_events_for_calendar', name='eventcalendar'),
@@ -118,6 +116,6 @@ urlpatterns = patterns('',
    	url(r'^complete/(?P<backend>[^/]+)/$', AuthComplete.as_view()),
     url(r'^login-error/$', LoginError.as_view()),
    	url(r'^(?i)postevent/', include('postevent.urls')),
-   	url(r'^^(?i)postbanner/', include('postbanner.urls')),
+   	# url(r'^^(?i)postbanner/', include('postbanner.urls')),
 
 )+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

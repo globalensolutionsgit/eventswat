@@ -443,55 +443,55 @@ $("document").ready(function($){
 //         event.preventDefault();
 //     });
 $('.error').hide();
- $("#review_btn").click(function(event){
-         $('.error').hide();
-          var name = $('input[name="name"]').val();
-          if (name == "") {
-            $("label#name_error").show();
-            $("input#name").focus();
-            return false;
-          }
-          var email = $('input[name="email"]').val();
-          if (email == "") {
-            $("label#email_error").show();
-            $("input#email").focus();
-            return false;
-          }
-          var rating = $('input[name="rating"]').val();
-          if (rating == "") {
-            $("label#rating_error").show();
-            $("input#rating").focus();
-            return false;
-          }
-          var content = $('input[name="content"]').val();
-          if (content == "") {
-            $("label#content_error").show();
-            $("input#content").focus();
-            return false;
-          }
+ // $("#review_btn").click(function(event){
+ //         $('.error').hide();
+ //          var name = $('input[name="name"]').val();
+ //          if (name == "") {
+ //            $("label#name_error").show();
+ //            $("input#name").focus();
+ //            return false;
+ //          }
+ //          var email = $('input[name="email"]').val();
+ //          if (email == "") {
+ //            $("label#email_error").show();
+ //            $("input#email").focus();
+ //            return false;
+ //          }
+ //          var rating = $('input[name="rating"]').val();
+ //          if (rating == "") {
+ //            $("label#rating_error").show();
+ //            $("input#rating").focus();
+ //            return false;
+ //          }
+ //          var content = $('input[name="content"]').val();
+ //          if (content == "") {
+ //            $("label#content_error").show();
+ //            $("input#content").focus();
+ //            return false;
+ //          }
 
-          $.ajax({
-               type:"POST",
-               url:"/review/",
-               data: {
-                      'name': $('#name').val(),
-                      'email': $('#email').val(),
-                      'rating': $('input[name="rating"]').val(),
-                      'content': $('#content').val(),
-                      'postevent': $('#postevent').val(),
-                      },
-               success: function(){
-                   $('#mgs').show();
-                   setTimeout(function() { $("#mgs").hide(); }, 5000);
-                  }
-          });
-          $('#name').val('');
-          $('#email').val('');
-          $('#rating').val('');
-          $('#content').val('');
-          return false;
+ //          $.ajax({
+ //               type:"POST",
+ //               url:"/review/",
+ //               data: {
+ //                      'name': $('#name').val(),
+ //                      'email': $('#email').val(),
+ //                      'rating': $('input[name="rating"]').val(),
+ //                      'content': $('#content').val(),
+ //                      'postevent': $('#postevent').val(),
+ //                      },
+ //               success: function(){
+ //                   $('#mgs').show();
+ //                   setTimeout(function() { $("#mgs").hide(); }, 5000);
+ //                  }
+ //          });
+ //          $('#name').val('');
+ //          $('#email').val('');
+ //          $('#rating').val('');
+ //          $('#content').val('');
+ //          return false;
         
-       });
+ //       });
 
 
 /******************feedback form ************************/

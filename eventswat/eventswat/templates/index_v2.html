@@ -41,7 +41,7 @@
     <div id="mgs" style="display:none;"><h2>Thanks For Your Feedback</h2></div>
     <a class="btn btn-default feedback1">FEEDBACK</a>                 
     <div class="feedback_popup">
-        <form action="{%url 'events.views.feedback' %}" id="form" method="post" name="form" class="feedback_form">
+        <form action="{%url 'reviews.views.feedback' %}" id="form" method="post" name="form" class="feedback_form">
         {% csrf_token %}
 
             <a class="close"> <i class="fa fa-times"></i></a>
@@ -68,6 +68,16 @@
                             <span class="error">Enter your comments</span>
                         </div>
                         <div class="field_wapper">
+                            <!-- <label for="id_rating">
+                            <fieldset class="rating" name="rating" id="rating">
+                                <legend class="feedback_star">How satisfied are you with our services</legend>
+                                <input type="radio"  name="rating" value="5" /><label for="star5" title="Rocks!">5 stars</label>
+                                <input type="radio"  name="rating" value="4" /><label for="star4" title="Pretty good">4 stars</label>
+                                <input type="radio" name="rating" value="3" /><label for="star3" title="Modrate">3 stars</label>
+                                <input type="radio"  name="rating" value="2" /><label for="star2" title="Kinda bad">2 stars</label>
+                                <input type="radio"  name="rating" value="1" /><label for="star1" title="Poor">1 star</label>
+                            </fieldset>
+                            </label> -->
                             <label for="id_rating">{{ feedback_form.rating.label_tag }}</label>
                                 {{feedback_form.rating.errors}}
                                 {{ feedback_form.rating }}
