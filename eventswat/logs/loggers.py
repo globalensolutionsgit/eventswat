@@ -13,16 +13,16 @@ class MyDbLogHandler(logging.Handler): # Inherit from logging.Handler
         try:
             from logs.models import ErrorLog
             logEntry =ErrorLog()
-            logEntry.level = record.levelname 
-            logEntry.error_msg = record.getMessage(), record.exc_info      
+            logEntry.level = record.levelname
+            logEntry.error_msg = record.getMessage(), record.exc_info
             # logEntry.ip_address = user_ip()
             # print "logEntry.ip_address", logEntry.ip_address
-            logEntry.page = record.args, record.lineno, record.pathname 
+            logEntry.page = record.args, record.lineno, record.pathname
             logEntry.datetime = datetime.datetime.now()
             logEntry.user = record.request.user
             logEntry.admin_status = 'open'
             logEntry.save()
-        except:            
+        except:
             pass
         try:
             if record.levelname == 'ERROR':
@@ -37,6 +37,6 @@ class MyDbLogHandler(logging.Handler): # Inherit from logging.Handler
                              'error_user': record.request.user,
                              'error_line' : [record.lineno, record.pathname],
                     },
-                ) 
+                )
         except:
-            psss  
+            pass 

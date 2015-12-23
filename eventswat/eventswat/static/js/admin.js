@@ -1,8 +1,46 @@
 $(document).ready(function(){
-    
+
+    //remove text box and add select box in postevent add page for country,state and city
+    if(!$('#id_country').val() && !$('#id_state').val() && !$('#id_city').val()){
+        $('#id_country,#id_state,#id_city').remove();
+        $('<select id="id_country" name="country"><option value="">------------</option></select>').insertAfter('.field-country label');
+        $('<select id="id_state" name="state"><option value="">------------</option></select>').insertAfter('.field-state label');
+        $('<select id="id_city" name="city"><option value="">------------</option></select>').insertAfter('.field-city label');
+
+        //load country list when add page loading
+        $.get('/postevent/load_country/', function(data) {
+            $.each(data, function(key,value) {
+                $('#id_country').append($('<option>').text(value.value).attr('value', value.label));
+            });
+        });
+
+        //load list of state user select country
+        $('#id_country').change(function(){
+            var country= $(this).val();
+            $.get('/postevent/load_state/',{ country:country }, function(data) {
+                $('#id_state').empty();
+                $.each(data, function(key,value) {
+                    $('#id_state').append($('<option>').text(value.value).attr('value', value.label));
+                });
+            });
+        });
+
+        //load list of cities user select state
+        $('#id_state').change(function(){
+            var state= $(this).val();
+            $('#id_city').empty();
+            $.get('/postevent/load_city/',{ state:state }, function(data) {
+                $.each(data, function(key,value) {
+                    $('#id_city').append($('<option>').text(value.value).attr('value', value.label));
+                });
+            });
+        });
+    }
+
+    //load subcategory base on categories
     $('#id_event_category').change(function(){
         var id= $(this).val();
-        $.get('/admin_subcategory/', { id: id }, function(data) {
+        $.get('/postevent/admin_subcategory/', { id: id }, function(data) {
             $('#id_event_subcategory').empty();
             $('.field-event_subcategory').show();
             $.each(data, function(key,value) {
@@ -105,5 +143,8 @@ $(document).ready(function(){
         }
 
     });
+
+    //foreign key plus symbol remove
     $('.field-subcategory_relatedfield .add-another').hide();
+
 });

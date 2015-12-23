@@ -49,7 +49,7 @@ INSTALLED_APPS = (
     'postbanner',
     'reviews',
     'worker',
-    'south',
+    #'south',
     'postevent',
     'usermanagement',
     'logs',
@@ -128,7 +128,6 @@ STATICFILES_DIRS = (
 TEMPLATE_DIRS = os.path.join((os.path.dirname(__file__)), 'templates')
 
 MEDIA_ROOT = os.path.join((os.path.dirname(__file__)), 'media')
-print 'MEDIA_ROOT', MEDIA_ROOT
 
 MEDIA_URL = '/media/'
 
@@ -291,4 +290,3 @@ LOGGING = {
 }
 
 DEFAULT_FROM_EMAIL = 'eventswat@gmail.com'
-
