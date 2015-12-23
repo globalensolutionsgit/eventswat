@@ -82,6 +82,42 @@ def load_city(request):
             results.append(v)
         return HttpResponse(json.dumps(results), mimetype='application/json')
 
+@csrf_exempt
+def load_college(request):
+	from collections import OrderedDict
+	results = []
+	unsort_dict = {}
+	key_loc = request.GET.get('term')
+	college_lists = CampusCollege.objects.filter(college_name__icontains=key_loc)
+	for college_list in college_lists:
+		collegename = college_list.college_name.strip()
+		unsort_dict[collegename] = {'label':collegename, 'value':collegename}
+
+	sorted_dic = OrderedDict(sorted(unsort_dict.iteritems(), key=lambda v: v[0]))
+	for k, v in sorted_dic.iteritems():
+		results.append(v)
+	print results
+	return HttpResponse(simplejson.dumps(results), mimetype='application/json')
+
+@csrf_exempt
+def load_dept(request):
+	from collections import OrderedDict
+	results = []
+	unsort_dict = {}
+	key_loc = request.GET.get('term')
+	college=request.GET.get('college')
+	filterargs={'college__id':college}
+	department_lists = CampusDepartment.objects.filter(department__icontains=key_loc)
+	for department_list in department_lists:
+		departmentname = department_list.department.strip()
+		departmentid = department_list.id
+		unsort_dict[departmentname] = {'departmentid':departmentid, 'label':departmentname, 'value':departmentname}
+
+	sorted_dic = OrderedDict(sorted(unsort_dict.iteritems(), key=lambda v: v[0]))
+	for k, v in sorted_dic.iteritems():
+		results.append(v)
+
+	return HttpResponse(simplejson.dumps(results), mimetype='application/json')
 
 def postevent(request):
     """Save postevent details,organizer information,poster and

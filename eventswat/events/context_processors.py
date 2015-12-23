@@ -1,4 +1,4 @@
-from events.models import *
+from events.models import EventsSubCategory
 from postevent.models import Postevent
 
 def globalactivity(request):

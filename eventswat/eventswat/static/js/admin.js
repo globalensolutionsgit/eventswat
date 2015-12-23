@@ -59,7 +59,7 @@ $(document).ready(function(){
             $('#id_subcategoryrelatedfieldvalue_set-0-field_value').removeAttr('disabled');
             $('#id_subcategoryrelatedfieldvalue_set-0-field_value').autocomplete({
                 source: function (request, response) {
-                    $.getJSON("/getcollege?term=" + request.term, function (data) {
+                    $.getJSON("/postevent/load_college?term=" + request.term, function (data) {
                         response($.map(data, function (value, key) {
                             return {
                                 label: value.label,
@@ -76,7 +76,7 @@ $(document).ready(function(){
         else if(id == '2'){
             $('#id_subcategoryrelatedfieldvalue_set-0-field_value').autocomplete({
                 source: function (request, response) {
-                    $.getJSON("/getdept?term=" + request.term, function (data) {
+                    $.getJSON("/postevent/load_dept?term=" + request.term, function (data) {
                         response($.map(data, function (value, key) {
                             return {
                                 label: value.label,
@@ -104,7 +104,7 @@ $(document).ready(function(){
                 $('#id_subcategoryrelatedfieldvalue_set-1-field_value').removeAttr('disabled');
                 $('#id_subcategoryrelatedfieldvalue_set-1-field_value').autocomplete({
                     source: function (request, response) {
-                        $.getJSON("/getcollege?term=" + request.term, function (data) {
+                        $.getJSON("/postevent/load_college?term=" + request.term, function (data) {
                             response($.map(data, function (value, key) {
                                 return {
                                     label: value.label,
@@ -122,7 +122,7 @@ $(document).ready(function(){
                 $('#id_subcategoryrelatedfieldvalue_set-1-field_value').removeAttr('disabled');
                 $('#id_subcategoryrelatedfieldvalue_set-1-field_value').autocomplete({
                     source: function (request, response) {
-                        $.getJSON("/getdept?term=" + request.term, function (data) {
+                        $.getJSON("/postevent/load_dept?term=" + request.term, function (data) {
                             response($.map(data, function (value, key) {
                                 return {
                                     label: value.label,

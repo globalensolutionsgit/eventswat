@@ -47,5 +47,6 @@ class ContentTypeRestrictedFileField(FileField):
 
 
 class JSONResponse(HttpResponse):
+    """Return as json dump files"""
     def __init__(self, data):
         super(JSONResponse, self).__init__(json.dumps(data), mimetype='application/json')
