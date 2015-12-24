@@ -9,6 +9,7 @@ from django.contrib.sites.models import Site
 from django.http import HttpResponseRedirect, HttpResponse
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from postbanner.models import PostBanner,TempBanner
+from commerce.models import Order, Transaction
 
 
 def my_random_string(string_length=10):
@@ -86,14 +87,25 @@ def payu_data(request):
         payu.pg_type = request.POST.get('PG_TYPE')
         payu.band_ref_number = request.POST.get('bank_ref_num')
         payu.save()
-        if 'status' in request.POST:
+        if request.POST['status'] == 'success':
             uploadbanner = PostBanner()
-            temporary_banner = TempBanner.objects.all()           
-            uploadbanner.bannerplan_id = request.POST.get('productinfo')            
-            banner_id = TempBanner.objects.get(temp_bannerplan_id=uploadbanner.bannerplan_id)            
-            uploadbanner.banner = banner_id.temp_banner            
-            uploadbanner.link=banner_id.temp_link            
-            uploadbanner.user_id=banner_id.temp_user_id            
+            temporary_banner = TempBanner.objects.get(temp_user_id=request.user.id)
+            uploadbanner.bannerplan_id = request.POST.get('productinfo')
+            banner_id = TempBanner.objects.get(temp_bannerplan_id=uploadbanner.bannerplan_id)
+            uploadbanner.banner = banner_id.temp_banner
+            uploadbanner.link=banner_id.temp_link
+            uploadbanner.user_id=banner_id.temp_user_id
             uploadbanner.save()
+            temporary_banner.delete()
+            order = Order()
+            order.banner = uploadbanner
+            order.banner_plan_id = request.POST.get('productinfo')
+            order.save()
+            trans = Transaction()
+            trans.user = request.user
+            trans.transaction_mode = 'online'
+            trans.post_type = 'banner'
+            trans.order_id = order.id
+            trans.payu = payu
+            trans.save()
     return HttpResponseRedirect("/banner/")
-       
