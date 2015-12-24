@@ -437,25 +437,28 @@
 .category_hovericon{
     display: none;
 }
-.icon_list li:hover .category_hovericon{
+.icon_list .category_icon_hover:hover .category_hovericon{
     display: block;
 } 
 
-.icon_list li:hover {
+.icon_list .category_icon_hover:hover {
     background-image: linear-gradient(68deg, #fd7843, #fb6262);
 }
-.entertainment_list li,.campus_list li,.competition_list li,.exhibition_list li,.spiritual_list li,.business_list li,.sports_list li,.adventure_list li {
-    color: #555555;
-    font-family: Microsoft Yi Baiti;
+/*.entertainment_list li,.campus_list li,.competition_list li,.exhibition_list li,.spiritual_list li,.business_list li,.sports_list li,.adventure_list li {
+    
 }
 .entertainment_list ul,.campus_list ul,.competition_list ul,.exhibition_list ul,.spiritual_list ul,.business_list ul,.sports_list ul,.adventure_list ul {
-    text-align: left;
+   
 }
-
+*/
 .subcategory_list {
+    color: #555555;
+    font-family: Microsoft Yi Baiti;
+    left: 50px;
     line-height: 30px;
     position: absolute;
-    top: 197%;
+    top: 0;
+    text-align:left;
 }
 .category_icon {
     border: 1px solid #dbdbdb;

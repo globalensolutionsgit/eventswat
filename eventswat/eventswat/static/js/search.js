@@ -50,51 +50,25 @@ $(document).ready(function(){
 	});
 	
 	// City based search when change dropdown in listing page
-	$(document).on("change", '.city_selectbox', function () {       
-		var selected_option = $( ".city_selectbox option:selected" ).val();  
+	$('.city_selectbox').on("change", function () {       
+		var selected_option = $(".city_selectbox option:selected").val();  
 		$('[name=city]').val(selected_option);	
 		perform_search();		      
 	});
 
 	// Event type search either free or paid when choose radio button in listing page
-	$(document).on("change", 'input[name="radio"]', function () {       
+	$('input[name="radio"]').on("change", function () {       
 		var selected_option = $( 'input[name="radio"]:checked' ).val();  
 		$('[name=eventtype]').val(selected_option);
 		perform_search();		      
 	});
 
-	// Load city via ajax before typed fully
-	$(function() {    
-	    $("#fitltercitytxt" ).autocomplete({
-	    open: function(){
-	        setTimeout(function () {
-	            $('.ui-autocomplete').css('z-index', 9999);
-	        }, 0);
-	    },
-
-	    source: function (request, response) {
-
-	        $.getJSON("/getcity_base?term=" + request.term, function (data) {             
-	            response($.map(data, function (value, key) {                            
-	                return {
-	                    label: value.label,
-	                    value: value.value,
-	                    extra: value.cityid
-	                };
-	            }));
-	        });
-	    },
-	    select : function(event, ui) {
-	            $('#fitltercity').val(ui.item.value);                
-	    },
-	    minLength: 2,
-	    delay: 100
-	    });
-  });
-  
-  $("#fitltercitytxt" ).blur(function () {
-    	$('#fitltercity').val($("#fitltercitytxt" ).val());
-  });
-
+	// Category based search in listing page
+	$('.subcategory_list li').on("click", function () {       
+		var selected_option = $(this).attr('data-subcategory');
+		$('[name=eventtype]').val('');  
+		$('[name=eventsubcategory]').val(selected_option);
+		perform_search();		      
+	});
 
 });
