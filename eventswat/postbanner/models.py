@@ -30,7 +30,7 @@ class BannerPlan(models.Model):
     """
     page = models.CharField(max_length=50, choices=PAGEURL,
                             help_text="page = All is only \
-                            applicable for top position")
+                            applicable for top position of all pages")
     position = models.CharField(max_length=50, choices=POSITION)
     price = models.FloatField(null=True, default=0.0)
     plan_duration = models.BigIntegerField(

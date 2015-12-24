@@ -311,7 +311,7 @@
                 <h2>Prioritized Banners</h2>                 
                 <div id="partners-slider" class="owl-carousel owl-theme">
                     {% for banners in banner|get_banner %}
-                        {% if banners.pageurl == '/' and banners.position == 'bottom' %}  
+                        {% if banners.bannerplan.page == '/' and banners.bannerplan.position == 'bottom' and banners.admin_status == True %}  
                             <div class="item">  
                                 <a href="http://{{banners.link}}">{% if 'start' in path %} <img src="../media/{{banners.banner}}"  alt=""> {% else %}<img src="media/{{banners.banner}}"  alt="">{% endif %}</a>  
                             </div>       

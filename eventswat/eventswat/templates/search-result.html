@@ -6,7 +6,7 @@
             <div class="slider-content">
                 <div id="home-slider" class="owl-carousel owl-theme">
                     {% for banners in banner|get_banner %}
-                        {{% if banners.bannerplan.page == 'all' and banners.bannerplan.position == 'top' and banners.admin_status == True %}
+                        {% if banners.bannerplan.page == 'all' and banners.bannerplan.position == 'top' and banners.admin_status == True %}
                             <div class="item">
                                 <img src="/media/{{banners.banner}}"  alt="">
                                 <div class="slide-content"></div>
@@ -26,12 +26,17 @@
             <div class="container">
                 <div class="row">
                     <div class="page-sidebar">
-                      <!--   <div class="col-md-3 category-toggle">     
+                         <div class="col-md-3 category-toggle">     
                             <div class="advertisement" style="color:black;">
                                 <p>Advertisement</p>
+                                {% for banners in banner|get_banner %}
+                                {% if banners.bannerplan.page == 'event/' and banners.bannerplan.position == 'left' and banners.admin_status == True %}
+                                    <img src="/media/{{banners.banner}}" >
+                                {% endif %}
+                                {% endfor %}
                                 
                             </div>
-                        </div>--> <!-- end .category-toggle -->
+                        </div> <!-- end .category-toggle -->
                     
                         <div class="advertisement col-md-2" style="color:black;float:right !important;">
                             <p>Advertisement</p>
@@ -117,9 +122,18 @@
                                     {% endif %}
                                 </li> 
                             </ul>
-                        </div><!--pagination-->
-                    </div> <!-- end .row -->               
+                              <div class="adve">                      
+                        {% for banners in banner|get_banner %}
+                            {% if banners.bannerplan.page == 'event/' and banners.bannerplan.position == 'bottom' and banners.admin_status == True %}
+                                <img src="/media/{{banners.banner}}" >
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                        </div><!--pagination-->                      
+                    </div> <!-- end .row -->             
+
                 </div> <!-- end .tabe-pane -->
+
             </div> <!-- end .product-details-->
         </div> <!-- end .page-content -->       
     </div> <!-- end .col-md-7  -->
