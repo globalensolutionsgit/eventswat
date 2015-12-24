@@ -1,3 +1,7 @@
+@font-face{
+    font-family: Microsoft Yi Baiti;
+    src:url(../fonts/msyi.ttf);
+}
 /* Home page */
 .navbar-nav {
 	float: right;
