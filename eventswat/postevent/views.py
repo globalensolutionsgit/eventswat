@@ -6,6 +6,8 @@ from postevent.models import (Postevent, PosteventPoster,
                               Organizer, PostEventKeyword)
 from events.extra import JSONResponse
 from events.models import EventsCategory, EventsSubCategory, City
+from usermanagement.models import Userprofile
+from django.contrib.auth.decorators import login_required
 try:
     import json
 except ImportError:
@@ -117,6 +119,7 @@ def load_dept(request):
 
 	return HttpResponse(simplejson.dumps(results), mimetype='application/json')
 
+@login_required(login_url='/?lst=2')
 def postevent(request):
     """Save postevent details,organizer information,poster and
        keywords of postevent"""
@@ -142,6 +145,16 @@ def postevent(request):
         event.user_email = request.user.email
         event.user_mobile = user.mobile
         event.save()
+        # keyword save
+        keywords = request.POST.get('keywords')
+        trimmed_keyword = keywords.replace(" ", "")
+        split_keyword = trimmed_keyword.split(',')
+        for keys in split_keyword:
+            if keys:
+                keyword = PostEventKeyword()
+                keyword.keyword = keys
+                keyword.save()
+                event.keywords.add(keyword)
         # organizer save
         organizer = Organizer()
         organizer.postevent = event
@@ -156,16 +169,7 @@ def postevent(request):
             poster.postevent = event
             poster.event_poster = post
             poster.save()
-        # keyword save
-        keywords = request.POST.get('keywords')
-        trimmed_keyword = keywords.replace(" ", "")
-        split_keyword = trimmed_keyword.split(',')
-        for keys in split_keyword:
-            if keys:
-                keyword = PostEventKeyword()
-                keyword.keyword = keys
-                keyword.save()
-                keyword.postevent.add(Postevent.objects.order_by('-pk')[0])
+
         # redirect page
         category = EventsCategory.objects.all()
         country = City.objects.all()

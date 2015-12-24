@@ -20,7 +20,7 @@ class Comment(models.Model):
 	depth = models.PositiveSmallIntegerField(default=0)
 	rating=models.IntegerField(blank=False, null=True, validators=[MinValueValidator(0),
 									   MaxValueValidator(5)])
-	postevent = models.ForeignKey(Postevent)
+	#postevent = models.ForeignKey(Postevent)
 
 	def __unicode__(self):
 		return self.content

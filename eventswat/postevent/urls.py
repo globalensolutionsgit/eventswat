@@ -7,7 +7,6 @@ urlpatterns = patterns('',
                        url(r'^load_country/$', 'postevent.views.load_country'),
                        url(r'^load_state/$', 'postevent.views.load_state'),
                        url(r'^load_city/$', 'postevent.views.load_city'),
-	                     url(r'^load_dept/$', 'postevent.views.load_dept'),
+	                   url(r'^load_dept/$', 'postevent.views.load_dept'),
                        url(r'^load_college/$', 'postevent.views.load_college'),
                        )
-
