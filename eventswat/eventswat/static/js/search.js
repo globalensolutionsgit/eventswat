@@ -62,6 +62,39 @@ $(document).ready(function(){
 		$('[name=eventtype]').val(selected_option);
 		perform_search();		      
 	});
-		
+
+	// Load city via ajax before typed fully
+	$(function() {    
+	    $("#fitltercitytxt" ).autocomplete({
+	    open: function(){
+	        setTimeout(function () {
+	            $('.ui-autocomplete').css('z-index', 9999);
+	        }, 0);
+	    },
+
+	    source: function (request, response) {
+
+	        $.getJSON("/getcity_base?term=" + request.term, function (data) {             
+	            response($.map(data, function (value, key) {                            
+	                return {
+	                    label: value.label,
+	                    value: value.value,
+	                    extra: value.cityid
+	                };
+	            }));
+	        });
+	    },
+	    select : function(event, ui) {
+	            $('#fitltercity').val(ui.item.value);                
+	    },
+	    minLength: 2,
+	    delay: 100
+	    });
+  });
+  
+  $("#fitltercitytxt" ).blur(function () {
+    	$('#fitltercity').val($("#fitltercitytxt" ).val());
+  });
+
 
 });
