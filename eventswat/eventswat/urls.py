@@ -19,5 +19,6 @@ urlpatterns = patterns('',
 	  form_class=EventSearchFilter, 
 	), name='newsearchPageV2'), 
 	url(r'^postevent/getevents_by_date/$', 'postevent.views.getevents_by_date', name='getevents_by_date'),
+	url(r'^getcity_base/$', 'events.views.getcity_base',name='getcity_base'),
 
 )+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -63,52 +63,28 @@ $('.advance_search, #datepicker, .calander').hide();
 	    });
  	 });
 
-	
-	
+    $(".subcategory_list").hide();
+    $(".subcategory_list:first").show();
 
-//subcategory hover in listpage
-	$(".campus_list ul,.competition_list ul,.exhibition_list ul,.spiritual_list ul,.business_list ul,.sports_list ul,.adventure_list ul").hide();
- 	$(".category_img1 ,.category_hovericon").hover(function () {
-        $(".entertainment_list ul").show();
-        $(".campus_list ul,.competition_list ul,.exhibition_list ul,.spiritual_list ul,.business_list ul,.sports_list ul,.adventure_list ul").hide();
+	$( ".category_icon_hover").hover(function () {
+        $(this).addClass('active');
+        $(this).siblings('li').removeClass('active');
+        $(this).find('ul.subcategory_list').show();
+        $(this).siblings().find('ul.subcategory_list').hide();
     });
-    $(".category_img2 ,.category_hovericon").hover(function () {
-        $(".campus_list ul").show();
-        $(".entertainment_list ul,.competition_list ul,.exhibition_list ul,.spiritual_list ul,.business_list ul,.sports_list ul,.adventure_list ul").hide();
-    });
-    $(".category_img3 ,.category_hovericon").hover(function () {
-        $(".competition_list ul").show();
-        $(".entertainment_list ul,.campus_list ul,.exhibition_list ul,.spiritual_list ul,.business_list ul,.sports_list ul,.adventure_list ul").hide();
-    });
-     $(".category_img4 ,.category_hovericon").hover(function () {
-        $(".exhibition_list ul").show();
-        $(".entertainment_list ul,.campus_list ul,.competition_list ul,.spiritual_list ul,.business_list ul,.sports_list ul,.adventure_list ul").hide();
-    });
-      $(".category_img5 ,.category_hovericon").hover(function () {
-        $(".spiritual_list ul").show();
-        $(".entertainment_list ul,.campus_list ul,.competition_list ul,.exhibition_list ul,.business_list ul,.sports_list ul,.adventure_list ul").hide();
-    });
-       $(".category_img6 ,.category_hovericon").hover(function () {
-        $(".business_list ul").show();
-        $(".entertainment_list ul,.campus_list ul,.competition_list ul,.exhibition_list ul,.spiritual_list ul,.sports_list ul,.adventure_list ul").hide();
-    });
-        $(".category_img7 ,.category_hovericon").hover(function () {
-        $(".sports_list ul").show();
-        $(".entertainment_list ul,.campus_list ul,.competition_list ul,.exhibition_list ul,.spiritual_list ul,.business_list ul,.adventure_list ul").hide();
-    });
-         $(".category_img8 ,.category_hovericon").hover(function () {
-        $(".adventure_list ul").show();
-        $(".entertainment_list ul,.campus_list ul,.competition_list ul,.exhibition_list ul,.spiritual_list ul,.business_list ul,.sports_list ul").hide();
-    });
-
+	
 //Grid and list view in listpage
         $(".listgrid_events").hide();
         $(".grid_view").click(function(){
+            $('#search_result').removeClass('list_active');
+            $('#search_result').addClass('grid_active');
             $('.listgrid_events').show();
             $('.listview_events').hide();
         });
         
         $(".list_view").click(function(){
+            $('#search_result').removeClass('grid_active');
+            $('#search_result').addClass('list_active');
             $('.listview_events').show();
             $(".listgrid_events").hide();
         });
