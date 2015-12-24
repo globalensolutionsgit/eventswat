@@ -1,6 +1,15 @@
 //Home page nav bar
 $(document).ready(function(){
 
+
+// $(".grid-item").each(function(){
+//  var img_height = $(this).children('img').height();
+//  var img_width = $(this).children('img').width();
+//  $(this).find('img').attr('width', img_width).attr('height', img_height);
+//  $(this).css('width', img_width + 'px').attr('height', img_height + 'px');
+ 
+// })
+
 // hide .navbar first
 	$(".navbar").hide();
 	
@@ -27,7 +36,7 @@ $(document).ready(function(){
   });
 
 //advance button slide left
-$('.advance_search, #datepicker').hide();
+$('.advance_search, #datepicker, .calander').hide();
  $('.advance_btn').click(
     function(){
         $('.search_bar').animate(
@@ -104,16 +113,19 @@ $('.advance_search, #datepicker').hide();
             $(".listgrid_events").hide();
         });
 
- // init Masonry
+ // Masonry
   var $grid = $('.grid').masonry({
-    itemSelector: '.grid-item',
-    percentPosition: true,
-    columnWidth: '.grid-sizer'
-  });
+    columnWidth: 82,
+    });
   
-
-
-
+//Prioritized banner
+   $(function(){
+    $(".large_image img:eq(0)").nextAll().hide();
+    $(".thumbnails_img img").click(function(e){
+        var index = $(this).index();
+        $(".large_image img").eq(index).show().siblings().hide();
+    });
+});
 
 
 });

@@ -305,8 +305,8 @@
 		<ul class="pagination">
 			<li>
 				 {% if page.has_previous %} 
-	                <a data-ajaxlink="true" data-ajaxpage="{{ page.previous_page_number }}" href="?q={{request.REQUEST.q}}&page={{ page.previous_page_number }}" class="previous">
-	                <i class="fa  fa-angle-left"></i></a> 
+	                <a data-ajaxlink="true" data-ajaxpage="{{ page.previous_page_number }}" href="?q={{request.REQUEST.q}}&page={{ page.previous_page_number }}" class="previous">PREV
+	                <i class="fa fa-angle-left"></i></a> 
                  {% endif %}
 			</li>
 			{% for p in page.paginator.page_range %}
@@ -320,8 +320,8 @@
             {% endfor %}
 		    <li>
                 {% if page.has_next %} 
-                    <a data-ajaxlink="true" data-ajaxpage="{{ page.next_page_number }}" href="?q={{request.REQUEST.q}}&page={{ page.next_page_number }}" class="next">
-                        <i class="fa angle-right"></i>
+                    <a data-ajaxlink="true" data-ajaxpage="{{ page.next_page_number }}" href="?q={{request.REQUEST.q}}&page={{ page.next_page_number }}" class="next">NEXT
+                        <i class="fa fa-angle-right"></i>
                     </a>
                 {% endif %}
              </li> 
