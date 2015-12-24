@@ -16,8 +16,6 @@ USER_TYPE_CHOICES = (
 )
 
 # Model for storing user personal details
-
-
 class Userprofile(User):
     """
     This is model is used for maintaining Userprofile for each

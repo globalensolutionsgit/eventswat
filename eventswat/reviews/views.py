@@ -13,13 +13,9 @@ from django.http import HttpResponseRedirect, HttpResponse
 def feedback(request):
 	if request.is_ajax():
 		if request.method == 'POST':
-			print "enter"
 			form = WebsiteFeedbackForm(request.POST)
 			if form.is_valid():
-				print "form is valid"
-				# print "form",form
 				form.save()
-				print "save"
 			else:
 				form = WebsiteFeedbackForm()
 
@@ -37,19 +33,15 @@ def comment(request):
 		if request.method == "POST":
 			if request.user.is_authenticated():
 				if comment_form.is_valid():
-					print "comment"
 					temp = comment_form.save(commit=False)
 					temp.postevent_id = request.POST.get('postent')
 					temp.content = request.POST.get('content',request.COOKIES.get('content'))
-					print temp.content,"content"
 					temp.rating = request.POST.get('rating',request.COOKIES.get('rating'))
-					print temp.rating,"rating"
 					parent = comment_form['parent'].value()
 					if parent == "":
 						temp.path = []
 						temp.save()
 						id = temp.id
-						print "id",id
 						temp.path = [id]
 					else:
 

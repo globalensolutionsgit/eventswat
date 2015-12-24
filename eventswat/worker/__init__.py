@@ -21,7 +21,7 @@ class WorkerMaster(object):
     if debug:
       root = logging.getLogger()
       # root.setLevel(logging.DEBUG)
-      if root.handlers:        
+      if root.handlers:
         for handler in root.handlers:
           root.removeHandler(handler)
 
@@ -31,15 +31,14 @@ class WorkerMaster(object):
       # console.setLevel(logging.INFO)
       # formatter = logging.Formatter('%(message)s')
       # console.setFormatter(formatter)
-      # logging.getLogger().addHandler(console) 
+      # logging.getLogger().addHandler(console)
 
       self.create_dummyworks()
 
 
   def create_dummyworks(self):
-    print 'create_dummyworks'
     pass
-    
+
     # from leads.models import Lead
     #Lead.objects.get(pk=3).save()
 
@@ -96,6 +95,3 @@ class WorkerMaster(object):
           traceback.print_exc()
 
       time.sleep(self.heartbeat)
-
-
-    

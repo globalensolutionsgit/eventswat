@@ -16,7 +16,6 @@ class MyDbLogHandler(logging.Handler): # Inherit from logging.Handler
             logEntry.level = record.levelname
             logEntry.error_msg = record.getMessage(), record.exc_info
             # logEntry.ip_address = user_ip()
-            # print "logEntry.ip_address", logEntry.ip_address
             logEntry.page = record.args, record.lineno, record.pathname
             logEntry.datetime = datetime.datetime.now()
             logEntry.user = record.request.user
@@ -39,4 +38,4 @@ class MyDbLogHandler(logging.Handler): # Inherit from logging.Handler
                     },
                 )
         except:
-            pass 
+            pass

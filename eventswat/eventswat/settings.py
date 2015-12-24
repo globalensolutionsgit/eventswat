@@ -7,7 +7,6 @@ https://docs.djangoproject.com/en/1.6/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.6/ref/settings/
 """
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 import smtplib
@@ -131,11 +130,6 @@ MEDIA_ROOT = os.path.join((os.path.dirname(__file__)), 'media')
 
 MEDIA_URL = '/media/'
 
-COMPRESS_ENABLED = True
-
-COMPRESS_JS_FILTERS = [
-    'compressor.filters.template.TemplateFilter',
-]
 #EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # GEOS_LIBRARY_PATH = '/usr/local/lib/libgeos_c.so'
@@ -147,7 +141,6 @@ COMPRESS_JS_FILTERS = [
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'compressor.finders.CompressorFinder',
 )
 
 PAYU_INFO = {
@@ -157,8 +150,8 @@ PAYU_INFO = {
              'payment_url': 'https://test.payu.in/_payment',
              #success url for hotel
              'surl':'payu/payment_success/',
-             'curl':'post_event',
-             'furl':'post_event',
+             'curl':'banner/',
+             'furl':'banner/',
             }
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
