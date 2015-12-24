@@ -8,8 +8,8 @@ from django.template import RequestContext
 class PosteventIndex(SearchIndex, Indexable):
     text = CharField(document=True, use_template=True)
     searchtext = CharField()
-    eventcategory = CharField(model_attr='event_category__id')
-    eventsubcategory = CharField(model_attr='event_subcategory__id')
+    eventcategory = IntegerField(model_attr='event_category__id')
+    eventsubcategory = IntegerField(model_attr='event_subcategory__id')
     city = CharField(model_attr='city')
     country = CharField(model_attr='country', null=True)
     eventtitle = CharField(model_attr='event_title')

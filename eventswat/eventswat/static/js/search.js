@@ -16,7 +16,7 @@ function perform_search(){
 
 function attach_pagination_events(){
     $('[data-ajaxlink=true]').click(function(ele){
-    $("html, body").animate({ scrollTop: 0 }, "slow");
+    $("html, body").animate({ scrollTop: 1100 }, "slow");
     $('#page').val($(ele.currentTarget).attr('data-ajaxpage'));             
     perform_search();
     return false;
@@ -41,7 +41,8 @@ $(document).ready(function(){
 	   }	   			 
 	}
 	$('.search-btn, .advsearch-btn').on('click', function() {
- 		$('[name=q]').val($('#event_title').val());
+		if ($('#event_title').val())
+ 			$('[name=q]').val($('#event_title').val());
  		$('[name=city]').val($('#city').val());	 		
  		if ($("[name='city']").val() == '' )
  			$('[name=city]').attr("disabled",true);

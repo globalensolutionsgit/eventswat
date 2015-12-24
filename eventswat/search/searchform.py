@@ -33,53 +33,13 @@ class Partial(Clean):
 class EventSearchFilter(FacetedSearchForm):
 	model = None
 
-	eventcategory = forms.CharField(required=False)
-	eventsubcategory = forms.CharField(required=False)		
+	eventcategory = forms.IntegerField(required=False)
+	eventsubcategory = forms.IntegerField(required=False)		
 	city = forms.CharField(required=False)		
 	eventtitle = forms.CharField(required=False)
 	payment = forms.CharField(required=False)
 	filterdata = forms.CharField(required=False)
 	admin_status = forms.IntegerField(required=False)
-
-	def filter_by_calendar(self):
-	  data = self.searchqueryset.all()  		
-	  if hasattr(self, 'cleaned_data'):
-		  save_object = None	  
-		  #Filter Events by user query filterdata
-		  if self.cleaned_data['filterdata']:
-			  today = datetime.now().date()
-			  this_week_dates = [today + timedelta(days=i) for i in range(0 - today.weekday(), 7 - today.weekday())] 
-			  # Filter All Postevents
-			  if (self.cleaned_data['filterdata'] == "allevent"):
-				data = data.filter(admin_status=1)	  
-			  # Filter Today Postevents
-			  if (self.cleaned_data['filterdata'] == "today"):	
-				data = data.filter(Q(event_startdate_time=str(today))|Q(event_enddate_time=str(today)))  
-			  # Filter Tomorrow Events
-			  if (self.cleaned_data['filterdata'] == "tomorrow"):
-				tomorrow = today + timedelta(1)
-				data = data.filter(Q(event_startdate_time=str(tomorrow))|Q(event_enddate_time=str(tomorrow)))  	  
-			  # Filter This Week Events
-			  if (self.cleaned_data['filterdata'] == "thisweek"): 
-				for dates in this_week_dates:
-					if dates < today:
-						this_week_dates.remove(dates)
-				this_week_dates = [dates.strftime('%Y-%m-%d') for dates in this_week_dates]
-				first_date = this_week_dates[0]
-				last_date = this_week_dates[-1]
-				data = data.filter(Q(event_startdate_time__range=(first_date, last_date))|Q(event_enddate_time__range=(first_date, last_date)))
-			  # Filter This Week End Events
-			  if (self.cleaned_data['filterdata'] == "thisweekend"): 
-				first_date = this_week_dates[-2]
-				last_date = this_week_dates[-1] 
-				data = data.filter(Q(event_startdate_time__range=(first_date, last_date))|Q(event_enddate_time__range=(first_date, last_date)))			  
-			  # Filter This Month Events
-			  if (self.cleaned_data['filterdata'] == "thismonth"): 
-				import calendar
-				current_month_last_date = datetime(today.year,today.month,calendar.mdays[today.month]).strftime('%Y-%m-%d') 
-				data = data.filter(Q(event_startdate_time__range=(today, current_month_last_date))|Q(event_enddate_time__range=(today, current_month_last_date)))
-	  
-	  return data
   
 	def get_default_filters(self):
 	  sqs = SearchQuerySet().all()

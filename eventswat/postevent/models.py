@@ -99,12 +99,12 @@ class Postevent(models.Model):
         max_length=50,
         help_text='Event end date and time.suggest for midnight',
         verbose_name='End date')
-    event_poster = models.ImageField(
-        upload_to='static/img/',
-        null=True,
-        max_length=500,
-        help_text="Please upload the banner Image with 2MB min and jpg, \
-        png format only allowed")
+    # event_poster = models.ImageField(
+    #     upload_to='static/img/',
+    #     null=True,
+    #     max_length=500,
+    #     help_text="Please upload the banner Image with 2MB min and jpg, \
+    #     png format only allowed")
     event_keywords = models.ManyToManyField(
         PostEventKeyword,
         null=True,

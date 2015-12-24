@@ -13,8 +13,8 @@ from haystack.query import SQ
 default_param_mappings = OrderedDict(
   #FieldName = Form Variable
   # locality = 'locality__in',
-  eventcategory = 'eventcategory',
-  eventsubcategory = 'eventsubcategory',
+  eventcategory = 'eventcategory__id',
+  eventsubcategory = 'eventsubcategory__id',
   city = 'city',
   payment='payment',  
   # festname = 'festname',

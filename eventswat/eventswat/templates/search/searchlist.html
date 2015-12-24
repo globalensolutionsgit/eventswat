@@ -54,38 +54,12 @@
 			<div class="category_icon">
 		    	<div class="icon_list">
 		    		<ul>
+		    		{% for category in eventscategory %}
 		    			<li>
-			    			<img src="{% static "img/category_icon1.png" %}" class="category_img category_img1">
-			    			<img src="{% static "img/category_hover1.png" %}" class="category_hovericon">
-		    			</li>
-		    			<li>
-			    			<img src="{% static "img/category_icon2.png" %}" class="category_img category_img2">
-			    			<img src="{% static "img/category_hover2.png" %}" class="category_hovericon">
-		    			</li>
-		    			<li>
-			    			<img src="{% static "img/category_icon3.png" %}" class="category_img category_img3">
-			    			<img src="{% static "img/category_hover3.png" %}" class="category_hovericon">
-		    			</li>
-		    			<li>
-			    			<img src="{% static "img/category_icon4.png" %}" class="category_img category_img4">
-			    			<img src="{% static "img/category_hover4.png" %}" class="category_hovericon">
-		    			</li>
-		    			<li>
-			    			<img src="{% static "img/category_icon5.png" %}" class="category_img category_img5">
-			    			<img src="{% static "img/category_hover5.png" %}" class="category_hovericon">
-		    			</li>
-		    			<li>
-			    			<img src="{% static "img/category_icon6.png" %}" class="category_img category_img6">
-			    			<img src="{% static "img/category_hover6.png" %}" class="category_hovericon">
-		    			</li>
-		    			<li>
-			    			<img src="{% static "img/category_icon7.png" %}" class="category_img category_img7">
-			    			<img src="{% static "img/category_hover7.png" %}" class="category_hovericon">
-		    			</li>
-		    			<li>
-			    			<img src="{% static "img/category_icon8.png" %}" class="category_img category_img8">
-			    			<img src="{% static "img/category_hover8.png" %}" class="category_hovericon">
-		    			</li>
+			    			<img src="{{MEDIA_URL}}{{category.category_icon}}" class="category_img category_img{{forloop.counter}}">
+			    			<img src="{{MEDIA_URL}}{{category.category_hover_icon}}" class="category_hovericon">
+		    			</li>	
+		    		{% endfor %}	    			
 		    		</ul>
 		    	</div><!--icon_list-->
 		    </div><!--category_icon-->
@@ -278,7 +252,7 @@
 			</ul>
 	    </div><!--list_pagination-->
 	{% else %}
-	    <div class="right_align"><span>No Results Found</span></div>
+	    <div class=""><span>No Results Found</span></div>
 	{% endif %}	
 {% if not request.is_ajax %}	
 </div><!--search_result-->	
