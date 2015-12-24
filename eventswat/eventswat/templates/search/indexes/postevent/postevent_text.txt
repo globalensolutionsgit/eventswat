@@ -4,4 +4,5 @@
 {{object.event_title}}
 {{object.event_startdate_time}}
 {{object.event_enddate_time}}
+{{object.event_type}}
 

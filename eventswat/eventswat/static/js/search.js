@@ -48,4 +48,20 @@ $(document).ready(function(){
  			$('[name=city]').attr("disabled",true);
 		validateSearch();
 	});
+	
+	// City based search when change dropdown in listing page
+	$(document).on("change", '.city_selectbox', function () {       
+		var selected_option = $( ".city_selectbox option:selected" ).val();  
+		$('[name=city]').val(selected_option);	
+		perform_search();		      
+	});
+
+	// Event type search either free or paid when choose radio button in listing page
+	$(document).on("change", 'input[name="radio"]', function () {       
+		var selected_option = $( 'input[name="radio"]:checked' ).val();  
+		$('[name=eventtype]').val(selected_option);
+		perform_search();		      
+	});
+		
+
 });

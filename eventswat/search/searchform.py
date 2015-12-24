@@ -39,6 +39,7 @@ class EventSearchFilter(FacetedSearchForm):
 	eventtitle = forms.CharField(required=False)
 	payment = forms.CharField(required=False)
 	filterdata = forms.CharField(required=False)
+	eventtype = forms.CharField(required=False)
 	admin_status = forms.IntegerField(required=False)
   
 	def get_default_filters(self):
@@ -63,7 +64,8 @@ class EventSearchFilter(FacetedSearchForm):
 		'city',
 		'eventtitle',
 		'payment',
-		'filterdata'
+		'filterdata',
+		'eventtype',
 	  ]
 	  params = OrderedDict()
 	  for p in _params:

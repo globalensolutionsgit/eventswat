@@ -4,7 +4,9 @@
 {% if not request.is_ajax %}
 	<form id="form_search_filter" class="form_search_filter">
 	    <input id="search_form" type="hidden" name="{{form.q.html_name}}"  value="{{form.q.value|default:''}}"/>
-	    <input type="hidden" name="page" id="page" value="{{page.number}}"/>    
+	    <input type="hidden" name="page" id="page" value="{{page.number}}"/> 
+	    <input type="hidden" name="city" value=""/>  
+	    <input type="hidden" name="eventtype" value=""/>  
 	</form>
 
 	<div class="listpage_adv col-md-2 container">
@@ -160,16 +162,16 @@
 	     			<label>CITY</label>
 					<i class="fa fa-sort-desc sort_city"></i>
 					<select class="form-control city_selectbox" id="sel1">
-				        <option>AGRA</option>
-				        <option></option>
-				        <option></option>
-				        <option></option>
+					<option value="city">CITY</option>
+					{% for cities in city %}
+				        <option value="{{cities.city}}">{{cities.city}}</option>
+					{% endfor %}
 			      	</select>
 		      	</div><!--form-group-->
 	     		<div class="check_list">
 		     		<ul>
-		     			<li><input type="radio" name="radio" class="radio_btn">FREE</li>
-		     			<li><input type="radio" name="radio" class="radio_btn">PAID</li>
+		     			<li><input type="radio" name="radio" class="radio_btn" value="free">FREE</li>
+		     			<li><input type="radio" name="radio" class="radio_btn" value="paid">PAID</li>
 	     			</ul>
 	     		</div><!--check_list-->
 	     	</div><!--city_select-->

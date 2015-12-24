@@ -16,6 +16,7 @@ class PosteventIndex(SearchIndex, Indexable):
     payment=CharField(model_attr='payment')
     event_startdate_time=DateTimeField(model_attr='event_startdate_time')
     event_enddate_time=DateTimeField(model_attr='event_enddate_time')
+    eventtype=CharField(model_attr='event_type', null=True)
     admin_status=IntegerField(model_attr='admin_status')
     
     def autoUpdateRebuild_index(self):
