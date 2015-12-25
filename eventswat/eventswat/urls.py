@@ -20,5 +20,7 @@ urlpatterns = patterns('',
 	), name='newsearchPageV2'), 
 	url(r'^postevent/getevents_by_date/$', 'postevent.views.getevents_by_date', name='getevents_by_date'),
 	url(r'^getcity_base/$', 'events.views.getcity_base',name='getcity_base'),
+	url(r'^get_event_title/$', 'events.views.get_event_title', 
+								name='get_event_title'),
 
 )+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

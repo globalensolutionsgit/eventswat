@@ -40,14 +40,84 @@ $(document).ready(function(){
 	    	$("#f_search").submit();
 	   }	   			 
 	}
+
 	$('.search-btn, .advsearch-btn').on('click', function() {
-		if ($('#event_title').val())
- 			$('[name=q]').val($('#event_title').val());
- 		$('[name=city]').val($('#city').val());	 		
+		if ($('#fitlter_title').val())
+ 			$('[name=q]').val($('#fitlter_title').val());
+ 		$('[name=city]').val($('#fitltercity').val());	 		
  		if ($("[name='city']").val() == '' )
  			$('[name=city]').attr("disabled",true);
 		validateSearch();
 	});
+
+	// autocomplete function for city
+	$(function() { 
+	    $("#fitltercitytxt" ).autocomplete({
+	    open: function(){
+	        setTimeout(function () {
+	            $('.ui-autocomplete').css('z-index', 9999);
+	        }, 0);
+	    },
+
+	    source: function (request, response) {
+
+	        $.getJSON("/getcity_base?term=" + request.term, function (data) {             
+	            response($.map(data, function (value, key) {	            	                           
+	                return {
+	                    label: value.label,
+	                    value: value.value,
+	                    extra: value.cityid
+	                };
+	            }));
+	        });
+	    },
+	    select : function(event, ui) {
+	            $('#fitltercity').val(ui.item.value);                
+	    },
+	    // minLength: 2,
+	    // delay: 100
+	    });
+	});
+	  
+	$("#fitltercitytxt" ).blur(function () {
+	   $('#fitltercity').val($("#fitltercitytxt" ).val());
+	}); 
+
+
+	//autocomplete function for Event name
+	$(function() { 
+	    $("#filter_title_term" ).autocomplete({
+	    open: function(){
+	        setTimeout(function () {
+	            $('.ui-autocomplete').css('z-index', 9999);
+	        }, 0);
+	    },
+
+	    source: function (request, response) {
+
+	        $.getJSON("/get_event_title?term=" + request.term, function (data) {             
+	            response($.map(data, function (value, key) {	            	                           
+	                return {
+	                    label: value.label,
+	                    value: value.value,
+	                    extra: value.cityid
+	                };
+	            }));
+	        });
+	    },
+	    select : function(event, ui) {
+	            $('#fitlter_title').val(ui.item.value);                
+	    },
+	    // minLength: 2,
+	    // delay: 100
+	    });
+	});
+	  
+	$("#filter_title_term" ).blur(function () {
+	   $('#fitlter_title').val($("#filter_title_term" ).val());
+	}); 
+
+
 	
 	// City based search when change dropdown in listing page
 	$('.city_selectbox').on("change", function () {       
@@ -72,3 +142,6 @@ $(document).ready(function(){
 	});
 
 });
+
+
+

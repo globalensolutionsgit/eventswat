@@ -590,3 +590,10 @@
     padding: 0 30px;
     font-family: Microsoft Yi Baiti;
 }
+.c_breadcrumbs a {
+    color: gray;
+    text-decoration: none;
+}.c_breadcrumbs a:hover {
+    
+    text-decoration: none;
+}
