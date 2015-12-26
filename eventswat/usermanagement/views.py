@@ -84,7 +84,8 @@ def user_profile(request):
                                        'events_for_user': events_for_user,
                                        'event_interest': event_interest},
                                       context_instance=RequestContext(request))
-
+    else:
+        return HttpResponseRedirect('/')        
 
 @csrf_exempt
 def privacy(request):

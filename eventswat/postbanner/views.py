@@ -17,23 +17,26 @@ class JSONResponse(HttpResponse):
 
 @csrf_exempt
 def banner(request):
-    try:
-        temporary_banner = TempBanner.objects.get(temp_user_id=request.user.id)
-        temporary_banner.delete()
-    except TempBanner.DoesNotExist:
-        pass
-    if request.method == 'POST' and request.POST['status'] == 'failure':
-        message = 'Unable to complete your transaction'
+    if request.user.is_authenticated():
+        try:
+            temporary_banner = TempBanner.objects.get(temp_user_id=request.user.id)
+            temporary_banner.delete()
+        except TempBanner.DoesNotExist:
+            pass
+        if request.method == 'POST' and request.POST['status'] == 'failure':
+            message = 'Unable to complete your transaction'
+        else:
+            message = ''
+        banner_list = BannerPlan.objects.all()
+        banner_plans = list(set(banner_list))
+        posted_banner = PostBanner.objects.filter(admin_status='true')
+        return render_to_response("uploadbanner.html",
+                                  {'banner_plans': banner_plans,
+                                  'posted_banner':posted_banner,
+                                  'message':message},
+                                  context_instance=RequestContext(request))
     else:
-        message = ''
-    banner_list = BannerPlan.objects.all()
-    banner_plans = list(set(banner_list))
-    posted_banner = PostBanner.objects.filter(admin_status='true')
-    return render_to_response("uploadbanner.html",
-                              {'banner_plans': banner_plans,
-                              'posted_banner':posted_banner,
-                              'message':message},
-                              context_instance=RequestContext(request))
+        return HttpResponseRedirect('/')    
 
 @csrf_exempt
 @login_required(login_url='/?lst=2')
