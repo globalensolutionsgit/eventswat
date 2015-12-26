@@ -72,15 +72,15 @@ class OrganizerAdmin(admin.ModelAdmin):
 
 
 class PostEventKeywordAdmin(admin.ModelAdmin):
-    fields = ['keyword', 'postevent']
+    fields = ['keyword']
     list_display = ('id', 'keyword')
-    search_fields = ['postevent__event_title']
+    search_fields = ['keyword']
 
 
 class PosteventAdmin(admin.ModelAdmin):
     fields = ['event_type', 'event_category', 'event_subcategory', 'user_name',
               'user_email', 'user_mobile', 'event_title', 'event_description',
-              'event_startdate_time', 'event_enddate_time',
+              'event_startdate_time', 'event_enddate_time','keywords',
               'terms_and_condition', 'event_website', 'is_webinar', 'venue',
               'country', 'state', 'city', 'is_active', 'admin_status',
               'payment']
@@ -94,7 +94,7 @@ class PosteventAdmin(admin.ModelAdmin):
 
     class Media:
         css = {'all': ('css/jquery-ui.css',)}
-        js = ('js/jquery.js', 'js/admin.js', 'js/jquery-ui.js')
+        js = ('js/jquery.js', 'js/jquery-ui.js', 'js/admin.js')
 
     def send_EMAIL(self, request, queryset):
         if self.admin_status.boolean:

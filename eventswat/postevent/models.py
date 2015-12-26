@@ -49,6 +49,14 @@ class CampusDepartment(models.Model):
         return self.department
 
 
+class PostEventKeyword(models.Model):
+    """This model postevent related keywords"""
+    keyword = models.CharField(max_length=50)
+
+    def __unicode__(self):
+        return self.keyword
+
+
 class Postevent(models.Model):
     """This model store all the information about user posted events"""
     EVENT_MODE = (('free', 'Free'), ('paid', 'Paid'),
@@ -94,7 +102,8 @@ class Postevent(models.Model):
         max_length=50,
         help_text='Event end date and time.suggest for midnight',
         verbose_name='End date')
-
+    keywords = models.ManyToManyField(
+        PostEventKeyword, null=True, blank=True,)
     terms_and_condition = models.TextField(
         null=True,
         blank=True,
@@ -156,15 +165,6 @@ class Postevent(models.Model):
 
     def __unicode__(self):
         return self.event_title
-
-
-class PostEventKeyword(models.Model):
-    """This model postevent related keywords"""
-    postevent = models.ManyToManyField(Postevent)
-    keyword = models.CharField(max_length=50)
-
-    def __unicode__(self):
-        return self.keyword
 
 
 class PosteventPoster(models.Model):

@@ -147,4 +147,17 @@ $(document).ready(function(){
     //foreign key plus symbol remove
     $('.field-subcategory_relatedfield .add-another').hide();
 
+    //hide all keyeword when user add new postevent in admin side
+    if (window.location.pathname == '/admin/postevent/postevent/add/'){
+        $('#id_keywords').empty();
+    }
+    //show only user selected keywords in postevent change pages
+    var path = window.location.pathname;
+    if(path.indexOf('/admin/postevent/postevent/')== 0){
+        $("#id_keywords").each(function(){
+            if($(this).attr('selected')!='selected'){
+                $(this).remove();
+            }
+        });
+    }
 });
