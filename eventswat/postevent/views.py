@@ -6,6 +6,7 @@ from postevent.models import (Postevent, PosteventPoster,
                               Organizer, PostEventKeyword)
 from events.extra import JSONResponse
 from events.models import EventsCategory, EventsSubCategory, City
+from usermanagement.models import Userprofile
 try:
     import json
 except ImportError:

@@ -10,17 +10,17 @@ from usermanagement.models import Userprofile
 
 
 POSITION = (
-    ('top', 'Top of the page'),
-    ('bottom', 'Bottom of the page'),
-    ('center', 'Center of the page'),
-    ('right', 'Right of the page'),
+    ('Top', 'Top of the page'),
+    ('Bottom', 'Bottom of the page'),
+    ('Center', 'Center of the page'),
+    ('Right', 'Right of the page'),
 )
 
 PAGEURL = (
-    ('all', 'All'),
-    ('/', 'Home page'),
-    ('event/', 'Listing page'),
-    ('details/', 'Details page'),
+    ('All pages', 'All pages'),
+    ('Home page', 'Home page'),
+    ('Listing page', 'Listing page'),
+    ('Details page', 'Details page'),
 )
 
 
@@ -65,7 +65,7 @@ class PostBanner(models.Model):
     is_superuser = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return unicode(self.pk)
+        return unicode(self.banner)
 
 
 class TempBanner(models.Model):
@@ -87,6 +87,6 @@ class TempBanner(models.Model):
     ) + timedelta(days=30), help_text="Enddate for banner")
 
     def __unicode__(self):
-        return self.temp_link
+        return self.temp_banner
 
 

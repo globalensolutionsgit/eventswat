@@ -650,16 +650,20 @@ $('.close').click(function(){
     $('input[name="plan"]').val() == '';
   });
 
-  $(".login_act, .login_button, .signin").on('click', function (){
-        // alert('signin ');
-        $('.popup_fade').show();
-        $('#signin_popup').show();
+  $(".login_act, .login_button").on('click', function (){        
+        $('.popup_fade, #signin_popup').show();       
         $('.header-search-bar').hide();       
   });
 
   $(".register_btn, .signup").on('click', function (){ 
     $('.popup_fade, #signup_popup').show();
     $('.header-search-bar').hide();     
+  });
+
+  $('.signin').on('click', function(){
+    $('.popup_fade, #signin_popup').show();       
+    $('.header-search-bar, #signup_popup').hide();       
+
   });
 
 
@@ -686,7 +690,7 @@ $('.close').click(function(){
 //       });
 
   $('.post_event_btn_act').click(function(){
-    $('input[name="next"]').val('/post_event');
+    $('input[name="next"]').val('/postevent');
   });
     $('.upload_banner_btn_act').click(function(){
     $('input[name="next"]').val('/banner');

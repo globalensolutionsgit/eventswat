@@ -22,8 +22,10 @@ def user_profile(request):
             if date_of_birth == '':
                 date_of_birth = None
             print 'date_of_birth', date_of_birth
-            user_address = request.POST.get('address', '')
-            user_interest = request.POST.get('user_interest', '')
+            user_address = request.POST.get('address', '')            
+            if 'user_interest' in request.POST:
+                user_interest = request.POST.get('user_interest')
+                print 'user_interest', user_interest
             twitter_url = request.POST.get('twitter_url', '')
             facebook_url = request.POST.get('facebook_url', '')
             user_type = request.POST.get('user_type', '')

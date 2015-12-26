@@ -6,7 +6,7 @@
             <div class="slider-content">
                 <div id="home-slider" class="owl-carousel owl-theme">
                     {% for banners in banner|get_banner %}
-                        {% if banners.bannerplan.page == 'all' and banners.bannerplan.position == 'top' and banners.admin_status == True %}
+                        {% if banners.bannerplan.page == 'All pages' and banners.bannerplan.position == 'Top' and banners.admin_status == True %}
                             <div class="item">
                                 <img src="/media/{{banners.banner}}"  alt="">
                                 <div class="slide-content"></div>
@@ -29,11 +29,7 @@
                          <div class="col-md-3 category-toggle">     
                             <div class="advertisement" style="color:black;">
                                 <p>Advertisement</p>
-                                {% for banners in banner|get_banner %}
-                                {% if banners.bannerplan.page == 'event/' and banners.bannerplan.position == 'left' and banners.admin_status == True %}
-                                    <img src="/media/{{banners.banner}}" >
-                                {% endif %}
-                                {% endfor %}
+                                
                                 
                             </div>
                         </div> <!-- end .category-toggle -->
@@ -41,7 +37,7 @@
                         <div class="advertisement col-md-2" style="color:black;float:right !important;">
                             <p>Advertisement</p>
                             {% for banners in banner|get_banner %}
-                                {% if banners.bannerplan.page == 'event/' and banners.bannerplan.position == 'right' and banners.admin_status == True %}
+                                {% if banners.bannerplan.page == 'Listing page' and banners.bannerplan.position == 'Right' and  banners.admin_status == True %}
                                     <img src="/media/{{banners.banner}}" >
                                 {% endif %}
                             {% endfor %}
@@ -90,8 +86,18 @@
                                                 </a>
                                             </h5>
                                             <a class="read-more" href="/details/{{events.object.id}}"><i class="fa fa-angle-right"></i>Read More</a>
-                                        </div> <!-- end .single-product -->
-                                    </div> <!-- end .col-sm-4 grid layout -->
+                                        </div> <!-- end .single-product -->                                 
+                                   </div> <!-- end .col-sm-4 grid layout -->                                    
+                                    <div class="col-sm-4 col-xs-6 center_banner">
+                                    {% if forloop.counter == 2 %}                      
+                                        {% for banners in banner|get_banner %}
+                                            {% if banners.bannerplan.page == 'Listing page' and banners.bannerplan.position == 'Center' and banners.admin_status == True %}
+                                                <img src="/media/{{banners.banner}}" >
+                                            {% endif %}
+                                        {% endfor %}
+                                        {% endif %}  
+                                    </div>  
+                                                               
                                 {% endif %}
                             {% endfor %}
                         {% else %}
@@ -121,15 +127,15 @@
                                             </a>
                                     {% endif %}
                                 </li> 
-                            </ul>
-                              <div class="adve">                      
-                        {% for banners in banner|get_banner %}
-                            {% if banners.bannerplan.page == 'event/' and banners.bannerplan.position == 'bottom' and banners.admin_status == True %}
-                                <img src="/media/{{banners.banner}}" >
-                            {% endif %}
-                        {% endfor %}
-                    </div>
-                        </div><!--pagination-->                      
+                            </ul>                          
+                        </div><!--pagination--> 
+                        <div class="col-sm-4 col-xs-6 adve">                      
+                            {% for banners in banner|get_banner %}
+                                {% if banners.bannerplan.page == 'Listing page' and banners.bannerplan.position == 'Bottom' and banners.admin_status == True %}
+                                    <img src="/media/{{banners.banner}}" >
+                                {% endif %}
+                            {% endfor %}
+                        </div>                     
                     </div> <!-- end .row -->             
 
                 </div> <!-- end .tabe-pane -->

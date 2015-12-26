@@ -126,8 +126,8 @@ def register(request):
 	registered = False
 	user=User()
 	userprofile=Userprofile()
-	if request.method == 'POST':
-		registeration_form = UserCreationForm(request.POST)
+	registeration_form = UserCreationForm(request.POST)
+	if request.method == 'POST' and registeration_form.is_valid():		
 		username = registeration_form.data.get('username')
 		email = registeration_form.cleaned_data['email']
 		try:
@@ -145,7 +145,7 @@ def register(request):
 			redirect_url = format_redirect_url(redirect_path, query_string)
 			return HttpResponseRedirect(redirect_url)
 
-		if registeration_form.is_valid():
+		if not error:
 			userprofile.is_active = True
 			userprofile = registeration_form.save()
 			send_templated_mail(

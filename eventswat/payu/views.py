@@ -10,6 +10,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from postbanner.models import PostBanner,TempBanner
 from commerce.models import Order, Transaction
+from templated_email import send_templated_mail
 
 
 def my_random_string(string_length=10):
@@ -88,15 +89,28 @@ def payu_data(request):
         payu.band_ref_number = request.POST.get('bank_ref_num')
         payu.save()
         if request.POST['status'] == 'success':
+            print 'success'
             uploadbanner = PostBanner()
             temporary_banner = TempBanner.objects.get(temp_user_id=request.user.id)
+            print 'temporary_banner', temporary_banner.temp_user_id
             uploadbanner.bannerplan_id = request.POST.get('productinfo')
-            banner_id = TempBanner.objects.get(temp_bannerplan_id=uploadbanner.bannerplan_id)
-            uploadbanner.banner = banner_id.temp_banner
-            uploadbanner.link=banner_id.temp_link
-            uploadbanner.user_id=banner_id.temp_user_id
+            banner = TempBanner.objects.values('temp_banner').get(temp_user_id=temporary_banner.temp_user_id)['temp_banner']
+            print 'banner', banner
+            uploadbanner.banner = banner
+            uploadbanner.link=temporary_banner.temp_link
+            uploadbanner.user_id=temporary_banner.temp_user_id
             uploadbanner.save()
             temporary_banner.delete()
+            send_templated_mail(
+              template_name = 'banner',
+              subject = 'Uplaod Banner',
+              from_email = 'eventswat@gmail.com',
+              recipient_list = [request.user.email ],
+              context={
+                       'user': request.user,
+
+              },
+            )
             order = Order()
             order.banner = uploadbanner
             order.banner_plan_id = request.POST.get('productinfo')

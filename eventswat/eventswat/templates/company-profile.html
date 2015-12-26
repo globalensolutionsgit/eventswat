@@ -9,7 +9,7 @@
         <div class="slider-content">
             <div id="home-slider" class="owl-carousel owl-theme">
                 {% for banners in banner|get_banner %}
-                    {% if banners.bannerplan.page == 'all' and banners.bannerplan.position == 'top' and banners.admin_status == True %}
+                    {% if banners.bannerplan.page == 'All pages' and banners.bannerplan.position == 'Top' and banners.admin_status == True %}
                         <div class="item">
                             <img src="/media/{{banners.banner}}"  alt="">
                             <div class="slide-content"></div>
@@ -93,7 +93,7 @@
                   <div class="advertisement col-md-2" style="color:black;float:right !important;">
                         <p>Advertisement</p>
                         {% for banners in banner|get_banner %}
-                            {% if banners.bannerplan.page == 'event/' and banners.bannerplan.position == 'right' and banners.admin_status == True %}
+                            {% if banners.bannerplan.page == 'Details page' and banners.bannerplan.position == 'right' and banners.admin_status == True %}
                                 <img src="/media/{{banners.banner}}" >
                             {% endif %}
                         {% endfor %}

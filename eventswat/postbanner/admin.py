@@ -42,15 +42,6 @@ class PostBannerAdmin(admin.ModelAdmin):
             return self.readonly_fields + ('startdate', 'enddate',)
         return self.readonly_fields
 
-
-class TempBannerAdmin(admin.ModelAdmin):
-    fields = ['temp_user', 'temp_bannerplan', 'temp_banner',
-              'temp_link', 'temp_startdate', 'temp_enddate']
-    list_display = ('id', 'temp_banner', 'temp_link')
-    list_filter = ['temp_user', 'temp_banner']
-    search_fields = ['id', 'temp_banner']
-    list_per_page = 50
-
 admin.site.register(PostBanner, PostBannerAdmin)
 admin.site.register(BannerPlan, BannerPlanAdmin)
-admin.site.register(TempBanner, TempBannerAdmin)
+

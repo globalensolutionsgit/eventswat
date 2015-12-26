@@ -30,7 +30,7 @@ class Transaction(models.Model):
     )
 
     order = models.ForeignKey(Order)
-    payu = models.OneToOneField(PayuDetails)
+    payu = models.OneToOneField(PayuDetails, null=True, blank=True)
     account_no = models.BigIntegerField(
     help_text='If transaction is of mode enter the account no or card details',
     verbose_name='Account no or Card No',

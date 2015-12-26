@@ -55,6 +55,6 @@ def google_calendarize(event):
 		 'sprop=website:' + urlquote_plus('192.168.1.42:8000'))
 
 	if event.venue:
-	    s = s + '&location=' + urlquote_plus(event.venue)
+		s = s + '&location=' + urlquote_plus(event.venue)
 	return s + '&trp=false'
 google_calendarize.safe = True

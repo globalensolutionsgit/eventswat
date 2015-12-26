@@ -28,7 +28,7 @@ class Userprofile(User):
     user_address = models.TextField(null=True, blank=True)
     verification_code = models.CharField(max_length=500, blank=True)
     is_emailverified = models.BooleanField(default=False)
-    user_interest = models.ManyToManyField(EventsSubCategory, blank=True)
+    user_interest = models.ManyToManyField(EventsSubCategory,null=True, blank=True)
     twitter_url = models.CharField(max_length=200, blank=True)
     facebook_url = models.CharField(max_length=200, blank=True)
     user_type = models.CharField(
