@@ -36,26 +36,42 @@ $(document).ready(function(){
   });
 
 //advance button slide left
-$('.advance_search, #datepicker, .calander').hide();
+$('#datepicker_calender, .calendar, .events_calander').hide();
  $('.advance_btn').click(
     function(){
-        $('.search_bar').animate(
+        $('.search_content').animate(
             {
                 'margin-left' : '-=1500px'
             },500);
-        $('.advance_search').show();
-        $('#datepicker').show();
+
+        $('.advance_search').show();        
+        $('.advance_content').animate(
+            {
+                'margin-right' : '0'
+            },510);
+
+        $('#datepicker_calender, .events_calander').show();
         });
  
-    $('.down_font').click(function(){
-        $('#datepicker').hide();
-        $('.search_bar').show();
+    $('.down_font').on('click', function(){
+        $('.search_content').animate(
+            {
+                'margin-left' : '100px'
+            },500);
+        // $('.search_content').show();
+
+        // $('.advance_content').animate(
+        //     {
+        //     'margin-right' : '+=1500px'
+        //     },500);
+        $('.advance_search').hide();          
+        $('#datepicker_calender, .events_calander').hide();                
     });
 
 //calendar
 	
 	$(function() {
-	    $( "#datepicker" ).datepicker({
+	    $( "#datepicker_calender" ).datepicker({
           dateFormat: 'yy-mm-dd',
 	      numberOfMonths: 2,
 	      showButtonPanel: true,
@@ -98,6 +114,7 @@ $('.advance_search, #datepicker, .calander').hide();
    $(function(){
     $(".large_image img:eq(0)").nextAll().hide();
     $(".thumbnails_img img").click(function(e){
+        e.preventDefault();
         var index = $(this).index();
         $(".large_image img").eq(index).show().siblings().hide();
     });

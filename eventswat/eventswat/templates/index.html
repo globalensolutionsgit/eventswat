@@ -2,10 +2,11 @@
 {% load static from staticfiles %}
 {% block content %}
 	 <div class="search_bar">
-		<div class="container">
+		<div class="container search_content">
 			<form method="get" action="/search/?q=" id="f_search" name="f_search">
 			    <div class="form-group">
-			   		<input type="text" class="form-control search_box" id="usr" name="q">
+			   		<input type="text" class="form-control search_box" id="usr" name="q" value="">
+			   		<!-- <input type="hidden" value="" name="keywords" id="keywords"> -->
 			   		<a class="search-btn"><i class="fa fa-search search_font"></i></a>
 			   		<button type="button" class="advance_btn">ADVANCE SEARCH</button>
 			   		<i class="fa fa-angle-right angle_search"></i>
@@ -45,7 +46,7 @@
     <div class="calander">
         <div class="container">
             <div class="col-md-6">
-                <div id="datepicker"></div><!--datepicker-->
+                <div id="datepicker_calender"></div><!--datepicker-->
 		            <div class="events_calander">
 				  		<div class="events_content">
 				  			<span class="event_date">DEC 09</span>
@@ -99,31 +100,36 @@
 		<span class="upcoming_txt">UPCOMING EVENTS</span>
 	
 		<div class="upcoming_part1">
-			<ul>
-				<li class="shadow" style="position: absolute; top: 0px; z-index: 999;">ALL</li>
-				<li class="shadow" style="position: absolute; top: 89px; z-index: 998;">TODAY</li>
-				<li class="shadow" style="position: absolute; top: 179px; z-index: 997;">TOMORROW</li>
-				<li class="shadow" style="position: absolute; top: 269px; z-index: 996;">THIS WEEK</li>
-				<li class="shadow" style="position: absolute; top: 359px; z-index: 995;">THIS WEEKEND</li>
-				<li class="shadow" style="position: absolute; top: 449px; z-index: 994;">THIS MONTH</li>
-				<li class="shadow" style="position: absolute; top: 539px; z-index: 993;">FREE</li>
+			<ul class="filterdata">
+				<li class="shadow" style="position: absolute; top: 0px; z-index: 999;"><a href="" data-value="allevent">ALL</a></li>
+				<li class="shadow" style="position: absolute; top: 89px; z-index: 998;"><a href="" data-value="today">TODAY</a></li>
+				<li class="shadow" style="position: absolute; top: 179px; z-index: 997;"><a href="" data-value="tommorrow">TOMORROW</a></li>
+				<li class="shadow" style="position: absolute; top: 269px; z-index: 996;"><a href="" data-value="thisweek">THIS WEEK</a></li>
+				<li class="shadow" style="position: absolute; top: 359px; z-index: 995;"><a href="" data-value="thisweekend">THIS WEEKEND</a></li>
+				<li class="shadow"  style="position: absolute; top: 449px; z-index: 994;"><a href="" data-value="thismonth">THIS MONTH</a></li>
+				<li class="shadow" data-value="" style="position: absolute; top: 539px; z-index: 993;"><a href="" data-value="free">FREE</a></li>
 			</ul>
 		</div><!--upcoming_part1-->
 
 	<div class="grid_events_home container">
+		{% for recent_poster in recent_poster %}
+			{%if recent_poster.postevent.admin_status == True %}
 			<div class="gridview_content col-md-4">
 				<div class="gridview_image">
-					<img src="{% static "img/list_img2.png" %}">
+					<img src="../media/{{recent_poster.event_poster_medium}}" alt="">
 					<div class="gridview_details">
-						<ul>
-							<li>INBLOOM 2016 BENGALURE</li>
-							<li><img src="{% static "img/listview_icon1.png" %}"  class="list_smallicon">ENTERTAINMENT</li>
-							<li>DEC 18-2015 <mark class="event_time">02:00PM</mark></li>
+						<ul>						
+							<li>{{recent_poster.postevent.event_title}}</li>
+							<li><img src="../media/{{recent_poster.postevent.event_subcategory.subcategory_icon}}"  class="list_smallicon">{{recent_poster.postevent.event_subcategory.subcategory_name}}</li>
+							<!-- <li></li> -->
+							<li>{{recent_poster.postevent.event_startdate_time}}<!-- <mark class="event_time">02:00PM</mark> --></li>
 						</ul>
 					</div><!--gridview_details-->
 				</div><!--gridview_image-->
 			</div><!--gridview_content-->
-			<div class="gridview_content col-md-4">
+			{% endif %}
+		{% endfor %}		
+			<!-- <div class="gridview_content col-md-4">
 			<div class="gridview_image">
 				<img src="{% static "img/list_img3.png" %}">
 				<div class="gridview_details">
@@ -132,83 +138,31 @@
 						<li><img src="{% static "img/listview_icon2.png" %}"  class="list_smallicon">SPIRITURAL</li>
 						<li>DEC 18-2015 <mark class="event_time">02:00PM</mark></li>
 					</ul>
-				</div><!--gridview_details-->
-			</div><!--gridview_image-->
-		</div><!--gridview_content-->
-		<div class="gridview_content col-md-4">
-			<div class="gridview_image">
-				<img src="{% static "img/list_img4.png" %}">
-				<div class="gridview_details">
-					<ul>
-						<li>INFLORE '15</li>
-						<li><img src="{% static "img/listview_icon1.png" %}"  class="list_smallicon">ENTERTAINMENT</li>
-						<li>DEC 18-2015 <mark class="event_time">02:00PM</mark></li>
-					</ul>
-				</div><!--gridview_details-->
-			</div><!--gridview_image-->
-		</div><!--gridview_content-->
-		<div class="gridview_content col-md-4">
-			<div class="gridview_image">
-				<img src="{% static "img/list_img5.png" %}">
-				<div class="gridview_details">
-					<ul>
-						<li>AATRAL 2K15 CHENNAI</li>
-						<li><img src="{% static "img/listview_icon2.png" %}"  class="list_smallicon">SPIRITURAL</li>
-						<li>DEC 18-2015 <mark class="event_time">02:00PM</mark></li>
-					</ul>
-				</div><!--gridview_details-->
-			</div><!--gridview_image-->
-		</div><!--gridview_content-->
-		<div class="gridview_content col-md-4">
-			<div class="gridview_image">
-				<img src="{% static "img/list_img6.png" %}">
-				<div class="gridview_details">
-					<ul>
-						<li>INFLORE '15</li>
-						<li><img src="{% static "img/listview_icon1.png" %}"  class="list_smallicon">ENTERTAINMENT</li>
-						<li>DEC 18-2015 <mark class="event_time">02:00PM</mark></li>
-					</ul>
-				</div><!--gridview_details-->
-			</div><!--gridview_image-->
-		</div><!--gridview_content-->
-		<div class="gridview_content col-md-4">
-			<div class="gridview_image">
-				<img src="{% static "img/list_img3.png" %}">
-				<div class="gridview_details">
-					<ul>
-						<li>AATRAL 2K15 CHENNAI</li>
-						<li><img src="{% static "img/listview_icon2.png" %}"  class="list_smallicon">SPIRITURAL</li>
-						<li>DEC 18-2015 <mark class="event_time">02:00PM</mark></li>
-					</ul>
-				</div><!--gridview_details-->
-			</div><!--gridview_image-->
-		</div><!--gridview_content-->
+				</div> --><!--gridview_details-->
+			<!-- </div> --><!--gridview_image-->
+		<!-- </div> --><!--gridview_content-->
+		
 	</div><!--grid_events_home-->
 	</div><!--upcoming_events-->
 	<div class="prioritized_banner container">
 		<span>PRIORITIZED BANNER</span>
 		<div class="large_image">
-			<img src="{% static "img/large_img1.png" %}">
-			<img src="{% static "img/large_img2.png" %}">
-			<img src="{% static "img/large_img3.png" %}">
-			<img src="{% static "img/large_img4.png" %}">
-			<img src="{% static "img/large_img5.png" %}">
-			<img src="{% static "img/large_img6.png" %}">
-			<img src="{% static "img/large_img7.png" %}">
-			<img src="{% static "img/large_img8.png" %}">
-			<img src="{% static "img/large_img9.png" %}">
+			{% for banners in banner|get_banner %}
+				{% if banners.bannerplan.page == 'Home page' and banners.bannerplan.position == 'Bottom' and banners.admin_status == True %}  
+					<img src="../media/{{banners.banner}}" class="large_image_size" alt="">
+				{% endif %}	   
+			{% endfor %}
 		</div><!--large_image-->
-		<div class="thumbnails_img">
-			<img src="{% static "img/tumbnails_img1.png" %}" class="thumbs">
-			<img src="{% static "img/tumbnails_img2.png" %}" class="thumbs">
-			<img src="{% static "img/tumbnails_img3.png" %}" class="thumbs">
-			<img src="{% static "img/tumbnails_img4.png" %}" class="thumbs">
-			<img src="{% static "img/tumbnails_img5.png" %}" class="thumbs">
-			<img src="{% static "img/tumbnails_img6.png" %}" class="thumbs">
-			<img src="{% static "img/tumbnails_img7.png" %}" class="thumbs">
-			<img src="{% static "img/tumbnails_img8.png" %}" class="thumbs">
-			<img src="{% static "img/tumbnails_img9.png" %}" class="thumbs">
-		</div><!--thumbnails_img-->
+			<div class="thumbnail_holder">	
+				<div class="thumbnails_img">
+					{% for banners in banner|get_banner %}
+			            {% if banners.bannerplan.page == 'Home page' and banners.bannerplan.position == 'Bottom' and banners.admin_status == True %}                
+			                	<img src="../media/{{banners.banner}}" class="thumbs"  alt="">               
+			            {% endif %}
+			        {% endfor %}
+	         </div><!--thumbnails_img--> 
+        </div><!--thumbnail_holder-->  
+		
 		<div class="prev_thumbs col-md-12">
 			<ul>
 				<li><i class="fa fa-caret-left thumbs_left"></i></li>

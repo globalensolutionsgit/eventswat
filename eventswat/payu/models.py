@@ -1,12 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-import uuid
+#http://my-django-python.blogspot.in/2015/04/payu-payment-gateway-integration-with.html
 import datetime
-from uuid import UUID
-from uuid import uuid4
 from django.db import models
 from django.contrib.auth.models import User
-from django_extensions.db.fields import UUIDField
 
 
 class PayuDetails(models.Model):

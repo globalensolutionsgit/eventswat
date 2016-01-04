@@ -1,6 +1,9 @@
 from django.db import models
-from events.models import *
+from events.models import (EventsCategory, EventsSubCategory,
+                           City, SubcategoryRelatedField)
+from events.extra import ContentTypeRestrictedFileField
 from django.core.exceptions import ValidationError
+from PIL import Image
 
 
 class CampusCollege(models.Model):
@@ -99,27 +102,17 @@ class Postevent(models.Model):
         max_length=50,
         help_text='Event end date and time.suggest for midnight',
         verbose_name='End date')
-    # event_poster = models.ImageField(
-    #     upload_to='static/img/',
-    #     null=True,
-    #     max_length=500,
-    #     help_text="Please upload the banner Image with 2MB min and jpg, \
-    #     png format only allowed")
-    event_keywords = models.ManyToManyField(
-        PostEventKeyword,
-        null=True,
-        blank=True,
-        help_text='Enter the keyword about event',
-        verbose_name='Key words')
+    keywords = models.ManyToManyField(
+        PostEventKeyword, null=True, blank=True,)
     terms_and_condition = models.TextField(
         null=True,
         blank=True,
         help_text='If event has terms and condition \
                    enter atleast 50 characters',
         verbose_name='Terms and Condition')
-    event_website = models.CharField(
+    event_website = models.URLField(
         max_length=200,
-        help_text='Enter the if event has website',
+        help_text='Enter the if event has website(http://www.example.com/)',
         blank=True,
         null=True)
     is_webinar = models.BooleanField(
@@ -136,7 +129,7 @@ class Postevent(models.Model):
         null=True,
         blank=True,
         help_text='Enter Country',
-        verbose_name='Country name')
+        verbose_name='Country name',)
     state = models.CharField(
         max_length=50,
         null=True,
@@ -172,6 +165,77 @@ class Postevent(models.Model):
 
     def __unicode__(self):
         return self.event_title
+
+
+class PosteventPoster(models.Model):
+    """https://gist.github.com/valberg/2429288 for thumbnail"""
+    postevent = models.ForeignKey(Postevent)
+    event_poster = ContentTypeRestrictedFileField(
+        upload_to='event/poster',
+        null=True,
+        max_length=500,
+        content_types=['image/jpeg', 'image/png'],
+        max_upload_size=2097152,
+        help_text="Please upload the banner Image with 2MB min and jpg, \
+        png format only allowed")
+    event_poster_thumbnil = models.ImageField(
+        upload_to='event/poster',
+        null=True,
+        max_length=500,)
+    event_poster_medium = models.ImageField(
+        upload_to='event/poster',
+        null=True,
+        max_length=500,)
+    created = models.DateTimeField('created', auto_now_add=True)
+    modified = models.DateTimeField('modified', auto_now=True)
+
+    def create_thumbnail(self):
+        if not self.event_poster:
+            return
+        from PIL import Image
+        from cStringIO import StringIO
+        import datetime
+        from django.core.files.uploadedfile import SimpleUploadedFile
+        import os
+        THUMBNAIL_SIZE = (99, 66)
+        MEDIUM_SIZE = (255, 218)
+        DJANGO_TYPE = self.event_poster.file.content_type
+
+        if DJANGO_TYPE == 'image/jpeg':
+            PIL_TYPE = 'jpeg'
+            FILE_EXTENSION = 'jpg'
+        elif DJANGO_TYPE == 'image/png':
+            PIL_TYPE = 'png'
+            FILE_EXTENSION = 'png'
+        image = Image.open(StringIO(self.event_poster.read()))
+        image.thumbnail(THUMBNAIL_SIZE, Image.ANTIALIAS)
+        image.thumbnail(MEDIUM_SIZE, Image.ANTIALIAS)
+        temp_handle = StringIO()
+        image.save(temp_handle, PIL_TYPE)
+        temp_handle.seek(0)
+        suf = SimpleUploadedFile(os.path.split(self.event_poster.name)[-1],
+                                 temp_handle.read(), content_type=DJANGO_TYPE)
+        timestamp = datetime.datetime.utcnow().strftime("%Y_%m_%d_%H_%M_%S_%f")
+        self.event_poster_thumbnil.save(
+            '%s_thumbnail_%s.%s' % (os.path.splitext(
+                suf.name)[0], timestamp, FILE_EXTENSION),
+            suf,
+            save=False)
+        self.event_poster_medium.save(
+            '%s_medium_%s.%s' % (os.path.splitext(suf.name)[
+                                 0], timestamp, FILE_EXTENSION),
+            suf,
+            save=False)
+
+    def save(self, *args, **kwargs):
+        self.create_thumbnail()
+        force_update = False
+        if self.id:
+            force_update = True
+        super(PosteventPoster, self).save(force_update=force_update)
+
+    def __unicode__(self):
+        return unicode(self.event_poster)
 
 
 class SubCategoryRelatedFieldValue(models.Model):

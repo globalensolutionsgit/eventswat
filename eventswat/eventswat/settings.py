@@ -125,7 +125,7 @@ STATICFILES_DIRS = (
 TEMPLATE_DIRS = os.path.join((os.path.dirname(__file__)), 'templates')
 
 MEDIA_ROOT = os.path.join((os.path.dirname(__file__)), 'media')
-print 'MEDIA_ROOT', MEDIA_ROOT
+
 
 MEDIA_URL = '/media/'
 
@@ -185,7 +185,7 @@ PAYU_INFO = {
              # for production environment use 'https://secure.payu.in/_payment'
              'payment_url': 'https://test.payu.in/_payment',
              #success url for hotel
-             'surl':'postbanner/payment_success/',
+             'surl':'payu/payment_success/',
              'curl':'post_event',
              'furl':'post_event',
             }

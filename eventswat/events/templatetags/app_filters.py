@@ -4,34 +4,28 @@ from postbanner.models import *
 from events.views import *
 from events.models import *
 from postevent.models import Postevent
+from postbanner.models import PostBanner, BannerPlan
 from eventswat.util import *
 from django.template.defaultfilters import stringfilter
 register = template.Library()
 
 @register.filter
-def get_main_banner(banner):
-	banner=PostBanner.objects.all()
-	return banner
-
-@register.filter
 def get_banner(banner):
 	banner=PostBanner.objects.all()
 	return banner
-	
+
 @register.filter
-def get_categories(initial_load):  
-	category=EventsCategory.objects.all().order_by('id')	
+def get_categories(initial_load):
+	category=EventsCategory.objects.all().order_by('id')
 	return category
 
 @register.filter
-def get_subcategories(categoryId):  	
-	print "get_subcategories"
-	subcategories = EventsSubCategory.objects.filter(category__id=categoryId)		
-	print "subcategories", subcategories
-	return subcategories	
+def get_subcategories(categoryId):
+	subcategories = EventsSubCategory.objects.filter(category__id=categoryId)
+	return subcategories
 
 @register.filter
-def get_photos(photo): 
+def get_photos(photo):
 	photo=str(photo).split(',')
 	return photo[0]
 
@@ -49,7 +43,6 @@ def google_calendarize(event):
 	st = event.event_startdate_time
 	en = event.event_enddate_time and event.event_enddate_time or event.event_startdate_time
 	tfmt = '%Y%m%dT000000'
-
 	dates = '%s%s%s' % (st.strftime(tfmt), '%2F', en.strftime(tfmt))
 	name = urlquote_plus(event.event_title)
 	description = event.event_description
@@ -62,7 +55,6 @@ def google_calendarize(event):
 		 'sprop=website:' + urlquote_plus('192.168.1.42:8000'))
 
 	if event.venue:
-	    s = s + '&location=' + urlquote_plus(event.venue)
-
+		s = s + '&location=' + urlquote_plus(event.venue)
 	return s + '&trp=false'
 google_calendarize.safe = True

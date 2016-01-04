@@ -18,7 +18,7 @@ function getevents_by_date(date)
 
 $(document).ready(function(){ 
     getevents_by_date($(this).val());
-  	$(document).on("change", "#datepicker", function () {
+  	$(document).on("change", "#datepicker_calender", function () {
       getevents_by_date($(this).val());
   	});
 });

@@ -5,7 +5,7 @@
 {% if not request.is_ajax %}
 	<form id="form_search_filter" class="form_search_filter">
 	    <input id="search_form" type="hidden" name="{{form.q.html_name}}"  value="{{form.q.value|default:''}}"/>
-	    <input type="hidden" name="page" id="page" value="{{page.number}}"/> 
+	    <input type="hidden" name="page" id="page" value="{{page.number}}"/>	    
 	    <input type="hidden" name="city" value=""/>  
 	    <input type="hidden" name="eventtype" value=""/> 
 	    <input type="hidden" name="eventcategory" value=""/>  
@@ -13,16 +13,22 @@
 	</form>
 
 	<div class="listpage_adv col-md-2 container">
-		<img src="{% static "img/advertisement_1.png" %}"><br><br>
-		<img src="{% static "img/advertisement_2.png" %}">
+	{% for banners in banner|get_banner %}
+        {% if banners.bannerplan.page == 'Listing page' and banners.bannerplan.position == 'Right' and  banners.admin_status == True %}
+            <img src="/media/{{banners.banner}}" ><br><br>
+        {% endif %}
+    {% endfor %}
+		<!-- <img src="{% static "img/advertisement_1.png" %}"><br><br>
+		<img src="{% static "img/advertisement_2.png" %}"> -->
 	</div><!--listpage_adv-->
 	
 	<div class="list_search">
 		<div class="container search_listpage">
 			<div class="listpage">
-				<form>
+				<form id="search_listing" name="listing_search_form">
+				{% csrf_token %}
 				    <div class="form-group">
-				   		<input type="text" class="form-control search_box_listpage" id="usr" placeholder="SEARCH">
+				   		<input type="text" class="form-control search_box_listpage" id="keyword_search" name="keyword_search" value="" placeholder="SEARCH">
 				   		<a class="search_btn_listpage"><i class="fa fa-search search_font_listpage"></i></a>
 				   		<div class="view_list">
 							<span class="view_txt">VIEW</span>
@@ -37,9 +43,9 @@
 	 
 	<div class="listpage_result">
 		<div class="breadcrumbs col-md-8">
-			<ul class="c_breadcrumbs">
+			<ul class="c_breadcrumbs" id="bread_crumbs_act">
 				<li><a href="/">HOME</a></li> <i class="fa fa-angle-double-right"></i>
-				<li><a href="#">ENTERTAINMENTS</a></li><i class="fa fa-angle-double-right"></i>
+				<li><a href="#">ENTERTAINMENT</a></li><i class="fa fa-angle-double-right"></i>
 				<li><a href="#">MUSIC & DANCE</a></li>
 			</ul>
 			<div class="events_result">
@@ -61,8 +67,8 @@
 		    		<ul>
 		    		{% for category in eventscategory %}
 		    			<li class="category_icon_hover">
-			    			<img src="{{MEDIA_URL}}{{category.category_icon}}" class="category_img category_img{{forloop.counter}}">
-			    			<img src="{{MEDIA_URL}}{{category.category_hover_icon}}" class="category_hovericon">
+			    			<img src="../media/{{category.category_icon}}" class="category_img category_img{{forloop.counter}}">
+			    			<img src="../media/{{category.category_hover_icon}}" class="category_hovericon">
 			    			<ul class="subcategory_list">    
 			    			{% for subcategory in category.id|get_subcategories %}	
 				    			<li data-subcategory="{{subcategory.id}}">{{subcategory.subcategory_name}}</li>
@@ -107,20 +113,24 @@
 	{% if page and page.object_list%}
 		<div class="listview_events container">
 				{% for events in page.object_list %}
-					{% if events.object.admin_status == True %}
+					{% if events.object.admin_status == True %}							
 							<div class="event_content col-md-12">
-								<div class="event_image">
-									<img src="{% static "img/listview_img1.png" %}">
-										<div class="event_details col-md-8">
-											<ul>
-												<li>{{events.object.event_title}}</li>
-												<li><img src="{% static "img/listview_icon1.png" %}" class="list_smallicon">{{events.object.event_category}}</li>
-												<li><i class="fa fa-map-marker"></i>{{events.object.city}},{{events.object.country}}</li>
-												<li>DEC 18-2015 <mark class="event_time">02:00PM</mark></li>
-											</ul>
-										</div><!--event_details-->
-										<a href="#" class="view_details">VIEW DETAILS</a>
-								</div><!--event_image-->
+								<div class="event_image col-md-3">
+									{% for poster in events.object.posteventposter_set.all %}
+										<img src="../media/{{poster.event_poster_medium}}">
+									{% endfor %}
+								</div><!--event_image-->	
+								<div class="event_details col-md-6">
+									<ul>
+										<li>{{events.object.event_title}}</li>
+										<li><img src="../media/{{events.object.event_category.category_icon}}" class="list_smallicon">{{events.object.event_category}}</li>
+										<li><i class="fa fa-map-marker"></i>{{events.object.city}},{{events.object.country}}</li>
+										<li>{{events.object.event_startdate_time}} <!-- <mark class="event_time">02:00PM</mark> --></li>
+									</ul>
+								</div><!--event_details-->
+								<div class="col-md-3">
+									<a href="#" class="view_details">VIEW DETAILS</a>			
+								</div>	
 							</div><!--event_content-->
 					{% endif %}
 				{% endfor %}
@@ -131,12 +141,14 @@
 							{% if events.object.admin_status == True %}
 								<div class="gridview_content col-md-6">
 									<div class="gridview_image">
-										<img src="{% static "img/list_img1.png" %}">
+										{% for poster in events.object.posteventposter_set.all %}
+											<img src="../media/{{poster.event_poster_medium}}">
+										{% endfor %}
 										<div class="gridview_details">
 											<ul>
 												<li>{{events.object.event_title}}</li>
-												<li><img src="{% static "img/listview_icon5.png" %}"  class="list_smallicon">{{events.object.event_category}}</li>
-												<li>DEC 18-2015 <mark class="event_time">02:00PM</mark></li>
+												<li><img src="../media/{{events.object.event_category.category_icon}}"  class="list_smallicon">{{events.object.event_category}}</li>
+												<li>{{events.object.event_startdate_time}} <!-- <mark class="event_time">02:00PM</mark> --></li>
 											</ul>
 										</div><!--gridview_details-->
 									</div><!--gridview_image-->
@@ -172,7 +184,7 @@
 			</ul>
 	    </div><!--list_pagination-->
 	{% else %}
-	    <div class=""><span>No Results Found</span></div>
+	    <div class="right_align"><span>No Results Found</span></div>
 	{% endif %}	
 {% if not request.is_ajax %}	
 </div><!--search_result-->	

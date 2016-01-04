@@ -1,6 +1,9 @@
 // this function is used for advance search using ajax
 function perform_search(){ 
     var q = $('#form_search_filter').serialize();
+    var qfilter = $(".filterdata").find('li.active a').attr('data-value');
+        q = q +'&filterdata='+$.trim(qfilter);
+        
     $.get('/search/?'+ q, function(data){       
       $('#search_result').html(data);
       // Below condition is used for setting grid and view after ajax load
@@ -9,10 +12,11 @@ function perform_search(){
       }     	
       if ($('#search_result').hasClass("list_active")){
       	$('.listgrid_events').hide();
-      }      	
+      }   
       attach_pagination_events();       
     });
 }
+
 
 function attach_pagination_events(){
     $('[data-ajaxlink=true]').click(function(ele){
@@ -44,11 +48,22 @@ $(document).ready(function(){
 	$('.search-btn, .advsearch-btn').on('click', function() {
 		if ($('#fitlter_title').val())
  			$('[name=q]').val($('#fitlter_title').val());
+ 		
+ 		if($('#fitltercity').val())
  		$('[name=city]').val($('#fitltercity').val());	 		
  		if ($("[name='city']").val() == '' )
  			$('[name=city]').attr("disabled",true);
-		validateSearch();
+ 		validateSearch();
 	});
+
+
+	//sorted_data click function in home page for calendar based events
+    $('.filterdata li').click(function () {
+      $(this).addClass("active");
+      $(this).siblings().removeClass("active");
+      perform_search();
+    });
+
 
 	// autocomplete function for city
 	$(function() { 
@@ -117,7 +132,6 @@ $(document).ready(function(){
 	   $('#fitlter_title').val($("#filter_title_term" ).val());
 	}); 
 
-
 	
 	// City based search when change dropdown in listing page
 	$('.city_selectbox').on("change", function () {       
@@ -141,7 +155,13 @@ $(document).ready(function(){
 		perform_search();		      
 	});
 
-});
+	//keyword search in listing page
+	$('.search_btn_listpage').on('click', function(){
+		var words = $('input[name="q"]').val($('#keyword_search').val());
+		perform_search();	
+	});
+
+});// ends docuement.ready function
 
 
 

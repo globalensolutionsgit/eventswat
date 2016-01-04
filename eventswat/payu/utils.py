@@ -16,7 +16,6 @@ def generate_hash(data):
     for key in KEYS:
         hash.update("%s%s" % (str(data.get(key, '')), '|'))
     hash.update(settings.PAYU_INFO.get('merchant_salt'))
-    print "sdfsdfsdfsdfasdfdf", hash.hexdigest().lower()
     return hash.hexdigest().lower()
 
 

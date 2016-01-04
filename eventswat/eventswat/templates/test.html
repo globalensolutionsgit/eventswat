@@ -1,0 +1,108 @@
+{% load static from staticfiles %}
+<link rel="stylesheet" href="{% static "css/jquery-ui.css" %}">
+<link rel="stylesheet" href="{% static "css/jquery.filer.css" %}">
+<link rel="stylesheet" href="{% static "css/themes/jquery-filer.css" %}">
+<link rel="stylesheet" href="{% static "css/datetimepicker_for_postevent.css" %}">
+<link rel="stylesheet" href="{% static "css/themes/jquery.filer-dragdropbox-theme.css" %}">
+<script type="text/javascript" src="{% static "js/jquery.js" %}"></script>
+<script type="text/javascript" src="{% static "js/jquery-ui.js" %}"></script>
+<script type="text/javascript" src="{% static "js/jquery.filer.min.js" %}"></script>
+<script type="text/javascript" src="{% static "js/datetimepicker_for_postevent.js" %}"></script>
+<script type="text/javascript" src="{% static "js/muthu.js" %}"></script>
+<style>
+.custom-combobox {
+  position: relative;
+  display: inline-block;
+}
+.custom-combobox-toggle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin-left: -1px;
+  padding: 0;
+}
+.custom-combobox-input {
+  margin: 0;
+  padding: 5px 10px;
+}
+</style>
+{% if success %}
+{{success}}
+{% endif %}
+<form action="{%url "postevent.views.postevent"  %}" method="post" name="postevent"  role="form" enctype="multipart/form-data">
+    {% csrf_token %}
+    <hr>
+    <input type="radio" name="event_type" value="free"/>Free
+    <input type="radio" name="event_type" value="paid"/>Paid
+    <input type="radio" name="event_type" value="nil"/>No Registration<br/><hr>
+    <label>Events category</label>
+    <select name="event_category" id='id_event_category' >
+        <option value="">----------------</option>
+        {% for categorys in category %}
+        <option value="{{categorys.id}}">{{categorys.category_name}}</option>
+        {%endfor %}
+    </select><br/><hr>
+    <span class="category_error" style="display:none">Please Select Event category</span>
+    <label>Events subcategory</label>
+    <select name="event_subcategory" id="id_event_subcategory" >
+        <option value="">----------------</option>
+    </select><br/>
+    <span class="subcategory_error" style="display:none">Please Select Event subcategory</span><hr>
+    <label>Events Title</label>
+    <input type="text" name="event_title" value="" id="event_title"/><br/><hr>
+    <span class="event_title_error" style="display:none">Please Type Event Title with in 25 characters</span>
+    <label>Events start date</label>
+    <input type="text" name="start_date" value="" id="startdate"/>
+    <span class="start_date_error" style="display:none">Please Choose start date with time</span>
+    <label>Events end date</label>
+    <input type="text" name="end_date" value="" id="enddate"/><br/><hr>
+    <span class="end_date_error" style="display:none">Please Choose end date with time</span>
+    <label>Events poster</label>
+    <input type="file" name="files[]" id="event_poster" multiple="multiple"><br/><hr>
+    <label>Events Description</label>
+    <textarea name="event_desc" id="event_desc"></textarea><br/><hr>
+    <span class="event_desc_error" style="display:none">Please Enter event description (Mininum 50 character and Maximum 500 characters)</span>
+    <input type="checkbox" name="terms_and_condition" id="terms_and_cond_check">Terms and conditions
+    <textarea name="term_and_cond" id="term_and_cond"></textarea><br/><hr>
+    <span class="term_and_cond_error" style="display:none">Please Enter terms and contidions</span>
+    <label>Keywords</label>
+    <input type="text" name="keywords" value=""/><br/><hr>
+    <p>Tips:Keywords should be separated with comma</p>
+    <label>Events website</label>
+
+    <input type="text" name="url" value="" id="website"/><br/><hr>
+    <span class="website_error" style="display:none">Please Enter valid Url(with http or https)</span>
+    <input type="checkbox" name="is_webniar" id="is_webniar"> Is webnair ?<br/><hr>
+    <label>Events Vanue</label>
+    <textarea name="venue" id="vanue"></textarea><br/><hr>
+    <span class="vanue_error" style="display:none">Please Enter vanue information</span>
+    <label>Country</label>
+    <select name="country" id="id_country" class="id_country">
+        <option>Select country</option>
+        {% for countries in country_list %}
+        <option value="{{countries}}">{{countries|capfirst}}</option>
+        {% endfor %}
+    </select><br/><hr>
+    <span class="country_error" style="display:none">Please Select country</span>
+    <label>State</label>
+    <select name="state" id="id_state">
+        <option value=""></option>
+    </select><br/><hr>
+    <span class="state_error" style="display:none">Please Select state</span>
+    <label>City</label>
+    <select name="city" id="id_city">
+        <option value=""></option>
+    </select><br/><hr>
+    <span class="city_error" style="display:none">Please Select city</span>
+    <label>Organizer name</label>
+    <input type="text" name="org_name" value="" id="org_name"/><br/><hr>
+    <span class="org_name_error" style="display:none">Please Enter organizer name</span>
+    <label>Organizer email</label>
+    <input type="text" name="org_email" value="" id="org_email"/><br/><hr>
+    <span class="org_email_error" style="display:none">Please Enter valid email id</span>
+    <label>Organizer mobile</label>
+    <input type="text" name="org_mobile" value="" id="org_mobile"/><br/>
+    <span class="org_mobile_error" style="display:none">Please Enter valid Mobile no</span>
+    <hr>
+    <input type="submit" value="Submit" id="postevent_submit">
+</form>

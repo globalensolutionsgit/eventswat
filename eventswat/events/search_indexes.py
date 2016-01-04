@@ -18,17 +18,21 @@ class PosteventIndex(SearchIndex, Indexable):
     event_enddate_time=DateTimeField(model_attr='event_enddate_time')
     eventtype=CharField(model_attr='event_type', null=True)
     admin_status=IntegerField(model_attr='admin_status')
+    keywords=MultiValueField(null=True)
+    event_poster=MultiValueField(null=True)
     
     def autoUpdateRebuild_index(self):
         update_index.Command().handle()
         rebuild_index.Command().handle()
 
-    def prepare_searchtext(self, obj):
+    def prepare_searchtext(self, obj):      
         text = []
         if obj.event_title:
             text.append(obj.event_title)
         # if obj.city:
         #     text.append(obj.city)
+
+        text += self.keyword_search(obj)
 
         search = []
         for t in text:
@@ -37,6 +41,14 @@ class PosteventIndex(SearchIndex, Indexable):
                 if q and (not re.match(r'[^\w]', q, flags=re.UNICODE)):
                     search.append(q)
         return ' '.join(search)
+
+    def keyword_search(self, obj):        
+        keywords = []
+        event_keywords = {}
+        for term in obj.keywords.all():
+            keywords.append(term.keyword)
+        return keywords    
+
 
     def get_model(self):
         return Postevent
